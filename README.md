@@ -15,8 +15,11 @@ Seele* is the frontend interface for [The Alexandria Library](https://github.com
 
 ## Tech Stack
 -**Languages** : HTML , CSS , JS
+
 -**Framework** : Bootstrap
+
 -**API Communication** : Integration with [Mellow API](https://github.com/Paranoid-Pufferfish/mellow-api)
+
 -**Text Editor** : IntelliJ IDEA 2024.3.3
 
 ## Team members :
