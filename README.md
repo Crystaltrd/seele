@@ -5,9 +5,13 @@ Seele* is the frontend interface for [The Alexandria Library](https://github.com
 
 ## Features 
 -**User Authentification** : Login and sign up for students and professors
+
 -**Research** : Simple and advanced research with filters for the categorie, edition and publication year
+
 -**Book management** : Borrow ,return, reserve and extend rental period
+
 -**Admin dashboard** : Manage users ,books and library setting 
+
 -**Guest mode** : Browse the catalog without borrowing
 
 ## Wireframe
