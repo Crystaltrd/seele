@@ -20,10 +20,11 @@ Seele* is the frontend interface for [The Alexandria Library](https://github.com
 -**Text Editor** : IntelliJ IDEA 2024.3.3
 
 ## Team members :
--[SAHI Nour El Imene](https://github.com/ImeneeSh)
+-[SAHI Nour El Imene](https://github.com/ImeneeSh) 
+
 -[SOLTANA Melissa](https://github.com/melissa60)
 
-#### License
+## License
 
 BSD 3-Clause License
 
