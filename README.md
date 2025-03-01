@@ -15,7 +15,7 @@
 - **Guest mode** : Browse the catalog without borrowing
 
 ## Wireframe
-🔗 **[view the wireframe on Canva](https://www.canva.com/design/DAGf5gWIg7E/Hh4Bi0XXFv2vhkFpdgxjjQ/view?mode=prototype)** 
+🔗 **[view the wireframe on Canva](https://www.canva.com/design/DAGgaKHwp_0/_WYxneecdjyUwVURa3oaDw/view?mode=prototype)** 
 
 ## Tech Stack
 - **Languages** : HTML , CSS , JS
