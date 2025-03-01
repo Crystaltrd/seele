@@ -31,6 +31,10 @@
 
 - [SOLTANA Melissa](https://github.com/melissa60)
 
+## Ressources and inspirations :
+- [Favicon](https://www.flaticon.com/fr/icone-gratuite/favicon_3585640)
+
+
 ## License
 
 BSD 3-Clause License
