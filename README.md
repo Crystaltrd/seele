@@ -1,35 +1,35 @@
 # Seele - Frontend for the Alexandria Library
 
 ## Introduction
-Seele* is the frontend interface for [The Alexandria Library](https://github.com/Paranoid-Pufferfish/alexandria-library), a university library management platform. It provides a smooth and intuitive user experience for students,professors and library staff. 
+*Seele* is the frontend interface for [The Alexandria Library](https://github.com/Paranoid-Pufferfish/alexandria-library), a university library management platform. It provides a smooth and intuitive user experience for students,professors and library staff. 
 
 ## Features 
--**User Authentification** : Login and sign up for students and professors
+- **User Authentification** : Login and sign up for students and professors
 
--**Research** : Simple and advanced research with filters for the categorie, edition and publication year
+- **Research** : Simple and advanced research with filters for the categorie, edition and publication year
 
--**Book management** : Borrow ,return, reserve and extend rental period
+- **Book management** : Borrow ,return, reserve and extend rental period
 
--**Admin dashboard** : Manage users ,books and library setting 
+- **Admin dashboard** : Manage users ,books and library setting 
 
--**Guest mode** : Browse the catalog without borrowing
+- **Guest mode** : Browse the catalog without borrowing
 
 ## Wireframe
 🔗 **[view the wireframe on Canva](https://www.canva.com/design/DAGf5gWIg7E/Hh4Bi0XXFv2vhkFpdgxjjQ/view?mode=prototype)** 
 
 ## Tech Stack
--**Languages** : HTML , CSS , JS
+- **Languages** : HTML , CSS , JS
 
--**Framework** : Bootstrap
+- **Framework** : Bootstrap
 
--**API Communication** : Integration with [Mellow API](https://github.com/Paranoid-Pufferfish/mellow-api)
+- **API Communication** : Integration with [Mellow API](https://github.com/Paranoid-Pufferfish/mellow-api)
 
--**Text Editor** : IntelliJ IDEA 2024.3.3
+- **Text Editor** : IntelliJ IDEA 2024.3.3
 
 ## Team members :
--[SAHI Nour El Imene](https://github.com/ImeneeSh) 
+- [SAHI Nour El Imene](https://github.com/ImeneeSh) 
 
--[SOLTANA Melissa](https://github.com/melissa60)
+- [SOLTANA Melissa](https://github.com/melissa60)
 
 ## License
 
