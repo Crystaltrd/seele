@@ -32,9 +32,10 @@
 - [SOLTANA Melissa](https://github.com/melissa60)
 
 ## Ressources and inspirations :
-- For the icons :[Favicon](https://www.flaticon.com/fr/icone-gratuite/favicon_3585640)
-- For the font :[Google Fonts](https://fonts.google.com/)
-
+- For the colors : [HTML Color Codes](https://htmlcolorcodes.com/)
+- For the fonts : [Google Fonts](https://fonts.google.com/)
+- For the icons : [Favicon](https://www.flaticon.com/fr/icone-gratuite/favicon_3585640)
+- For the animated-background : [CodePen](https://codepen.io/pen)
 
 ## License
 
