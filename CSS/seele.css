@@ -14,7 +14,7 @@ canvas {
     position: absolute;
     width: 100%;
     height: 100%;
-    background-color: #0d0b2e /*#17202a*/;
+    background-color: #050320;
     background-image: url("");
     background-repeat: no-repeat;
     background-size: cover;
@@ -38,7 +38,7 @@ canvas {
     font-weight: bold;
 }
 
-/*.js-count-particles {
+/*.js-count-particles { ça c'est truc inutile dans le code mais que j'ai la flemme de sup
     font-size: 1.1em;
 }
 #stats,
@@ -54,4 +54,25 @@ canvas {
 
 .count-particles {
     border-radius: 0 0 3px 3px;
+}
+
+/*--The header--*/
+.container-fluid {
+    display: flex;
+    padding: 15px 40px;
+    position: fixed;
+    margin-top: 10px;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1200px;
+    background: linear-gradient(135deg, #1e1e28 0%, #2c2c3a 100%);
+    backdrop-filter: blur(10px);
+    border-radius: 50px;
+}
+
+#logo {
+    margin: 5px;
+    width: 100%;
+    max-width: 1500px;
 }
