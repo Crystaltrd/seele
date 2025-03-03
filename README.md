@@ -1,10 +1,10 @@
 # Seele - Frontend for the Alexandria Library
 
 ## Introduction
-*Seele* is the frontend interface for [The Alexandria Library](https://github.com/Paranoid-Pufferfish/alexandria-library), a university library management platform. It provides a smooth and intuitive user experience for students,professors and library staff. 
+*Seele* is the frontend interface for [The Alexandria Library](https://github.com/Paranoid-Pufferfish/alexandria-library), a university library management platform. It provides a smooth and intuitive user experience for students,professors and library staff.
 
 ## Features 
-- **User Authentification** : Login and sign up for students and professors
+- **User Authentification ** : Login and sign up for students and professors
 
 - **Research** : Simple and advanced research with filters for the categorie, edition and publication year
 
