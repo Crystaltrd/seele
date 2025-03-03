@@ -15,7 +15,7 @@
 
 - **Guest mode** : Browse the catalog without borrowing
 
-## Wireframe
+## Skeleton
 🔗 **[view the wireframe on Canva](https://www.canva.com/design/DAGgaKHwp_0/_WYxneecdjyUwVURa3oaDw/view?mode=prototype)** 
 
 ## Tech Stack
