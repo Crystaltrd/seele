@@ -69,7 +69,7 @@ canvas {
     background: linear-gradient(135deg, #1e1e28 0%, #2c2c3a 100%);
     backdrop-filter: blur(10px);
     border-radius: 50px;
-    height: 90px;
+    height: 95px;
     z-index: 1000;
 }
 
@@ -111,6 +111,19 @@ canvas {
 
 .nav-links li a.active {
     color: #4A90E2;
+}
+
+.disabled {
+    color: gray;
+!important; /*without importante on arrive pas écraser la valeur par défaut */
+    opacity: 50%;
+    pointer-events: none;
+    cursor: default;
+}
+
+.nav-links li a:not(.desabled):hover {
+    color: #4A90E2;
+    text-decoration: none;
 }
 
 .user-actions {
