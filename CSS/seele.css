@@ -61,18 +61,128 @@ canvas {
     display: flex;
     padding: 15px 40px;
     position: fixed;
-    margin-top: 10px;
-    margin-left: 50%;
+    top: 10px;
+    left: 50%;
     transform: translateX(-50%);
     width: 90%;
     max-width: 1200px;
     background: linear-gradient(135deg, #1e1e28 0%, #2c2c3a 100%);
     backdrop-filter: blur(10px);
     border-radius: 50px;
+    height: 90px;
+    z-index: 1000;
 }
 
-#logo {
-    margin: 5px;
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
-    max-width: 1500px;
 }
+#logo {
+    width: 130px;
+    height: auto;
+}
+
+.nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 25px;
+}
+
+.nav-links li {
+    display: inline;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    transition: color 0.3s ease;
+    padding: 5px 10px;
+}
+
+.nav-links li a:hover {
+    color: #4A90E2;
+}
+
+.nav-links li a.active {
+    color: #4A90E2;
+}
+
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-bar {
+    padding: 5px 35px 5px 10px;
+    border-radius: 20px;
+    border: 1px solid lightgray;
+    outline: none;
+    font-size: 11px;
+    width: 280px;
+    height: 28px;
+}
+
+.search-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 14px;
+    color: white;
+    border: none;
+}
+
+.search-btn img {
+    width: 11px;
+    height: 11px;
+}
+
+.login-btn {
+    background: rgba(74, 144, 226, 0.5);;
+    color: #d5dbdb;
+    padding: 5px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 9px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.7s ease;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.login-btn:hover {
+    background: #050320;
+    color: #d5dbdb;
+}
+
+.login-btn {
+    border-radius: 100px; /*I did that because it doesn't work inside the other one */
+}
+
+.profile-icon {
+    font-size: 20px;
+    cursor: pointer;
+    color: lightgray;
+}
+
+.profile-icon img {
+    width: 27px;
+    height: 27px;
+}
+
+

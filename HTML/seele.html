@@ -7,31 +7,69 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Alexandria</title>
 
+    <link href="../MULTIMEDIA/univ-icone.png" rel="alexandria's icon" type="png">
+
     <!-- Bootstrap -->
     <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"
+          type="text/css">
     <link rel="stylesheet" type="text/css" href="../css/seele.css">
 </head>
+
 <body>
 
 <!-- particles.js container -->
 <div id="particles-js"></div>
 
 <!--<div class="count-particles">
-    <span class="js-count-particles">--</span>
-    particles </div>  particles.js lib - https://github.com/VincentGarreau/particles.js -->
+<span class="js-count-particles">--</span>
+particles </div>  particles.js lib - https://github.com/VincentGarreau/particles.js -->
 <script src="http://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script> <!-- stats.js lib -->
 <script src="http://threejs.org/examples/js/libs/stats.min.js"></script>
 
 <header class="container-fluid">
-    <div class="row">
-        <div class="col-12 col-md-3">
-            <img alt="LOGO" id="logo" src="../MULTIMEDIA/univ_logo.png">
+
+    <div class="header-content row align-items-center">
+        <div class="col-3 d-flex align-items-center"> <!-- logo -->
+            <a href="seele.html">
+                <img alt="LOGO" id="logo" src="../MULTIMEDIA/univ_logo.png">
+            </a>
+        </div>
+
+        <nav class="col-6 d-flex justify-content-center"> <!--menu-->
+            <ul class="nav-links">
+                <li><a class="active" href="#">Home</a></li>
+                </li>
+                <li><a href="#">History</a></li>
+                </li>
+                <li><a href="#">Filter</a></li>
+                </li>
+                <li><a href="#">About</a></li>
+                </li>
+                <li><a href="#">Contact</a></li>
+                </li>
+                <li><a href="#">Help</a></li>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="col-3 d-flex justify-content-end glyphicon-align-center user-actions"> <!--Search and user login-->
+            <div class="search-container">
+                <input class="search-bar" placeholder="Search" type="text">
+                <button class="search-btn">
+                    <img alt="search" src="../MULTIMEDIA/symbole-de-linterface-de-recherche.png">
+                </button>
+                <!--Icônes conçues par <a href="https://www.flaticon.com/fr/auteurs/ayub-irawan" title="Ayub Irawan"> Ayub Irawan </a> from <a href="https://www.flaticon.com/fr/" title="Flaticon">www.flaticon.com'</a>-->
+            </div>
+
+            <button class="login-btn">Login</button>
+            <div class="profile-icon">
+                <img alt="profile" src="../MULTIMEDIA/utilisateur.png">
+            </div>
         </div>
     </div>
+
 </header>
-
-
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

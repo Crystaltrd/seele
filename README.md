@@ -28,15 +28,17 @@
 - **Text Editor** : IntelliJ IDEA 2024.3.3
 
 ## Team members :
-- [SAHI Nour El Imene](https://github.com/ImeneeSh) 
 
+- [SAHI Nour El Imene](https://github.com/ImeneeSh)
 - [SOLTANA Melissa](https://github.com/melissa60)
 
 ## Ressources and tools :
-- For the colors : [HTML Color Codes](https://htmlcolorcodes.com/)
-- For the fonts : [Google Fonts](https://fonts.google.com/)
-- For the icons : [Favicon](https://www.flaticon.com/fr/icone-gratuite/favicon_3585640)
-- For the animated-background : [CodePen](https://codepen.io/pen)
+
+- The colors : [HTML Color Codes](https://htmlcolorcodes.com/)
+- The fonts : [Google Fonts](https://fonts.google.com/)
+- The icons : [Favicon](https://www.flaticon.com/fr/icone-gratuite/favicon_3585640)
+- The animated-background : [CodePen](https://codepen.io/pen)
+- The CSS effects : [MzCode](https://www.youtube.com/@mzcode01);
 
 ## License
 
