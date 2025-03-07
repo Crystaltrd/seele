@@ -38,7 +38,7 @@
 - The fonts : [Google Fonts](https://fonts.google.com/)
 - The icons : [Favicon](https://www.flaticon.com/fr/icone-gratuite/favicon_3585640)
 - The animated-background : [CodePen](https://codepen.io/pen)
-- The CSS effects : [MzCode](https://www.youtube.com/@mzcode01);
+- The CSS effects : [MzCode](https://www.youtube.com/@mzcode01)
 
 ## License
 
