@@ -115,7 +115,7 @@ canvas {
 
 .disabled {
     color: gray;
-!important; /*without importante on arrive pas écraser la valeur par défaut */
+!important; /*without important on arrive pas écraser la valeur par défaut */
     opacity: 50%;
     pointer-events: none;
     cursor: default;
@@ -165,7 +165,7 @@ canvas {
 }
 
 .login-btn {
-    background: rgba(74, 144, 226, 0.5);;
+    background: transparent;
     color: #d5dbdb;
     padding: 5px 20px;
     border: none;
@@ -173,14 +173,16 @@ canvas {
     font-size: 9px;
     font-weight: bold;
     text-decoration: none;
-    transition: color 0.7s ease;
+    transition: color 0.4s ease;
     margin-top: 30px;
     margin-bottom: 30px;
+    border: 1px solid #d5dbdb;
 }
 
 .login-btn:hover {
-    background: #050320;
-    color: #d5dbdb;
+    border: 1px solid #4A90E2;
+    color: #4A90E2;
+    transition: color 0.4s ease;
 }
 
 .login-btn {
