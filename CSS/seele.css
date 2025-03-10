@@ -113,19 +113,6 @@ canvas {
     color: #4A90E2;
 }
 
-.disabled {
-    color: gray;
-!important; /*without important on arrive pas écraser la valeur par défaut */
-    opacity: 50%;
-    pointer-events: none;
-    cursor: default;
-}
-
-.nav-links li a:not(.desabled):hover {
-    color: #4A90E2;
-    text-decoration: none;
-}
-
 .user-actions {
     display: flex;
     align-items: center;
