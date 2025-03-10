@@ -41,20 +41,31 @@ particles </div>  particles.js lib - https://github.com/VincentGarreau/particles
                 <li><a class="active" href="#">Home</a></li>
                 <li><a href="#">Filter</a></li>
                 <li><a href="#">History</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-                <li><a href="#">Help</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="help.html">Help</a></li>
             </ul>
         </nav>
 
         <div class="col-3 d-flex justify-content-end glyphicon-align-center user-actions"> <!--Search and user login-->
-            <div class="search-container">
-                <input class="search-bar" placeholder="Search" type="text">
-                <button class="search-btn">
-                    <img alt="search" src="../MULTIMEDIA/symbole-de-linterface-de-recherche.png">
+            <!-- From Uiverse.io by satyamchaudharydev -->
+            <form class="form">
+                <button>
+                    <svg aria-labelledby="search" fill="none" height="16" role="img" width="17"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7.667 12.667A5.333 5.333 0 107.667 2a5.333 5.333 0 000 10.667zM14.334 14l-2.9-2.9"
+                              stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                              stroke-width="1.333"></path>
+                    </svg>
                 </button>
-                <!--Icônes conçues par <a href="https://www.flaticon.com/fr/auteurs/ayub-irawan" title="Ayub Irawan"> Ayub Irawan </a> from <a href="https://www.flaticon.com/fr/" title="Flaticon">www.flaticon.com'</a>-->
-            </div>
+                <input class="input" placeholder="Search" required="" type="text">
+                <button class="reset" type="reset">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2"
+                         viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </button>
+            </form>
 
             <button class="login-btn">Login</button>
             <div class="profile-icon">
