@@ -171,7 +171,6 @@ canvas {
 .form:before {
     content: "";
     position: absolute;
-    background: var(--border-color);
     transform: scaleX(0);
     transform-origin: center;
     width: 100%;
@@ -182,10 +181,6 @@ canvas {
     transition: transform var(--timing) ease;
 }
 
-/* Hover on Input */
-.form:focus-within {
-    border-radius: var(--after-border-radius);
-}
 
 input:focus {
     outline: none;

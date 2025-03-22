@@ -10,6 +10,7 @@
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/login.css" rel="stylesheet" type="text/css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
     <link href="../MULTIMEDIA/univ-icone.png" rel="alexandria's icon" type="png">
 
@@ -31,13 +32,15 @@ particles </div>  particles.js lib - https://github.com/VincentGarreau/particles
     <form action="#">
         <img alt="LOGO" id="logo" src="../MULTIMEDIA/univ_logo.png">
         <h2>Welcome back !</h2>
-        <p id="txt">Please enter your details to login.</p>
+
         <div class="input-field">
+            <i class="fas fa-user"></i>
             <input placeholder=" " required type="text"/>
             <label>Enter your identifier</label>
         </div>
 
         <div class="input-field">
+            <i class="fas fa-lock"></i>
             <input id="password" placeholder=" " required type="password"/>
             <img alt="" class="pass-icon" id="pass-icon" onclick="eyeIcon()" src="../MULTIMEDIA/hidden.png">
             <label>Enter your password</label>
@@ -46,7 +49,7 @@ particles </div>  particles.js lib - https://github.com/VincentGarreau/particles
         <div class="forget">
             <label for="remember">
                 <input id="remember" type="checkbox"/>
-                <p>Remember me</p>
+                <p>Keep me signed in</p>
             </label>
             <a href="#">Forget password?</a>
         </div>
@@ -54,7 +57,7 @@ particles </div>  particles.js lib - https://github.com/VincentGarreau/particles
         <button class="btn" type="submit">Log in</button>
 
         <div class="register">
-            <p>Don't have an account? <a href="#">Sign Up</a></p>
+            <p>Don't have an account? <a href="signin.html">Sign Up</a></p>
         </div>
     </form>
 </div>
