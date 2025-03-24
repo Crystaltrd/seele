@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Sign Up</title>
+    
+    <!-- Stylesheets -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/signin.css" rel="stylesheet" type="text/css">
+    <link href="../MULTIMEDIA/univ-icone.png" rel="icon" type="image/png">
+</head>
+<body>
+    <!-- Particles.js background container -->
+    <div id="particles-js"></div>
+
+    <!-- Signup form wrapper -->
+    <div class="wrapper">
+        <!-- Header -->
+        <header class="header">
+            <img alt="University Logo" id="logo" src="../MULTIMEDIA/univ_logo.png">
+            <h1>Create an account</h1>
+            <p id="txt">Please complete your information to sign up</p>
+        </header>
+
+        <!-- Form Content -->
+        <form action="#">
+            <div class="form-content">
+                <!-- Left Column -->
+                <div class="left-section">
+                    <div class="input-field">
+                        <i class="fas fa-user"></i>
+                        <input id="display-name" placeholder=" " required type="text"/>
+                        <label>Display your name</label>
+                    </div>
+                    <div class="input-field">
+                        <i class="fas fa-user"></i>
+                        <input id="choose-identifier" placeholder=" " required type="text"/>
+                        <label>Choose an identifier</label>
+                    </div>
+                    <div class="input-field">
+                        <i class="fas fa-lock"></i>
+                        <input id="password" onkeyup="validate()" placeholder=" " required type="password"/>
+                        <img alt="Toggle password visibility" class="pass-icon" 
+                             onclick="eyeIcon('password', this)" src="../MULTIMEDIA/hidden.png">
+                        <label>Choose a password</label>
+                    </div>
+                    <div class="input-field">
+                        <i class="fas fa-lock"></i>
+                        <input id="confirm-password" oninput="confirm()" placeholder=" " required type="password"/>
+                        <img alt="Toggle password visibility" class="pass-icon"
+                             onclick="eyeIcon('confirm-password', this)" src="../MULTIMEDIA/hidden.png">
+                        <label>Confirm the password</label>
+                    </div>
+
+                    <h2>Select Your Role</h2>
+                    <div class="radio-inputs">
+                        <label>
+                            <input class="radio-input" name="role" type="radio" value="professor"/>
+                            <span class="radio-tile">
+                                <span class="radio-icon"><img alt="Professor" src="../MULTIMEDIA/professor.png"></span>
+                                <span class="radio-label">Professor</span>
+                            </span>
+                        </label>
+                        <label>
+                            <input checked class="radio-input" name="role" type="radio" value="student"/>
+                            <span class="radio-tile">
+                                <span class="radio-icon"><img alt="Student" src="../MULTIMEDIA/student.png"></span>
+                                <span class="radio-label">Student</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="right-section">
+                    <h2>Select Your Campus</h2>
+                    <div class="radio-inputs">
+                        <label>
+                            <input class="radio-input" name="campus" type="radio" value="targa"/>
+                            <span class="radio-tile">
+                                <span class="radio-icon"><img alt="Targa Ouzemour" src="../MULTIMEDIA/campus.png"></span>
+                                <span class="radio-label">Targa</span>
+                            </span>
+                        </label>
+                        <label>
+                            <input checked class="radio-input" name="campus" type="radio" value="aboudaou"/>
+                            <span class="radio-tile">
+                                <span class="radio-icon"><img alt="Aboudaou" src="../MULTIMEDIA/campus.png"></span>
+                                <span class="radio-label">Aboudaou</span>
+                            </span>
+                        </label>
+                        <label>
+                            <input class="radio-input" name="campus" type="radio" value="elkseur"/>
+                            <span class="radio-tile">
+                                <span class="radio-icon"><img alt="El Kseur" src="../MULTIMEDIA/campus.png"></span>
+                                <span class="radio-label">El Kseur</span>
+                            </span>
+                        </label>
+                    </div>
+
+                    <div class="form-footer">
+                        <div class="error-message" id="password-error" style="color: red; display: none;">
+                            Password should at least contain 8 characters
+                        </div>
+                        <div class="error-message" id="confirm-error" style="color: red; display: none;">
+                            Passwords do not match
+                        </div>
+                        <button class="btn" type="submit">Sign Up</button>
+                        <p class="register">Already have an account? <a href="login.html">Log in</a></p>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stats.js/r17/Stats.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/particles-config.js"></script>
+    <script src="../js/signin.js"></script>
+</body>
+</html>
