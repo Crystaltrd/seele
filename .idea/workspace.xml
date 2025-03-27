@@ -4,50 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3a3dc2c9-adf5-4f44-b054-a151d7ae1053" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/seelefront.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/assets/campus.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/assets/hidden.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/assets/professor.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/assets/search.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/assets/student.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/assets/univIcone.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/assets/univLogo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/assets/utilisateur.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/assets/visible.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Header.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/backGround.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/layouts/AdminLayout.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/layouts/AuthLayout.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/layouts/DefaultLayout.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/router/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/views/About.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/views/Contact.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/views/Filter.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/views/Help.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/views/History.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/views/Home.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/views/Login.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vite.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
+    <list default="true" id="3a3dc2c9-adf5-4f44-b054-a151d7ae1053" name="Changes" comment="this commit is a bad one">
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/HelloWorld.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/vite.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager">
+    <option name="groupingKeys">
+      <option value="directory" />
+    </option>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -136,11 +106,24 @@
       <workItem from="1743075029804" duration="4120000" />
       <workItem from="1743079241195" duration="98000" />
       <workItem from="1743080658771" duration="5708000" />
-      <workItem from="1743087475902" duration="8210000" />
+      <workItem from="1743087475902" duration="8695000" />
     </task>
+    <task id="LOCAL-00001" summary="this commit is a bad one">
+      <option name="closed" value="true" />
+      <created>1743104041421</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1743104041421</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="this commit is a bad one" />
+    <option name="LAST_COMMIT_MESSAGE" value="this commit is a bad one" />
   </component>
 </project>
