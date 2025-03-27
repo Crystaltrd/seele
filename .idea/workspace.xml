@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3a3dc2c9-adf5-4f44-b054-a151d7ae1053" name="Changes" comment="this commit is a bad one">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="3a3dc2c9-adf5-4f44-b054-a151d7ae1053" name="Changes" comment="this commit is a bad one" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -116,7 +114,7 @@
       <workItem from="1743075029804" duration="4120000" />
       <workItem from="1743079241195" duration="98000" />
       <workItem from="1743080658771" duration="5708000" />
-      <workItem from="1743087475902" duration="10522000" />
+      <workItem from="1743087475902" duration="11001000" />
     </task>
     <task id="LOCAL-00001" summary="this commit is a bad one">
       <option name="closed" value="true" />
