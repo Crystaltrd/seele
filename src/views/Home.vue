@@ -1,9 +1,10 @@
+{ /* This is just a test version */ }}
 <script setup>
 
 </script>
 
 <template>
-  $END$
+
 </template>
 
 <style scoped>

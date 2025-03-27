@@ -5,6 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3a3dc2c9-adf5-4f44-b054-a151d7ae1053" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/seelefront.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/assets/campus.png" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/assets/hidden.png" afterDir="false" />
@@ -129,7 +136,7 @@
       <workItem from="1743075029804" duration="4120000" />
       <workItem from="1743079241195" duration="98000" />
       <workItem from="1743080658771" duration="5708000" />
-      <workItem from="1743087475902" duration="7893000" />
+      <workItem from="1743087475902" duration="8210000" />
     </task>
     <servers />
   </component>
