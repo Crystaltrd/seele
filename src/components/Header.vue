@@ -1,4 +1,3 @@
-{{ /* This is just a test version */ }}
 <template>
   <header class="container-fluid">
     <div class="header-content row align-items-center">
@@ -22,7 +21,7 @@
 
       <div class="col-3 d-flex justify-content-end user-actions">
         <form class="form">
-          <button> {{ /* link of the original code is in the ReadMe */ }}
+          <button>
             <svg aria-labelledby="search" fill="none" height="16" role="img" width="17"
                  xmlns="http://www.w3.org/2000/svg">
               <path d="M7.667 12.667A5.333 5.333 0 107.667 2a5.333 5.333 0 000 10.667zM14.334 14l-2.9-2.9"
