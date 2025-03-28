@@ -21,11 +21,11 @@
 ## Tech Stack
 - **Languages** : HTML , CSS , JS
 
-- **Framework** : Bootstrap
+- **Framework** : Vue.js
 
 - **API Communication** : Integration with [Mellow API](https://github.com/Paranoid-Pufferfish/mellow-api)
 
-- **Text Editor** : IntelliJ IDEA 2024.3.3
+- **Text Editor** : WebStorm 2024.3.3
 
 ## Team members :
 
@@ -34,11 +34,23 @@
 
 ## Ressources and tools :
 
-- The colors : [HTML Color Codes](https://htmlcolorcodes.com/)
-- The fonts : [Google Fonts](https://fonts.google.com/)
-- The icons : [Favicon](https://www.flaticon.com/fr/icone-gratuite/favicon_3585640)
-- The animated-background : [CodePen](https://codepen.io/pen)
-- The CSS effects : [MzCode](https://www.youtube.com/@mzcode01)
+- [1] : Animated background : https://github.com/tsparticles/vue3/?tab=readme-ov-file#readme
+  - [2] : Icons :
+           - Search icon : https://www.flaticon.com/free-icon/search_3641364?term=loop&page=1&position=5&origin=search&related_id=3641364
+           - show icon : https://www.flaticon.com/free-icon/visible_11502607?term=show+hide&page=1&position=8&origin=search&related_id=11502607
+           - hide icon : https://www.flaticon.com/free-icon/hide_2767146?term=show+hide&page=1&position=1&origin=search&related_id=2767146
+           - professor icon : https://www.flaticon.com/free-icon/professor_8326055?term=professor&page=1&position=8&origin=search&related_id=8326055
+           - student icon : https://www.flaticon.com/free-icon/student_8892896?term=student&page=1&position=25&origin=search&related_id=8892896
+           - campus icon: https://www.flaticon.com/free-icon/campus_4696591?term=campus&page=1&position=32&origin=search&related_id=4696591
+           - user icon : https://www.flaticon.com/free-icon/user_1144760?term=user&page=1&position=2&origin=search&related_id=1144760
+                         https://fontawesome.com/icons/user?f=classic&s=solid
+           - password icon : https://fontawesome.com/icons/lock?f=classic&s=solid
+
+- [3] : Search bar : https://uiverse.io/satyamchaudharydev/plastic-bobcat-37
+- [4] : Radio input : https://uiverse.io/Yaya12085/silent-liger-85
+- [5] : Button Hoover effect : https://www.youtube.com/shorts/dojvU-Cg-9s
+- [6] : Log in / Sign in form :https://www.youtube.com/watch?v=mPsj3Pu_Z8U 
+- [7] : Password validation : https://www.youtube.com/watch?v=1ukSwlXAdqI
 
 ## License
 
