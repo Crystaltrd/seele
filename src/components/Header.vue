@@ -135,7 +135,7 @@
 }
 
 .input {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   background-color: transparent;
   width: 100%;
   height: 100%;

@@ -2,13 +2,19 @@
     --main-font: "Red Hat Display", sans-serif;
 }
 
-body {
+body,html {
     font-family: var(--main-font), sans-serif;
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
 }
 header {
     font-weight: 700 ;
 }
+
 
