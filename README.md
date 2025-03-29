@@ -35,7 +35,8 @@
 ## Ressources and tools :
 
 - [1] : Animated background : https://github.com/tsparticles/vue3/?tab=readme-ov-file#readme
-- [2] : Icons :
+- [2] : Font : https://fonts.google.com/selection/embed
+- [3] : Icons :
   - Search icon : https://www.flaticon.com/free-icon/search_3641364?term=loop&page=1&position=5&origin=search&related_id=3641364
   - show icon : https://www.flaticon.com/free-icon/visible_11502607?term=show+hide&page=1&position=8&origin=search&related_id=11502607
   - hide icon : https://www.flaticon.com/free-icon/hide_2767146?term=show+hide&page=1&position=1&origin=search&related_id=2767146
@@ -46,11 +47,11 @@
                 https://fontawesome.com/icons/user?f=classic&s=solid
   - password icon : https://fontawesome.com/icons/lock?f=classic&s=solid
 
-- [3] : Search bar : https://uiverse.io/satyamchaudharydev/plastic-bobcat-37
-- [4] : Radio input : https://uiverse.io/Yaya12085/silent-liger-85
-- [5] : Button Hoover effect : https://www.youtube.com/shorts/dojvU-Cg-9s
-- [6] : Log in / Sign in form :https://www.youtube.com/watch?v=mPsj3Pu_Z8U 
-- [7] : Password validation : https://www.youtube.com/watch?v=1ukSwlXAdqI
+- [4] : Search bar : https://uiverse.io/satyamchaudharydev/plastic-bobcat-37
+- [5] : Radio input : https://uiverse.io/Yaya12085/silent-liger-85
+- [6] : Button Hoover effect : https://www.youtube.com/shorts/dojvU-Cg-9s
+- [7] : Log in / Sign in form :https://www.youtube.com/watch?v=mPsj3Pu_Z8U 
+- [8] : Password validation : https://www.youtube.com/watch?v=1ukSwlXAdqI
 
 ## License
 

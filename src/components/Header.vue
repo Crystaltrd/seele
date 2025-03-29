@@ -14,7 +14,6 @@
           <li><router-link to="/filter">Filter</router-link></li>
           <li><router-link to="/history">History</router-link></li>
           <li><router-link to="/about">About</router-link></li>
-          <li><router-link to="/contact">Contact</router-link></li>
           <li><router-link to="/help">Help</router-link></li>
         </ul>
       </nav>
@@ -92,7 +91,7 @@
 .nav-links li a {
   text-decoration: none;
   color: white;
-  font-weight: 600;
+  font-weight: 850;
   font-size: 14px;
   transition: color 0.3s ease;
   padding: 5px 10px;
