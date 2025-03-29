@@ -61,7 +61,7 @@
   background: linear-gradient(135deg, #1e1e28 0%, #2c2c3a 100%);
   backdrop-filter: blur(10px);
   border-radius: 50px;
-  height: 95px;
+  height: 65px;
   z-index: 1000;
 }
 
@@ -116,8 +116,8 @@
 
 .form {
   --timing: 0.3s;
-  --width-of-input: 220px;
-  --height-of-input: 30px;
+  --width-of-input: 300px;
+  --height-of-input: 28px;
   --border-height: 2px;
   --input-bg: #fff;
   --border-color: #4A90E2;
@@ -135,11 +135,11 @@
 }
 
 .input {
-  font-size: 1.3rem;
+  font-size: 0.9rem;
   background-color: transparent;
   width: 100%;
   height: 100%;
-  padding-inline: 0.5em;
+  padding-inline: 0.2em;
   padding-block: 0.7em;
   border: none;
 }
@@ -188,8 +188,8 @@ input:not(:placeholder-shown) ~ .reset {
   color: #d5dbdb;
   padding: 5px 20px;
   cursor: pointer;
-  font-size: 9px;
-  font-weight: bold;
+  font-size: 11px;
+  font-weight: 850;
   text-decoration: none;
   transition: color 0.4s ease;
   margin-top: 30px;
@@ -200,7 +200,7 @@ input:not(:placeholder-shown) ~ .reset {
 .login-btn a {
   text-decoration: none;
   color: white;
-  transition: color 0.4s ease;
+  transition: color 0.3s ease;
 }
 
 .login-btn:hover {
