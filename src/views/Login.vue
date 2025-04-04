@@ -41,7 +41,7 @@
         <button class="btn" type="submit">Log in</button>
 
         <div class="register">
-          <p>Don't have an account? <router-link to="/signup">Sign Up</router-link></p>
+          <p>Don't have an account? <router-link to="">Sign Up</router-link></p>
         </div>
       </form>
     </div>
@@ -67,9 +67,30 @@ export default {
       showPassword.value = !showPassword.value;
     };
 
-    const handleLogin = () => {
-      console.log("Identifiant:", identifier.value);
-      console.log("Mot de passe:", password.value);
+    const handleLogin = async () => {
+      try {
+        const queryParams = new URLSearchParams({
+          UUID: identifier.value,
+          passwd: password.value,
+        });
+
+        if (rememberMe.value) {
+          queryParams.append('remember', 'true');
+        }
+
+        const response = await fetch(`/api/auth.cgi?${queryParams.toString()}`, {
+          method: "GET",
+          credentials: "include"
+        });
+
+        const data = await response.json();
+        data.authenticated = undefined;
+
+        console.log("Login failed :", data.error);
+
+      } catch (error) {
+        console.error("Error in API :", error);
+      }
     };
 
     return { identifier, password, showPassword, togglePassword, handleLogin, rememberMe, visibleIcon, hiddenIcon };

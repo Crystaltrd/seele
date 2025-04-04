@@ -13,6 +13,7 @@
     "@fortawesome/vue-fontawesome": "^3.0.8",
     "@tsparticles/slim": "^3.8.1",
     "@tsparticles/vue3": "^3.0.1",
+    "axios": "^1.8.4",
     "core-js": "^3.8.3",
     "tsparticles": "^3.8.1",
     "tsparticles-engine": "^2.12.0",
