@@ -7,6 +7,10 @@
         <img id="logo" src="../assets/univLogo.png" alt="LOGO" />
         <h2>Welcome back !</h2>
 
+        <p v-if="loginError" class="error-message">
+          {{ loginError }}
+        </p>
+
         <div class="input-field">
           <i class="fas fa-user"></i>
           <input v-model="identifier" type="text" required placeholder=" " />
@@ -62,12 +66,15 @@ export default {
     const password = ref("");
     const showPassword = ref(false);
     const rememberMe = ref(false);
+    const loginError=ref("");
 
     const togglePassword = () => {
       showPassword.value = !showPassword.value;
     };
 
     const handleLogin = async () => {
+      loginError.value = ''
+
       try {
         const queryParams = new URLSearchParams({
           UUID: identifier.value,
@@ -93,18 +100,19 @@ export default {
             console.log("Login successful", jsonResponse);
           } else {
             console.warn("Login failed:", jsonResponse.error || "Unknown error");
+            loginError.value ="The Username or Password that you provided are wrong ";
           }
         } catch (parseError) {
           console.error("Failed to parse JSON:", parseError);
+          loginError.value ="Unknown error, please try again";
         }
       } catch (fetchError) {
         console.error("Error in API:", fetchError);
+        loginError.value ="Unknown error, please try again";
       }
     };
 
-
-
-    return { identifier, password, showPassword, togglePassword, handleLogin, rememberMe, visibleIcon, hiddenIcon };
+    return { identifier, password, showPassword, togglePassword, handleLogin, rememberMe, visibleIcon, hiddenIcon, loginError };
   },
 };
 </script>
@@ -279,6 +287,27 @@ button:hover {
   text-align: center;
   margin-top: 20px;
   color: #FFFFFF;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+
+.error-message {
+  color: #ff4d4d;
+  background-color: rgba(255, 77, 77, 0.1);
+  border: 1px solid #ff4d4d;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  margin-top:10px ;
+  animation: shake 0.3s ease-in-out;
+  font-weight: bold;
+  font-size: 1rem;
 }
 
 </style>
