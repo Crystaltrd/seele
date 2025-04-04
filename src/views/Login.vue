@@ -75,23 +75,34 @@ export default {
         });
 
         if (rememberMe.value) {
-          queryParams.append('remember', 'true');
+          queryParams.append("remember", "true");
         }
 
         const response = await fetch(`/api/auth.cgi?${queryParams.toString()}`, {
           method: "GET",
-          credentials: "include"
         });
 
-        const data = await response.json();
-        data.authenticated = undefined;
+        const rawText = await response.text();
+        console.log("Response text:", rawText);
 
-        console.log("Login failed :", data.error);
+        try {
+          const jsonResponse = JSON.parse(rawText);
+          console.log("Parsed JSON:", jsonResponse);
 
-      } catch (error) {
-        console.error("Error in API :", error);
+          if (jsonResponse.authenticated) {
+            console.log("Login successful", jsonResponse);
+          } else {
+            console.warn("Login failed:", jsonResponse.error || "Unknown error");
+          }
+        } catch (parseError) {
+          console.error("Failed to parse JSON:", parseError);
+        }
+      } catch (fetchError) {
+        console.error("Error in API:", fetchError);
       }
     };
+
+
 
     return { identifier, password, showPassword, togglePassword, handleLogin, rememberMe, visibleIcon, hiddenIcon };
   },
