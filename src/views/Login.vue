@@ -42,7 +42,13 @@
           <a href="#">Forget password?</a>
         </div>
 
-        <button class="btn" type="submit">Log in</button>
+        <button class="btn" type="submit" v-if="!isLoading">Log in</button>
+
+        <div v-else class="loader-container">
+          <svg viewBox="25 25 50 50">
+            <circle r="20" cy="50" cx="50"></circle>
+          </svg>
+        </div>
 
         <div class="register">
           <p>Don't have an account? <router-link to="">Sign Up</router-link></p>
@@ -67,12 +73,15 @@ export default {
     const showPassword = ref(false);
     const rememberMe = ref(false);
     const loginError=ref("");
+    const isLoading = ref(false);
+
 
     const togglePassword = () => {
       showPassword.value = !showPassword.value;
     };
 
     const handleLogin = async () => {
+      isLoading.value = true;
       loginError.value = ''
 
       try {
@@ -109,10 +118,12 @@ export default {
       } catch (fetchError) {
         console.error("Error in API:", fetchError);
         loginError.value ="Unknown error, please try again";
+      }finally{
+        isLoading.value = false;
       }
     };
 
-    return { identifier, password, showPassword, togglePassword, handleLogin, rememberMe, visibleIcon, hiddenIcon, loginError };
+    return { identifier, password, showPassword, togglePassword, handleLogin, rememberMe, visibleIcon, hiddenIcon, loginError, isLoading };
   },
 };
 </script>
@@ -308,6 +319,51 @@ button:hover {
   animation: shake 0.3s ease-in-out;
   font-weight: bold;
   font-size: 1rem;
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 45px;
+}
+
+svg {
+  width: 3.25em;
+  transform-origin: center;
+  animation: rotate4 2s linear infinite;
+}
+
+circle {
+  fill: none;
+  stroke: hsl(214, 97%, 59%);
+  stroke-width: 2;
+  stroke-dasharray: 1, 200;
+  stroke-dashoffset: 0;
+  stroke-linecap: round;
+  animation: dash4 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate4 {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash4 {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+
+  50% {
+    stroke-dasharray: 90, 200;
+    stroke-dashoffset: -35px;
+  }
+
+  100% {
+    stroke-dashoffset: -125px;
+  }
 }
 
 </style>
