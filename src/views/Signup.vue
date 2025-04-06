@@ -434,10 +434,6 @@ h2 {
 
 .register a {
   color: #4A90E2;
-  text-decoration: none;
-}
-
-.register a:hover {
   text-decoration: underline;
 }
 
