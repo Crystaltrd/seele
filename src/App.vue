@@ -16,6 +16,6 @@ const route = useRoute();
 const showHeader = ref(true);
 
 watchEffect(() => {
-  showHeader.value = route.path !== "/login";
+  showHeader.value = route.path !== "/login" && route.path !== "/signup";
 });
 </script>

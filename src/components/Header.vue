@@ -11,10 +11,10 @@
       <nav class="col-6 d-flex justify-content-center">
         <ul class="nav-links">
           <li><router-link to="/" exact-active-class="active">Home</router-link></li>
-          <li><router-link to="/filter">Filter</router-link></li>
-          <li><router-link to="/history">History</router-link></li>
-          <li><router-link to="/about">About</router-link></li>
-          <li><router-link to="/help">Help</router-link></li>
+          <li><router-link to="/filter" exact-active-class="active">Advanced search</router-link></li>
+          <li><router-link to="/history" exact-active-class="active">History</router-link></li>
+          <li><router-link to="/about" exact-active-class="active">About</router-link></li>
+          <li><router-link to="/help" exact-active-class="active">Help</router-link></li>
         </ul>
       </nav>
 
@@ -211,6 +211,10 @@ input:not(:placeholder-shown) ~ .reset {
 
 .login-btn {
   border-radius: 100px;
+}
+
+::v-deep(.active) {
+  color: #4A90E2;
 }
 
 </style>

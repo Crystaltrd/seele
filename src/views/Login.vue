@@ -51,7 +51,7 @@
         </div>
 
         <div class="register">
-          <p>Don't have an account? <router-link to="">Sign Up</router-link></p>
+          <p>Don't have an account? <router-link to="/signup">Sign Up</router-link></p>
         </div>
       </form>
     </div>

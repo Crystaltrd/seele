@@ -5,6 +5,7 @@ import History from '../views/History.vue'
 import About from '../views/About.vue'
 import Help from '../views/Help.vue'
 import Login from "../views/Login.vue";
+import Signup from "../views/Signup.vue";
 
 const routes = [
     { path: '/', redirect: '/home' },
@@ -13,7 +14,8 @@ const routes = [
     { path: '/history', component: History },
     { path: '/about', component: About },
     { path: '/help', component: Help },
-    { path: "/login", name: "Login", component: Login }
+    { path: "/login", name: "Login", component: Login },
+    {path: "/signup", name: "Signup", component: Signup },
 ]
 
 const router = createRouter({
