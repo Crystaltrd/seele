@@ -95,7 +95,7 @@ export default {
         }
 
         const response = await fetch(`/api/auth.cgi?${queryParams.toString()}`, {
-          method: "GET",
+          method: "POST",
         });
 
         const rawText = await response.text();
