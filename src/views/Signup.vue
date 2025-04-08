@@ -15,12 +15,12 @@
           <div class="left-section">
             <div class="input-field">
               <i class="fas fa-user"></i>
-              <input v-model="displayName" id="display-name" placeholder="" required type="text"/>
+              <input v-model="displayName" id="display-name" placeholder="" type="text" required/>
               <label for="display-name">Choose your display name</label>
             </div>
             <div class="input-field">
               <i class="fas fa-user"></i>
-              <input v-model="identifier" id="choose-identifier" placeholder="" required type="text"/>
+              <input v-model="identifier" id="choose-identifier" placeholder="" type="text" required/>
               <label for="choose-identifier">Choose an identifier</label>
             </div>
             <div class="input-field">
@@ -40,14 +40,14 @@
             <h2>Select Your Role</h2>
             <div class="radio-inputs">
               <label>
-                <input v-model="role" type="radio" value="professor" class="radio-input"/>
+                <input v-model="role" type="radio" value="PROFESSOR" class="radio-input"/>
                 <span class="radio-tile">
                   <span class="radio-icon"><img alt="Professor" src="../assets/professor.png"></span>
                   <span class="radio-label">Professor</span>
                 </span>
               </label>
               <label>
-                <input v-model="role" type="radio" value="student" checked class="radio-input"/>
+                <input v-model="role" type="radio" value="STUDENT" class="radio-input"/>
                 <span class="radio-tile">
                   <span class="radio-icon"><img alt="Student" src="../assets/student.png"></span>
                   <span class="radio-label">Student</span>
@@ -60,21 +60,21 @@
             <h2>Select Your Campus</h2>
             <div class="radio-inputs">
               <label>
-                <input v-model="campus" type="radio" value="targa" class="radio-input" />
+                <input v-model="campus" type="radio" value="Targa Ouzemmour" class="radio-input" />
                 <span class="radio-tile">
                   <span class="radio-icon"><img alt="Targa Ouzemour" src="../assets/campus.png"></span>
                   <span class="radio-label">Targa Ouzemour</span>
                 </span>
               </label>
               <label>
-                <input v-model="campus" type="radio" value="aboudaou" checked class="radio-input"/>
+                <input v-model="campus" type="radio" value="Aboudaou" class="radio-input"/>
                 <span class="radio-tile">
                   <span class="radio-icon"><img alt="Aboudaou" src="../assets/campus.png"></span>
                   <span class="radio-label">Aboudaou</span>
                 </span>
               </label>
               <label>
-                <input v-model="campus" type="radio" value="el_kseur" class="radio-input"/>
+                <input v-model="campus" type="radio" value="El Kseur" class="radio-input"/>
                 <span class="radio-tile">
                   <span class="radio-icon"><img alt="El Kseur" src="../assets/campus.png"></span>
                   <span class="radio-label">El Kseur</span>
@@ -88,7 +88,14 @@
                 <span v-if="confirmError">Passwords do not match.</span>
               </p>
 
-              <button class="btn" type="submit">Sign Up</button>
+              <p v-if="serverError" class="error-message">{{ serverError }}</p>
+              <button class="btn" type="submit" v-if="!loading">Sign Up</button>
+
+              <div v-else class="loader-container">
+                <svg viewBox="25 25 50 50">
+                  <circle r="20" cy="50" cx="50"></circle>
+                </svg>
+              </div>
               <p class="register">Already have an account? <router-link to="/login">Log in</router-link></p>
             </div>
           </div>
@@ -113,12 +120,14 @@ export default defineComponent({
       identifier: "",
       password: "",
       confirmPassword: "",
-      role: "student",
-      campus: "aboudaou",
+      role: "",
+      campus: "",
       passwordVisible: false,
       confirmPasswordVisible: false,
       passwordError: false,
       confirmError: false,
+      loading: false,
+      serverError: "",
       visibleIcon,
       hiddenIcon,
     };
@@ -136,11 +145,60 @@ export default defineComponent({
     confirm() {
       this.confirmError = this.password !== this.confirmPassword;
     },
+
     handleSubmit() {
+      this.validate();
+      this.confirm();
+
       if (!this.passwordError && !this.confirmError) {
-        alert("Form submitted successfully!");
+        this.handleSignup();
       }
     },
+
+    async handleSignup() {
+      this.serverError = "";
+      this.loading = true;
+
+      try {
+        const formData = new FormData();
+        formData.append('UUID', this.identifier);
+        formData.append('name', this.displayName);
+        formData.append('passwd', this.password);
+        formData.append('role', this.role);
+        formData.append('campus', this.campus);
+
+        const response = await fetch('/api/signup.cgi', {
+          method: "POST",
+          body: formData
+        });
+
+        const rawText = await response.text();
+        console.log("Response text:", rawText);
+
+        try {
+          const jsonResponse = JSON.parse(rawText);
+          if (jsonResponse.account_created) {
+            this.$router.push('/login');
+          } else {
+            if (jsonResponse.error.includes("UUID")) {
+              this.serverError = "This identifier is already taken. Please choose another one.";
+            } else if (jsonResponse.error.includes("role")) {
+              this.serverError = "Invalid role selected.";
+            } else if (jsonResponse.error.includes("campus")) {
+              this.serverError = "Invalid campus selected.";
+            } else {
+              this.serverError = jsonResponse.error || "Registration failed. Please check your information.";
+            }
+          }
+        } catch (parseError) {
+          this.serverError = "Server error. Please try again later.";
+        }
+      } catch (error) {
+        this.serverError = "Network error. Please check your connection.";
+      } finally {
+        this.loading = false;
+      }
+    }
   },
 });
 </script>
@@ -435,6 +493,57 @@ h2 {
 .register a {
   color: #4A90E2;
   text-decoration: underline;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(4px); }
+  75% { transform: translateX(-4px); }
+  100% { transform: translateX(0); }
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 45px;
+}
+
+.loader-container svg {
+  width: 3.25em;
+  transform-origin: center;
+  animation: rotate4 2s linear infinite;
+}
+
+.loader-container circle {
+  fill: none;
+  stroke: hsl(214, 97%, 59%);
+  stroke-width: 2;
+  stroke-dasharray: 1, 200;
+  stroke-dashoffset: 0;
+  stroke-linecap: round;
+  animation: dash4 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate4 {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash4 {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 200;
+    stroke-dashoffset: -35px;
+  }
+  100% {
+    stroke-dashoffset: -125px;
+  }
 }
 
 @media (max-width: 768px) {
