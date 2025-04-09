@@ -240,12 +240,11 @@ body,html {
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: auto ;
+  height: 100vh;
 }
 .wrapper {
   position: relative;
   z-index: 1;
-  min-height: 100vh;
   width: 1020px;
   border-radius: 8px;
   padding: 20px;
@@ -254,7 +253,6 @@ body,html {
   backdrop-filter: blur(9px);
   -webkit-backdrop-filter: blur(9px);
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
-  margin-top: 0;
 }
 
 .header {
