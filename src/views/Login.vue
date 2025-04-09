@@ -64,6 +64,7 @@ import Background from "../components/backGround.vue";
 import visibleIcon from "../assets/visible.png";
 import hiddenIcon from "../assets/hidden.png";
 import router from "../router";
+import { isAuthenticated } from "../authStore";
 
 export default {
   name: "Login",
@@ -108,6 +109,7 @@ export default {
 
           if (jsonResponse.authenticated) {
             console.log("Login successful", jsonResponse);
+            isAuthenticated.value = true;
             const redirectTo = router.currentRoute.value.query.redirect || '/';
             await router.push(redirectTo);
           } else {

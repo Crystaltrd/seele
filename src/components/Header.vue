@@ -38,7 +38,7 @@
           </button>
         </form>
 
-        <router-link to="/login" class="login-btn">Login</router-link>
+        <router-link to="/login" class="login-btn" v-if="!isAuthenticated">Login</router-link>
 
       </div>
     </div>
@@ -46,6 +46,7 @@
 </template>
 
 <script setup>
+import { isAuthenticated } from '../authStore';
 </script>
 
 <style scoped>
