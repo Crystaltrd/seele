@@ -49,6 +49,9 @@
 </script>
 
 <style scoped>
+header{
+  position: fixed ;
+}
 .container-fluid {
   display: flex;
   padding: 15px 40px;
