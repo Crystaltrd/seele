@@ -115,9 +115,12 @@ export default {
         if (rememberMe.value) {
           queryParams.append("remember", "true");
         }
-
+        console.log(queryParams.toString());
         const response = await fetch(`/api/auth.cgi?${queryParams.toString()}`, {
           method: "GET",
+          headers: {
+            Accept: 'application/json',
+          }
         });
 
         const rawText = await response.text();
