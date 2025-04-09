@@ -40,13 +40,47 @@
 
         <router-link to="/login" class="login-btn" v-if="!isAuthenticated">Login</router-link>
 
+        <div class="user-profile" v-else @click="toggleDropdown" @mouseenter="showDropdown = true" @mouseleave="showDropdown = false">
+          <i class="fas fa-user-circle user-icon"></i>
+          <span class="username">{{ userDisplayName }}</span>
+
+          <div class="dropdown-menu" v-show="showDropdown" @click.stop>
+            <ul>
+              <li @click="handleLogout">
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </li>
+            </ul>
+          </div>
+        </div>
+
       </div>
     </div>
   </header>
 </template>
 
 <script setup>
-import { isAuthenticated } from '../authStore';
+import { ref } from 'vue';
+import { isAuthenticated, userDisplayName } from '../authStore';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const showDropdown = ref(false);
+
+const toggleDropdown = () => {
+  showDropdown.value = !showDropdown.value;
+};
+
+const handleLogout = () => {
+  isAuthenticated.value = false;
+  userDisplayName.value = '';
+
+  localStorage.removeItem('isAuthenticated');
+  localStorage.removeItem('userDisplayName');
+
+  router.push('/');
+
+  showDropdown.value = false;
+};
 </script>
 
 <style scoped>
@@ -215,10 +249,75 @@ input:not(:placeholder-shown) ~ .reset {
 
 .login-btn {
   border-radius: 100px;
+  margin-left: 15px;
+}
+
+.user-profile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 15px;
+  color: white;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.user-icon {
+  font-size: 25px;
+  color: #4A90E2;
+}
+
+.user-profile:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: linear-gradient(135deg, #1e1e28 0%, #2c2c3a 100%);
+  border-radius: 8px;
+  padding: 10px 0;
+  min-width: 150px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dropdown-menu li {
+  padding: 8px 15px;
+  color: white;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-menu li:hover {
+  color: #4A90E2;
+}
+
+.dropdown-menu i {
+  width: 16px;
+  text-align: center;
+}
+
+.username {
+  font-weight: 600;
+  font-size: 14px;
 }
 
 ::v-deep(.nav-links li .active) {
   color: #4A90E2;
 }
-
 </style>

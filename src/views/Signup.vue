@@ -110,6 +110,7 @@ import { defineComponent } from "vue";
 import Background from "../components/backGround.vue";
 import visibleIcon from "../assets/visible.png";
 import hiddenIcon from "../assets/hidden.png";
+import {isAuthenticated, userDisplayName} from "../authStore";
 
 
 export default defineComponent({
@@ -178,6 +179,8 @@ export default defineComponent({
         try {
           const jsonResponse = JSON.parse(rawText);
           if (jsonResponse.account_created) {
+            isAuthenticated.value = true;
+            userDisplayName.value = this.displayName;
             const redirectTo = this.$route.query.redirect || '/';
             this.$router.push(redirectTo);
           } else {

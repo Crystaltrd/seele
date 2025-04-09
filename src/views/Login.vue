@@ -64,7 +64,8 @@ import Background from "../components/backGround.vue";
 import visibleIcon from "../assets/visible.png";
 import hiddenIcon from "../assets/hidden.png";
 import router from "../router";
-import { isAuthenticated } from "../authStore";
+import {isAuthenticated, userDisplayName} from "../authStore";
+
 
 export default {
   name: "Login",
@@ -81,6 +82,7 @@ export default {
     const togglePassword = () => {
       showPassword.value = !showPassword.value;
     };
+
 
     const handleLogin = async () => {
       isLoading.value = true;
@@ -110,6 +112,10 @@ export default {
           if (jsonResponse.authenticated) {
             console.log("Login successful", jsonResponse);
             isAuthenticated.value = true;
+            if (jsonResponse.user && jsonResponse.user.disp_name) {
+              userDisplayName.value = jsonResponse.user.disp_name;
+              localStorage.setItem('userDisplayName', jsonResponse.user.disp_name);
+            }
             const redirectTo = router.currentRoute.value.query.redirect || '/';
             await router.push(redirectTo);
           } else {
