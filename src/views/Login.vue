@@ -39,7 +39,8 @@
             <input id="remember" type="checkbox" v-model="rememberMe" />
             <p>Keep me signed in</p>
           </label>
-          <a href="#">Forget password?</a>
+          <a href="#" @click.prevent="showPasswordAlert"> Forgot password?
+          </a>
         </div>
 
         <button class="btn" type="submit" v-if="!isLoading">Log in</button>
@@ -84,6 +85,22 @@ export default {
       showPassword.value = !showPassword.value;
     };
 
+    const showPasswordAlert = () => {
+      Swal.fire({
+        title: 'Password Help',
+        html: `
+             <div style="text-align:center">
+                  <i class="fas fa-unlock-alt" style="font-size:48px;color:#4A90E2;margin-bottom:15px"></i>
+                  <p>Please contact the administrators at:</p>
+                     <p><b>alexandriasupport@univ-bejaia.dz</b></p>
+              </div>
+    `,
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#4A90E2',
+        background: '#2c2c3a',
+        color: 'white'
+      })
+    }
 
     const handleLogin = async () => {
       isLoading.value = true;
@@ -146,8 +163,10 @@ export default {
       }
     };
 
-    return { identifier, password, showPassword, togglePassword, handleLogin, rememberMe, visibleIcon, hiddenIcon, loginError, isLoading };
+    return { identifier, password, showPassword, togglePassword, handleLogin, rememberMe, visibleIcon, hiddenIcon, loginError, isLoading, showPasswordAlert };
+
   },
+
 };
 </script>
 
