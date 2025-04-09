@@ -178,7 +178,8 @@ export default defineComponent({
         try {
           const jsonResponse = JSON.parse(rawText);
           if (jsonResponse.account_created) {
-            this.$router.push('/login');
+            const redirectTo = this.$route.query.redirect || '/';
+            this.$router.push(redirectTo);
           } else {
             if (jsonResponse.error.includes("UUID")) {
               this.serverError = "This identifier is already taken. Please choose another one.";

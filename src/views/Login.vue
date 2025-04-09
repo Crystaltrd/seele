@@ -63,6 +63,7 @@ import { ref } from "vue";
 import Background from "../components/backGround.vue";
 import visibleIcon from "../assets/visible.png";
 import hiddenIcon from "../assets/hidden.png";
+import router from "../router";
 
 export default {
   name: "Login",
@@ -95,7 +96,7 @@ export default {
         }
 
         const response = await fetch(`/api/auth.cgi?${queryParams.toString()}`, {
-          method: "POST",
+          method: "GET",
         });
 
         const rawText = await response.text();
@@ -107,6 +108,8 @@ export default {
 
           if (jsonResponse.authenticated) {
             console.log("Login successful", jsonResponse);
+            const redirectTo = router.currentRoute.value.query.redirect || '/';
+            await router.push(redirectTo);
           } else {
             console.warn("Login failed:", jsonResponse.error || "Unknown error");
             loginError.value ="The Username or Password that you provided are wrong ";
