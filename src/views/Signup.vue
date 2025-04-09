@@ -11,7 +11,6 @@
 
       <form @submit.prevent="handleSubmit">
         <div class="form-content">
-
           <div class="left-section">
             <div class="input-field">
               <i class="fas fa-user"></i>
@@ -36,7 +35,7 @@
               <img alt="" class="pass-icon" @click="toggleConfirmPassword" :src="confirmPasswordVisible ? visibleIcon : hiddenIcon"/>
               <label>Confirm the password</label>
             </div>
-
+            <!--    TODO:MAKE THIS DYNAMIC      -->
             <h2>Select Your Role</h2>
             <div class="radio-inputs">
               <label>
@@ -55,7 +54,7 @@
               </label>
             </div>
           </div>
-
+          <!--    TODO:MAKE THIS DYNAMIC      -->
           <div class="right-section">
             <h2>Select Your Campus</h2>
             <div class="radio-inputs">
