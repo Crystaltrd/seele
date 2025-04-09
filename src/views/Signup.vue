@@ -111,6 +111,7 @@ import Background from "../components/backGround.vue";
 import visibleIcon from "../assets/visible.png";
 import hiddenIcon from "../assets/hidden.png";
 import {isAuthenticated, userDisplayName} from "../authStore";
+import Swal from 'sweetalert2';
 
 
 export default defineComponent({
@@ -181,6 +182,17 @@ export default defineComponent({
           if (jsonResponse.account_created) {
             isAuthenticated.value = true;
             userDisplayName.value = this.displayName;
+            await Swal.fire({
+              title: "Login successfully !",
+              text: `Welcome back,${this.displayName} !`,
+              icon: "success",
+              iconColor: "#4A90E2",
+              draggable: true,
+              background: "#2c2c3a",
+              color: "#fff",
+              timer: 3000,
+              timerProgressBar: true
+            });
             const redirectTo = this.$route.query.redirect || '/';
             this.$router.push(redirectTo);
           } else {

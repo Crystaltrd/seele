@@ -65,6 +65,7 @@ import visibleIcon from "../assets/visible.png";
 import hiddenIcon from "../assets/hidden.png";
 import router from "../router";
 import {isAuthenticated, userDisplayName} from "../authStore";
+import Swal from 'sweetalert2';
 
 
 export default {
@@ -116,6 +117,17 @@ export default {
               userDisplayName.value = jsonResponse.user.disp_name;
               localStorage.setItem('userDisplayName', jsonResponse.user.disp_name);
             }
+            await Swal.fire({
+              title: "Login successfully !",
+              text: `Welcome,  ${jsonResponse.user.disp_name} !`,
+              icon: "success",
+              iconColor: "#4A90E2",
+              draggable: true,
+              background: "#2c2c3a",
+              color: "#fff",
+              timer: 3000,
+              timerProgressBar: true
+            });
             const redirectTo = router.currentRoute.value.query.redirect || '/';
             await router.push(redirectTo);
           } else {
