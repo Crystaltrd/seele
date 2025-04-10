@@ -1,10 +1,10 @@
 <template>
   <div class="login-container">
-    <Background />
+    <Background/>
 
     <div class="wrapper">
       <form @submit.prevent="handleLogin">
-        <img id="logo" src="../assets/univLogo.png" alt="LOGO" />
+        <img id="logo" src="../assets/univLogo.png" alt="LOGO"/>
         <h2>Welcome back !</h2>
 
         <p v-if="loginError" class="error-message">
@@ -13,7 +13,7 @@
 
         <div class="input-field">
           <i class="fas fa-user"></i>
-          <input v-model="identifier" type="text" required placeholder=" " />
+          <input v-model="identifier" type="text" required placeholder=" "/>
           <label>Enter your identifier</label>
         </div>
 
@@ -33,12 +33,10 @@
           />
           <label>Enter your password</label>
         </div>
-
+<!-- FIXME: fix alignement -->
         <div class="forget">
-          <label for="remember">
-            <input id="remember" type="checkbox" v-model="rememberMe" />
-            <p>Keep me signed in</p>
-          </label>
+          <input id="remember" type="checkbox" v-model="rememberMe"/>
+          <label for="remember">Keep me signed in</label>
           <a href="#" @click.prevent="showPasswordAlert"> Forgot password?
           </a>
         </div>
@@ -52,7 +50,9 @@
         </div>
 
         <div class="register">
-          <p>Don't have an account? <router-link to="/signup">Sign Up</router-link></p>
+          <p>Don't have an account?
+            <router-link to="/signup">Sign Up</router-link>
+          </p>
         </div>
       </form>
     </div>
@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import {ref} from "vue";
 import Background from "../components/backGround.vue";
 import visibleIcon from "../assets/visible.png";
 import hiddenIcon from "../assets/hidden.png";
@@ -71,13 +71,13 @@ import Swal from 'sweetalert2';
 
 export default {
   name: "Login",
-  components: { Background },
+  components: {Background},
   setup() {
     const identifier = ref("");
     const password = ref("");
     const showPassword = ref(false);
     const rememberMe = ref(false);
-    const loginError=ref("");
+    const loginError = ref("");
     const isLoading = ref(false);
 
 
@@ -154,21 +154,33 @@ export default {
             await router.push(redirectTo);
           } else {
             console.warn("Login failed:", jsonResponse.error || "Unknown error");
-            loginError.value ="The Username or Password that you provided are wrong ";
+            loginError.value = "The Username or Password that you provided are wrong ";
           }
         } catch (parseError) {
           console.error("Failed to parse JSON:", parseError);
-          loginError.value ="Unknown error, please try again";
+          loginError.value = "Unknown error, please try again";
         }
       } catch (fetchError) {
         console.error("Error in API:", fetchError);
-        loginError.value ="Unknown error, please try again";
-      }finally{
+        loginError.value = "Unknown error, please try again";
+      } finally {
         isLoading.value = false;
       }
     };
 
-    return { identifier, password, showPassword, togglePassword, handleLogin, rememberMe, visibleIcon, hiddenIcon, loginError, isLoading, showPasswordAlert };
+    return {
+      identifier,
+      password,
+      showPassword,
+      togglePassword,
+      handleLogin,
+      rememberMe,
+      visibleIcon,
+      hiddenIcon,
+      loginError,
+      isLoading,
+      showPasswordAlert
+    };
 
   },
 
@@ -296,10 +308,12 @@ h2 {
 .forget {
   display: flex;
   align-items: center;
+//FIXME: fix alignement
   justify-content: space-between;
   margin: 20px 0 35px 0;
   color: #FFFFFF;
 }
+
 #remember {
   accent-color: #FFFFFF;
 }
@@ -314,7 +328,7 @@ h2 {
   font-size: 13px;
 }
 
-.forget a{
+.forget a {
   font-size: 13px;
 }
 
@@ -348,11 +362,21 @@ button:hover {
 }
 
 @keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  50% { transform: translateX(5px); }
-  75% { transform: translateX(-5px); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
 .error-message {
@@ -362,7 +386,7 @@ button:hover {
   padding: 10px;
   border-radius: 8px;
   margin-bottom: 20px;
-  margin-top:10px ;
+  margin-top: 10px;
   animation: shake 0.3s ease-in-out;
   font-weight: bold;
   font-size: 1rem;
