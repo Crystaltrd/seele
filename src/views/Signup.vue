@@ -11,7 +11,6 @@
 
       <form @submit.prevent="handleSubmit">
         <div class="form-content">
-
           <div class="left-section">
             <div class="input-field">
               <i class="fas fa-user"></i>
@@ -36,7 +35,7 @@
               <img alt="" class="pass-icon" @click="toggleConfirmPassword" :src="confirmPasswordVisible ? visibleIcon : hiddenIcon"/>
               <label>Confirm the password</label>
             </div>
-
+            <!--    TODO:MAKE THIS DYNAMIC      -->
             <h2>Select Your Role</h2>
             <div class="radio-inputs">
               <label>
@@ -55,7 +54,7 @@
               </label>
             </div>
           </div>
-
+          <!--    TODO:MAKE THIS DYNAMIC      -->
           <div class="right-section">
             <h2>Select Your Campus</h2>
             <div class="radio-inputs">
@@ -169,8 +168,12 @@ export default defineComponent({
         formData.append('role', this.role);
         formData.append('campus', this.campus);
 
-        const response = await fetch('/api/signup.cgi', {
+        const response = await fetch('https://crystal.tilde.institute/mellow/signup.cgi', {
           method: "POST",
+          headers: {
+            Accept: 'application/json',
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
           body: formData
         });
 
@@ -240,12 +243,11 @@ body,html {
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: auto ;
+  height: 100vh;
 }
 .wrapper {
   position: relative;
   z-index: 1;
-  min-height: 100vh;
   width: 1020px;
   border-radius: 8px;
   padding: 20px;
@@ -254,7 +256,6 @@ body,html {
   backdrop-filter: blur(9px);
   -webkit-backdrop-filter: blur(9px);
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
-  margin-top: 0;
 }
 
 .header {

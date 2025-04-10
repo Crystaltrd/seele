@@ -6,12 +6,5 @@ export default defineConfig({
     server: {
         port: 5179,
         open: true,
-        proxy: {
-            '/api': {
-                target: 'https://crystal.tilde.institute/mellow',
-                changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/api/, '')
-            }
-        }
     }
 })
