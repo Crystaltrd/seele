@@ -304,12 +304,11 @@ h2 {
 .input-field input:focus ~ .pass-icon, .input-field input:not(:placeholder-shown) ~ .pass-icon {
   display: block;
 }
-
 .forget {
   display: flex;
   align-items: center;
-//FIXME: fix alignement
-  justify-content: space-between;
+  /*FIXME: fix justification*/
+  /*justify-content: space-between;*/
   margin: 20px 0 35px 0;
   color: #FFFFFF;
 }
