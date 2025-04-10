@@ -7,6 +7,7 @@
         <img alt="LOGO" id="logo" src="../assets/univLogo.png">
         <h1>Create an account</h1>
         <p id="txt">Please complete your informations to sign up</p>
+
       </header>
 
       <form @submit.prevent="handleSubmit">
@@ -61,27 +62,15 @@
           <div class="right-section">
             <h2>Select Your Campus</h2>
             <div class="radio-inputs">
-              <label>
-                <input v-model="campus" type="radio" value="Targa Ouzemmour" class="radio-input"/>
-                <span class="radio-tile">
-                  <span class="radio-icon"><img alt="Targa Ouzemour" src="../assets/campus.png"></span>
-                  <span class="radio-label">Targa Ouzemour</span>
+              <template v-for="camp in campuses">
+                <label>
+                  <input v-model="campus" type="radio" value="{{ camp.campusName }}" class="radio-input"/>
+                  <span class="radio-tile">
+                  <span class="radio-icon"><img alt="{{ camp.campusName }}" src="../assets/campus.png"></span>
+                  <span class="radio-label">{{ camp.campusName }}</span>
                 </span>
-              </label>
-              <label>
-                <input v-model="campus" type="radio" value="Aboudaou" class="radio-input"/>
-                <span class="radio-tile">
-                  <span class="radio-icon"><img alt="Aboudaou" src="../assets/campus.png"></span>
-                  <span class="radio-label">Aboudaou</span>
-                </span>
-              </label>
-              <label>
-                <input v-model="campus" type="radio" value="El Kseur" class="radio-input"/>
-                <span class="radio-tile">
-                  <span class="radio-icon"><img alt="El Kseur" src="../assets/campus.png"></span>
-                  <span class="radio-label">El Kseur</span>
-                </span>
-              </label>
+                </label>
+              </template>
             </div>
 
             <div class="form-footer">
@@ -165,7 +154,6 @@ export default defineComponent({
 
     async getCampuses() {
       this.serverError = "";
-      console.log("Im here");
       try {
         const response = await fetch(apiurl + 'query.cgi?campus', {
           method: "GET",
@@ -178,10 +166,10 @@ export default defineComponent({
         console.log("Response text:", rawText);
         try {
           const jsonResponse = JSON.parse(rawText);
-
+          console.log(jsonResponse.hasOwnProperty("res"));
           if (jsonResponse.hasOwnProperty("res")) {
             this.campuses = jsonResponse.res;
-            console.log(this.campuses);
+
           } else {
             this.serverError = "Server error. Please try again later.";
           }
