@@ -168,7 +168,7 @@ export default defineComponent({
         formData.append('role', this.role);
         formData.append('campus', this.campus);
 
-        const response = await fetch('/api/signup.cgi', {
+        const response = await fetch('https://crystal.tilde.institute/mellow/signup.cgi', {
           method: "POST",
           headers: {
             Accept: 'application/json',

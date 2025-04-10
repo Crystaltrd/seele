@@ -33,13 +33,14 @@
           />
           <label>Enter your password</label>
         </div>
-<!-- FIXME: fix alignement -->
         <div class="forget">
-          <input id="remember" type="checkbox" v-model="rememberMe"/>
-          <label for="remember">Keep me signed in</label>
-          <a href="#" @click.prevent="showPasswordAlert"> Forgot password?
-          </a>
+          <div class="remember-block">
+            <input id="remember" type="checkbox" v-model="rememberMe" />
+            <label for="remember">Keep me signed in</label>
+          </div>
+          <a href="#" @click.prevent="showPasswordAlert">Forgot password?</a>
         </div>
+
 
         <button class="btn" type="submit" v-if="!isLoading">Log in</button>
 
@@ -116,7 +117,7 @@ export default {
           queryParams.append("remember", "true");
         }
         console.log(queryParams.toString());
-        const response = await fetch(`/api/auth.cgi?${queryParams.toString()}`, {
+        const response = await fetch(`https://crystal.tilde.institute/mellow/auth.cgi?${queryParams.toString()}`, {
           method: "POST",
           headers: {
             Accept: 'application/json',
@@ -205,6 +206,13 @@ body {
   justify-content: center;
   width: 100%;
   height: 100vh;
+}
+
+.remember-block {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
 .wrapper {
@@ -307,9 +315,8 @@ h2 {
 
 .forget {
   display: flex;
-  align-items: center;
-//FIXME: fix alignement
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
   margin: 20px 0 35px 0;
   color: #FFFFFF;
 }
@@ -330,6 +337,8 @@ h2 {
 
 .forget a {
   font-size: 13px;
+  color: cornflowerblue;
+  text-decoration: underline;
 }
 
 .wrapper a {
