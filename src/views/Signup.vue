@@ -170,6 +170,10 @@ export default defineComponent({
 
         const response = await fetch('/api/signup.cgi', {
           method: "POST",
+          headers: {
+            Accept: 'application/json',
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
           body: formData
         });
 

@@ -117,10 +117,12 @@ export default {
         }
         console.log(queryParams.toString());
         const response = await fetch(`/api/auth.cgi?${queryParams.toString()}`, {
-          method: "GET",
+          method: "POST",
           headers: {
             Accept: 'application/json',
-          }
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: queryParams
         });
 
         const rawText = await response.text();
