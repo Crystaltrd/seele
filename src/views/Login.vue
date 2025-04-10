@@ -61,7 +61,7 @@
 
 <script>
 import { ref } from "vue";
-import Background from "../components/backGround.vue";
+import Background from "../components/background.vue";
 import visibleIcon from "../assets/visible.png";
 import hiddenIcon from "../assets/hidden.png";
 import router from "../router";
@@ -71,7 +71,7 @@ import Swal from 'sweetalert2';
 
 export default {
   name: "Login",
-  components: { Background },
+  components: { Background: Background },
   setup() {
     const identifier = ref("");
     const password = ref("");
@@ -149,7 +149,7 @@ export default {
             await router.push(redirectTo);
           } else {
             console.warn("Login failed:", jsonResponse.error || "Unknown error");
-            loginError.value ="The Username or Password that you provided are wrong ";
+            loginError.value ="The Identifier or Password that you provided are wrong ";
           }
         } catch (parseError) {
           console.error("Failed to parse JSON:", parseError);

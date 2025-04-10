@@ -107,7 +107,7 @@
 
 <script>
 import { defineComponent } from "vue";
-import Background from "../components/backGround.vue";
+import Background from "../components/background.vue";
 import visibleIcon from "../assets/visible.png";
 import hiddenIcon from "../assets/hidden.png";
 import {isAuthenticated, userDisplayName} from "../authStore";
@@ -115,7 +115,7 @@ import Swal from 'sweetalert2';
 
 
 export default defineComponent({
-  components: { Background },
+  components: { Background: Background },
   data() {
     return {
       displayName: "",

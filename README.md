@@ -53,7 +53,8 @@
 - [7] : Log in / Sign in form :https://www.youtube.com/watch?v=mPsj3Pu_Z8U 
 - [8] : Password validation : https://www.youtube.com/watch?v=1ukSwlXAdqI
 - [9] : Connection with the API : https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-- [10] : The loading animation : https://uiverse.io/barisdogansutcu/light-rat-32
+- [10] : Loading animation : https://uiverse.io/barisdogansutcu/light-rat-32
+- [11] : Sweetalert :https://sweetalert2.github.io/#usage
 
 ## License
 
