@@ -312,7 +312,6 @@ h2 {
 .input-field input:focus ~ .pass-icon, .input-field input:not(:placeholder-shown) ~ .pass-icon {
   display: block;
 }
-
 .forget {
   display: flex;
   flex-direction: column;
