@@ -62,7 +62,7 @@
 
 <script>
 import {ref} from "vue";
-import Background from "../components/backGround.vue";
+import Background from "../components/background.vue";
 import visibleIcon from "../assets/visible.png";
 import hiddenIcon from "../assets/hidden.png";
 import router from "../router";
@@ -72,7 +72,7 @@ import Swal from 'sweetalert2';
 
 export default {
   name: "Login",
-  components: {Background},
+  components: {Background: Background},
   setup() {
     const identifier = ref("");
     const password = ref("");

@@ -1,12 +1,12 @@
 <script setup>
 
-import BackGround from "../components/backGround.vue";
+import Background from "../components/background.vue";
 import Header from "../components/Header.vue";
 </script>
 
 <template>
   <div>
-    <BackGround />
+    <Background />
     <Header />
   </div>
 </template>

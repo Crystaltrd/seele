@@ -6,5 +6,5 @@
 
 </style>
 <script setup lang="ts">
-import Background from "../components/backGround.vue";
+import Background from "../components/background.vue";
 </script>
