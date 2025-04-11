@@ -39,10 +39,9 @@
                    :src="confirmPasswordVisible ? visibleIcon : hiddenIcon"/>
               <label>Confirm the password</label>
             </div>
-            <!--    TODO:MAKE THIS DYNAMIC      -->
             <h2>Select Your Role</h2>
             <div class="radio-inputs">
-              <template v-for="rolei in roles">
+              <template v-for="rolei in roles" v-if="!loadingroles">
               <label>
                 <input v-model="role" type="radio" value="{{ rolei.roleName.toString() }}" class="radio-input"/>
                 <span class="radio-tile">
@@ -51,13 +50,14 @@
                 </span>
               </label>
               </template>
+
+              <p v-else class="register">Loading Roles. Please wait!</p>
             </div>
           </div>
-          <!--    TODO:MAKE THIS DYNAMIC      -->
           <div class="right-section">
             <h2>Select Your Campus</h2>
             <div class="radio-inputs">
-              <template v-for="camp in campuses">
+              <template v-for="camp in campuses" v-if="!loadingcampuses">
                 <label>
                   <input v-model="campus" type="radio" value="{{ camp.campusName }}" class="radio-input"/>
                   <span class="radio-tile">
@@ -66,6 +66,7 @@
                 </span>
                 </label>
               </template>
+              <p v-else class="register">Loading Campuses. Please wait!</p>
             </div>
 
             <div class="form-footer">
@@ -105,8 +106,6 @@ import Swal from 'sweetalert2';
 export default defineComponent({
   components: {Background: Background},
   data() {
-    let campuses;
-    let roles;
     return {
       displayName: "",
       identifier: "",
@@ -119,11 +118,13 @@ export default defineComponent({
       passwordError: false,
       confirmError: false,
       loading: false,
+      loadingroles: true,
+      loadingcampuses: true,
       serverError: "",
       visibleIcon,
       hiddenIcon,
-      campuses,
-      roles,
+      campuses: "",
+      roles: "",
     };
   },
   methods: {
@@ -166,7 +167,7 @@ export default defineComponent({
           console.log(jsonResponse.hasOwnProperty("res"));
           if (jsonResponse.hasOwnProperty("res")) {
             this.campuses = jsonResponse.res;
-
+            this.loadingcampuses = false;
           } else {
             this.serverError = "Server error. Please try again later.";
           }
@@ -194,6 +195,7 @@ export default defineComponent({
           console.log(jsonResponse.hasOwnProperty("res"));
           if (jsonResponse.hasOwnProperty("res")) {
             this.roles = jsonResponse.res;
+            this.loadingroles = false;
 
           } else {
             this.serverError = "Server error. Please try again later.";
