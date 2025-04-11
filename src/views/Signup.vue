@@ -42,20 +42,15 @@
             <!--    TODO:MAKE THIS DYNAMIC      -->
             <h2>Select Your Role</h2>
             <div class="radio-inputs">
+              <template v-for="rolei in roles">
               <label>
-                <input v-model="role" type="radio" value="PROFESSOR" class="radio-input"/>
+                <input v-model="role" type="radio" value="{{ rolei.roleName.toString() }}" class="radio-input"/>
                 <span class="radio-tile">
-                  <span class="radio-icon"><img alt="Professor" src="../assets/professor.png"></span>
-                  <span class="radio-label">Professor</span>
+                  <span class="radio-icon"><img alt="{{ rolei.roleName.toString().toLowerCase() }}" src="../assets/professor.png"></span>
+                  <span class="radio-label">{{ rolei.roleName.toString().charAt(0)+rolei.roleName.toString().substring(1).toLowerCase() }}</span>
                 </span>
               </label>
-              <label>
-                <input v-model="role" type="radio" value="STUDENT" class="radio-input"/>
-                <span class="radio-tile">
-                  <span class="radio-icon"><img alt="Student" src="../assets/student.png"></span>
-                  <span class="radio-label">Student</span>
-                </span>
-              </label>
+              </template>
             </div>
           </div>
           <!--    TODO:MAKE THIS DYNAMIC      -->
@@ -111,6 +106,7 @@ export default defineComponent({
   components: {Background: Background},
   data() {
     let campuses;
+    let roles;
     return {
       displayName: "",
       identifier: "",
@@ -127,6 +123,7 @@ export default defineComponent({
       visibleIcon,
       hiddenIcon,
       campuses,
+      roles,
     };
   },
   methods: {
@@ -179,8 +176,35 @@ export default defineComponent({
       } catch (error) {
         this.serverError = "Network error. Please check your connection.";
       }
-    }
-    ,
+    },
+    async getRoles() {
+      this.serverError = "";
+      try {
+        const response = await fetch(apiurl + 'query.cgi?role&by_perm=1', {
+          method: "GET",
+          headers: {
+            Accept: 'application/json',
+          },
+        });
+
+        const rawText = await response.text();
+        console.log("Response text:", rawText);
+        try {
+          const jsonResponse = JSON.parse(rawText);
+          console.log(jsonResponse.hasOwnProperty("res"));
+          if (jsonResponse.hasOwnProperty("res")) {
+            this.roles = jsonResponse.res;
+
+          } else {
+            this.serverError = "Server error. Please try again later.";
+          }
+        } catch (parseError) {
+          this.serverError = "Server error. Please try again later.";
+        }
+      } catch (error) {
+        this.serverError = "Network error. Please check your connection.";
+      }
+    },
     async handleSignup() {
       this.serverError = "";
       this.loading = true;
@@ -224,15 +248,7 @@ export default defineComponent({
             const redirectTo = this.$route.query.redirect || '/';
             this.$router.push(redirectTo);
           } else {
-            if (jsonResponse.error.includes("UUID")) {
-              this.serverError = "This identifier is already taken. Please choose another one.";
-            } else if (jsonResponse.error.includes("role")) {
-              this.serverError = "Invalid role selected.";
-            } else if (jsonResponse.error.includes("campus")) {
-              this.serverError = "Invalid campus selected.";
-            } else {
               this.serverError = jsonResponse.error || "Registration failed. Please check your information.";
-            }
           }
         } catch (parseError) {
           this.serverError = "Server error. Please try again later.";
@@ -246,6 +262,7 @@ export default defineComponent({
   },
   beforeMount() {
     this.getCampuses()
+    this.getRoles()
   }
 });
 
@@ -431,7 +448,6 @@ h2 {
 
 .radio-input {
   clip: rect(0 0 0 0);
-  -webkit-clip-path: inset(100%);
   clip-path: inset(100%);
   height: 1px;
   overflow: hidden;
