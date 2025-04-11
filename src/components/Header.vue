@@ -38,7 +38,8 @@
           </button>
         </form>
 
-        <router-link to="/login" class="login-btn" v-if="!isAuthenticated">Login</router-link>
+        <router-link to="/login" class="btn" v-if="!isAuthenticated">Login</router-link>
+        <router-link to="/signup" class="btn" id="signup" v-if="!isAuthenticated">Signup</router-link>
 
         <div class="user-profile" v-else @click="toggleDropdown">
           <i class="fas fa-user-circle user-icon"></i>
@@ -221,7 +222,7 @@ input:not(:placeholder-shown) ~ .reset {
   margin-top: 3px;
 }
 
-.login-btn {
+.btn {
   background: transparent;
   color: #d5dbdb;
   padding: 5px 20px;
@@ -233,23 +234,24 @@ input:not(:placeholder-shown) ~ .reset {
   margin-top: 30px;
   margin-bottom: 30px;
   border: 1px solid #d5dbdb;
+  border-radius: 100px;
+  margin-left: 10px;
 }
 
-.login-btn a {
+#signup {
+  margin-left: 2px;
+}
+
+.btn a {
   text-decoration: none;
   color: white;
   transition: color 0.3s ease;
 }
 
-.login-btn:hover {
+.btn:hover {
   border: 1px solid #4A90E2;
   color: #4A90E2;
   transition: color 0.4s ease;
-}
-
-.login-btn {
-  border-radius: 100px;
-  margin-left: 15px;
 }
 
 .user-profile {
