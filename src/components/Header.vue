@@ -40,7 +40,7 @@
 
         <router-link to="/login" class="login-btn" v-if="!isAuthenticated">Login</router-link>
 
-        <div class="user-profile" v-else @click="toggleDropdown" @mouseenter="showDropdown = true" @mouseleave="showDropdown = false">
+        <div class="user-profile" v-else @click="toggleDropdown">
           <i class="fas fa-user-circle user-icon"></i>
           <span class="username">{{ userDisplayName }}</span>
 

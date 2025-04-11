@@ -1,17 +1,17 @@
 <template>
   <div class="signup-container">
-    <Background />
+    <Background/>
 
     <div class="wrapper">
       <header class="header">
         <img alt="LOGO" id="logo" src="../assets/univLogo.png">
         <h1>Create an account</h1>
         <p id="txt">Please complete your informations to sign up</p>
+
       </header>
 
       <form @submit.prevent="handleSubmit">
         <div class="form-content">
-
           <div class="left-section">
             <div class="input-field">
               <i class="fas fa-user"></i>
@@ -25,18 +25,21 @@
             </div>
             <div class="input-field">
               <i class="fas fa-lock"></i>
-              <input v-model="password" @blur="validate" :type="passwordVisible ? 'text' : 'password'" id="password" placeholder=" " required/>
+              <input v-model="password" @blur="validate" :type="passwordVisible ? 'text' : 'password'" id="password"
+                     placeholder=" " required/>
               <img alt="" class="pass-icon" @click="togglePassword" :src="passwordVisible ? visibleIcon : hiddenIcon"/>
               <label>Choose a password</label>
             </div>
 
             <div class="input-field">
               <i class="fas fa-lock"></i>
-              <input v-model="confirmPassword" @input="confirm" :type="confirmPasswordVisible ? 'text' : 'password'" id="confirm-password" placeholder=" " required/>
-              <img alt="" class="pass-icon" @click="toggleConfirmPassword" :src="confirmPasswordVisible ? visibleIcon : hiddenIcon"/>
+              <input v-model="confirmPassword" @input="confirm" :type="confirmPasswordVisible ? 'text' : 'password'"
+                     id="confirm-password" placeholder=" " required/>
+              <img alt="" class="pass-icon" @click="toggleConfirmPassword"
+                   :src="confirmPasswordVisible ? visibleIcon : hiddenIcon"/>
               <label>Confirm the password</label>
             </div>
-
+            <!--    TODO:MAKE THIS DYNAMIC      -->
             <h2>Select Your Role</h2>
             <div class="radio-inputs">
               <label>
@@ -55,31 +58,19 @@
               </label>
             </div>
           </div>
-
+          <!--    TODO:MAKE THIS DYNAMIC      -->
           <div class="right-section">
             <h2>Select Your Campus</h2>
             <div class="radio-inputs">
-              <label>
-                <input v-model="campus" type="radio" value="Targa Ouzemmour" class="radio-input" />
-                <span class="radio-tile">
-                  <span class="radio-icon"><img alt="Targa Ouzemour" src="../assets/campus.png"></span>
-                  <span class="radio-label">Targa Ouzemour</span>
+              <template v-for="camp in campuses">
+                <label>
+                  <input v-model="campus" type="radio" value="{{ camp.campusName }}" class="radio-input"/>
+                  <span class="radio-tile">
+                  <span class="radio-icon"><img alt="{{ camp.campusName }}" src="../assets/campus.png"></span>
+                  <span class="radio-label">{{ camp.campusName }}</span>
                 </span>
-              </label>
-              <label>
-                <input v-model="campus" type="radio" value="Aboudaou" class="radio-input"/>
-                <span class="radio-tile">
-                  <span class="radio-icon"><img alt="Aboudaou" src="../assets/campus.png"></span>
-                  <span class="radio-label">Aboudaou</span>
-                </span>
-              </label>
-              <label>
-                <input v-model="campus" type="radio" value="El Kseur" class="radio-input"/>
-                <span class="radio-tile">
-                  <span class="radio-icon"><img alt="El Kseur" src="../assets/campus.png"></span>
-                  <span class="radio-label">El Kseur</span>
-                </span>
-              </label>
+                </label>
+              </template>
             </div>
 
             <div class="form-footer">
@@ -96,7 +87,9 @@
                   <circle r="20" cy="50" cx="50"></circle>
                 </svg>
               </div>
-              <p class="register">Already have an account? <router-link to="/login">Log in</router-link></p>
+              <p class="register">Already have an account?
+                <router-link to="/login">Log in</router-link>
+              </p>
             </div>
           </div>
         </div>
@@ -106,7 +99,7 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import {defineComponent} from "vue";
 import Background from "../components/background.vue";
 import visibleIcon from "../assets/visible.png";
 import hiddenIcon from "../assets/hidden.png";
@@ -115,8 +108,9 @@ import Swal from 'sweetalert2';
 
 
 export default defineComponent({
-  components: { Background: Background },
+  components: {Background: Background},
   data() {
+    let campuses;
     return {
       displayName: "",
       identifier: "",
@@ -132,6 +126,7 @@ export default defineComponent({
       serverError: "",
       visibleIcon,
       hiddenIcon,
+      campuses,
     };
   },
   methods: {
@@ -157,6 +152,35 @@ export default defineComponent({
       }
     },
 
+    async getCampuses() {
+      this.serverError = "";
+      try {
+        const response = await fetch(apiurl + 'query.cgi?campus', {
+          method: "GET",
+          headers: {
+            Accept: 'application/json',
+          },
+        });
+
+        const rawText = await response.text();
+        console.log("Response text:", rawText);
+        try {
+          const jsonResponse = JSON.parse(rawText);
+          console.log(jsonResponse.hasOwnProperty("res"));
+          if (jsonResponse.hasOwnProperty("res")) {
+            this.campuses = jsonResponse.res;
+
+          } else {
+            this.serverError = "Server error. Please try again later.";
+          }
+        } catch (parseError) {
+          this.serverError = "Server error. Please try again later.";
+        }
+      } catch (error) {
+        this.serverError = "Network error. Please check your connection.";
+      }
+    }
+    ,
     async handleSignup() {
       this.serverError = "";
       this.loading = true;
@@ -169,8 +193,12 @@ export default defineComponent({
         formData.append('role', this.role);
         formData.append('campus', this.campus);
 
-        const response = await fetch('/api/signup.cgi', {
+        const response = await fetch(apiurl + 'signup.cgi', {
           method: "POST",
+          headers: {
+            Accept: 'application/json',
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
           body: formData
         });
 
@@ -216,7 +244,11 @@ export default defineComponent({
       }
     }
   },
+  beforeMount() {
+    this.getCampuses()
+  }
 });
+
 </script>
 
 <style scoped>
@@ -224,7 +256,7 @@ export default defineComponent({
   box-sizing: border-box;
 }
 
-body,html {
+body, html {
   margin: 0;
   padding: 0 10px;
   display: flex;
@@ -240,12 +272,12 @@ body,html {
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: auto ;
+  height: 100vh;
 }
+
 .wrapper {
   position: relative;
   z-index: 1;
-  min-height: 100vh;
   width: 1020px;
   border-radius: 8px;
   padding: 20px;
@@ -254,7 +286,6 @@ body,html {
   backdrop-filter: blur(9px);
   -webkit-backdrop-filter: blur(9px);
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
-  margin-top: 0;
 }
 
 .header {
@@ -272,7 +303,7 @@ h1 {
   font-size: 1.8rem;
   margin-bottom: 5px;
   font-weight: 700;
-  color: white ;
+  color: white;
 }
 
 #txt {
@@ -296,7 +327,7 @@ h1 {
 .left-section {
   display: flex;
   flex-direction: column;
-  gap:  15px;
+  gap: 15px;
 }
 
 .right-section {
@@ -388,7 +419,7 @@ h1 {
 h2 {
   font-size: 0.9rem;
   margin-bottom: 4px;
-  color: white ;
+  color: white;
 }
 
 .radio-inputs {
@@ -512,11 +543,21 @@ h2 {
 }
 
 @keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-4px); }
-  50% { transform: translateX(4px); }
-  75% { transform: translateX(-4px); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+  75% {
+    transform: translateX(-4px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
 .loader-container {
