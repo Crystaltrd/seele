@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import {stringifyQuery} from "vue-router";
 
 export default defineConfig({
     plugins: [vue()],

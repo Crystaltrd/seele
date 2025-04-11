@@ -235,7 +235,7 @@ input:not(:placeholder-shown) ~ .reset {
   margin-bottom: 30px;
   border: 1px solid #d5dbdb;
   border-radius: 100px;
-  margin-left: 10px;
+  margin-left: 5px;
 }
 
 #signup {
