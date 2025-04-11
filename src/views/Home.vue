@@ -1,6 +1,6 @@
 <template>
   <div class="home-container">
-    <Background />
+    <Background/>
 
     <section id="popular">
       <div class="container">
@@ -8,13 +8,18 @@
           <h3 class="section-heading">Popular Publications</h3>
 
           <div class="publications-grid">
-            <div class="publication" v-for="i in 5" :key="i">
-              <img alt="Book cover" src="../assets/bookcover.jpg">
-              <div class="publication-info">
-                <span class="availability">Available</span>
-                <h4 class="title">Publication Title</h4>
+            <template v-for="book in books" v-if="!loadingbooks">
+              <div class="publication" v-bind:id="'PUBSN'+book.serialnum">
+                <img v-bind:alt="book.booktitle+'\'s Cover'" v-if="book.bookcover" v-bind:src="assetsurl+book.bookcover"/>
+                <img v-bind:alt="book.booktitle+'\'s Cover PLACEHOLDER'" v-else src="../assets/bookcover.jpg"/>
+                <div class="publication-info">
+                  <span class="availability avail" v-if="this.isAvailable(book) > 0">Available</span>
+                  <span class="availability" v-else>Unavailable</span>
+                  <h4 class="title">{{ book.booktitle }}</h4>
+                </div>
               </div>
-            </div>
+            </template>
+            <p v-else style="color: white">Loading Books</p>
           </div>
         </div>
       </div>
@@ -23,6 +28,65 @@
 </template>
 
 <script>
+import {defineComponent} from "vue";
+import Background from "../components/background.vue";
+
+export default defineComponent({
+  components: {Background},
+  data() {
+    return {
+      books: "",
+      limit: 5,
+      loadingbooks: true,
+    };
+  },
+  methods: {
+    isAvailable(book) {
+      let n = 0;
+      for (const stockElement of book.stock) {
+        n += stockElement.stock;
+      }
+      console.log(n)
+      return n
+    },
+    async getBooks() {
+      this.serverError = "";
+      try {
+
+        const queryParams = new URLSearchParams({
+          limit: this.limit,
+        });
+        const response = await fetch(apiurl + `query.cgi?book&${queryParams.toString()}`, {
+          method: "GET",
+          headers: {
+            Accept: 'application/json',
+          },
+        });
+
+        const rawText = await response.text();
+        console.log("Response text:", rawText);
+        try {
+          const jsonResponse = JSON.parse(rawText);
+          console.log(jsonResponse.hasOwnProperty("res"));
+          if (jsonResponse.hasOwnProperty("res")) {
+            this.books = jsonResponse.res;
+            this.loadingbooks = false;
+
+          } else {
+            this.serverError = "Server error. Please try again later.";
+          }
+        } catch (parseError) {
+          this.serverError = "Server error. Please try again later.";
+        }
+      } catch (error) {
+        this.serverError = "Network error. Please check your connection.";
+      }
+    },
+  },
+  beforeMount() {
+    this.getBooks()
+  }
+})
 </script>
 
 <style scoped>
@@ -122,13 +186,17 @@
   position: absolute;
   top: 0.8rem;
   right: 0.8rem;
-  background: #4a90e2;
+  background: red;
   color: white;
   padding: 0.3rem 0.7rem;
   border-radius: 0.4rem;
   font-size: 0.75rem;
   font-weight: bold;
   text-transform: uppercase;
+}
+
+.avail {
+  background: #4a90e2;
 }
 
 .title {

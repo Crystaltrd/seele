@@ -117,7 +117,7 @@ export default {
           queryParams.append("remember", "true");
         }
         console.log(queryParams.toString());
-        const response = await fetch(apiurl+`auth.cgi?${queryParams.toString()}`, {
+        const response = await fetch(apiurl+`auth.cgi`, {
           method: "POST",
           headers: {
             Accept: 'application/json',

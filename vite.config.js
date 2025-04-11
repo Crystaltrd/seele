@@ -8,6 +8,7 @@ export default defineConfig({
         open: true,
     },
     define: {
-        apiurl: JSON.stringify('https://crystal.tilde.institute/mellow/')
+        apiurl: JSON.stringify('https://crystal.tilde.institute/mellow/'),
+        assetsurl: JSON.stringify('https://crystal.tilde.institute/mellow/')
     }
 })

@@ -99,7 +99,7 @@ import {defineComponent} from "vue";
 import Background from "../components/background.vue";
 import visibleIcon from "../assets/visible.png";
 import hiddenIcon from "../assets/hidden.png";
-import {isAuthenticated, userDisplayName} from "../authStore";
+import {isAuthenticated, userDisplayName} from "../authStore.js";
 import Swal from 'sweetalert2';
 
 
