@@ -73,8 +73,7 @@ const toggleDropdown = () => {
 
 const handleLogout = async () => {
   try {
-    formData.append('sessionID', sessionId.value);
-
+/*FIXME*/
     const response = await fetch(apiurl + 'deauth.cgi', {
       method: 'POST',
       headers: {
@@ -83,7 +82,6 @@ const handleLogout = async () => {
       },
 
         body: new URLSearchParams({ sessionID: sessionId.value }),
-        credentials: 'include'
     });
 
     const rawText = await response.text();
