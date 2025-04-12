@@ -61,7 +61,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { isAuthenticated, userDisplayName } from '../authStore';
+import {isAuthenticated, sessionId, setAuth, userDisplayName} from '../authStore';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -71,16 +71,49 @@ const toggleDropdown = () => {
   showDropdown.value = !showDropdown.value;
 };
 
-const handleLogout = () => {
-  isAuthenticated.value = false;
-  userDisplayName.value = '';
+const handleLogout = async () => {
+  try {
+    formData.append('sessionID', sessionId.value);
 
-  localStorage.removeItem('isAuthenticated');
-  localStorage.removeItem('userDisplayName');
+    const response = await fetch(apiurl + 'deauth.cgi', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
 
-  router.push('/');
+        body: new URLSearchParams({ sessionID: sessionId.value }),
+        credentials: 'include'
+    });
 
-  showDropdown.value = false;
+    const rawText = await response.text();
+    console.log("Response text:", rawText);
+
+    try {
+      const jsonResponse = JSON.parse(rawText);
+
+      if (jsonResponse.status === 'success' || jsonResponse.disconnected) {
+        setAuth(false);
+        await router.push('/');
+        window.location.reload();
+      } else {
+        console.error('Logout failed :', jsonResponse.message);
+        setAuth(false);
+        await router.push('/');
+      }
+    } catch (error) {
+      console.error('Network error :', error);
+      setAuth(false);
+      await router.push('/');
+    } finally {
+      showDropdown.value = false;
+    }
+  } catch (error) {
+    console.error('Outer try error:', error);
+    setAuth(false);
+    await router.push('/');
+    showDropdown.value = false;
+  }
 };
 </script>
 

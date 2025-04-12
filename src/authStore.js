@@ -1,19 +1,26 @@
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 
 const savedAuth = localStorage.getItem('isAuthenticated') === 'true';
 export const isAuthenticated = ref(savedAuth);
 
 export const userDisplayName = ref(localStorage.getItem('userDisplayName') || '');
+export const sessionId = ref(localStorage.getItem('sessionId') || '');
 
-watch(isAuthenticated, (value) => {
-    localStorage.setItem('isAuthenticated', value);
-    if (!value) {
+export function setAuth(authenticated, displayName = '', session = '') {
+    isAuthenticated.value = authenticated;
+    userDisplayName.value = displayName;
+    sessionId.value = session;
+
+    localStorage.setItem('isAuthenticated', authenticated);
+    if (displayName) {
+        localStorage.setItem('userDisplayName', displayName);
+    }
+    if (session) {
+        localStorage.setItem('sessionId', session);
+    }
+
+    if (!authenticated) {
         localStorage.removeItem('userDisplayName');
+        localStorage.removeItem('sessionId');
     }
-});
-
-watch(userDisplayName, (value) => {
-    if (value) {
-        localStorage.setItem('userDisplayName', value);
-    }
-});
+}
