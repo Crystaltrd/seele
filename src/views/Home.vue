@@ -112,7 +112,7 @@ export default defineComponent({
 }
 
 .content-wrapper {
-  background: rgba(41, 68, 95, 0.1);
+  background: rgba(44, 44, 58, 0.1);
   backdrop-filter: blur(3px);
   border-radius: 20px;
   padding: 0 1.5rem;
