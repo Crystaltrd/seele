@@ -12,10 +12,14 @@
               <div class="publication" v-bind:id="'PUBSN'+book.serialnum">
                 <img v-bind:alt="book.booktitle+'\'s Cover'" v-if="book.bookcover" v-bind:src="assetsurl+book.bookcover"/>
                 <img v-bind:alt="book.booktitle+'\'s Cover PLACEHOLDER'" v-else src="../assets/bookcover.jpg"/>
+
+                <span class="release-year">{{ book.bookreleaseyear }}</span>
                 <div class="publication-info">
-                  <span class="availability avail" v-if="this.isAvailable(book) > 0">Available</span>
-                  <span class="availability" v-else>Unavailable</span>
-                  <h4 class="title">{{ book.booktitle }}</h4>
+
+                    <span class="availability avail" v-if="this.isAvailable(book) > 0">Available</span>
+                    <span class="availability" v-else>Unavailable</span>
+                    <h4 class="title">{{ book.booktitle }}</h4>
+
                 </div>
               </div>
             </template>
@@ -211,6 +215,23 @@ export default defineComponent({
   font-weight: 500;
   text-align: center;
 }
+
+.release-year {
+  position: absolute;
+  bottom: 3.6rem;
+  right: 0.8rem;
+  background: rgba(0, 0, 0, 0.7);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  color: white;
+  padding: 0.3rem 0.7rem;
+  border-radius: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: bold;
+  z-index: 2;
+  backdrop-filter: blur(2px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 
 svg {
   width: 3.25em;
