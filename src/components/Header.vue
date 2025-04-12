@@ -61,7 +61,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import {isAuthenticated, sessionId, setAuth, userDisplayName} from '../authStore';
+import {isAuthenticated, sessionID, setAuth, userDisplayName} from '../authStore';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -74,14 +74,14 @@ const toggleDropdown = () => {
 const handleLogout = async () => {
   try {
 /*FIXME*/
+    console.log(localStorage.getItem('sessionID'))
     const response = await fetch(apiurl + 'deauth.cgi', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         "Content-Type": "application/x-www-form-urlencoded",
       },
-
-        body: new URLSearchParams({ sessionID: sessionId.value }),
+        body: new URLSearchParams({ sessionID: localStorage.getItem('sessionID') }),
     });
 
     const rawText = await response.text();

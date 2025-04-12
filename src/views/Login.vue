@@ -35,7 +35,7 @@
         </div>
         <div class="forget">
           <div class="remember-block">
-            <input id="remember" type="checkbox" v-model="rememberMe" />
+            <input id="remember" type="checkbox" v-model="rememberMe"/>
             <label for="remember">Keep me signed in</label>
           </div>
           <a href="#" @click.prevent="showPasswordAlert">Forgot password?</a>
@@ -66,7 +66,7 @@ import Background from "../components/background.vue";
 import visibleIcon from "../assets/visible.png";
 import hiddenIcon from "../assets/hidden.png";
 import router from "../router";
-import {isAuthenticated, userDisplayName} from "../authStore";
+import {isAuthenticated, sessionID, userDisplayName} from "../authStore";
 import Swal from 'sweetalert2';
 
 
@@ -117,7 +117,7 @@ export default {
           queryParams.append("remember", "true");
         }
         console.log(queryParams.toString());
-        const response = await fetch(apiurl+`auth.cgi`, {
+        const response = await fetch(apiurl + `auth.cgi`, {
           method: "POST",
           headers: {
             Accept: 'application/json',
@@ -136,6 +136,12 @@ export default {
           if (jsonResponse.authenticated) {
             console.log("Login successful", jsonResponse);
             isAuthenticated.value = true;
+            localStorage.setItem('isAuthenticated', true);
+            if (jsonResponse.sessionid) {
+              sessionID.value= jsonResponse.sessionid;
+              localStorage.setItem('sessionID', jsonResponse.sessionid);
+              console.log(sessionID.value)
+            }
             if (jsonResponse.user && jsonResponse.user.disp_name) {
               userDisplayName.value = jsonResponse.user.disp_name;
               localStorage.setItem('userDisplayName', jsonResponse.user.disp_name);
@@ -312,6 +318,7 @@ h2 {
 .input-field input:focus ~ .pass-icon, .input-field input:not(:placeholder-shown) ~ .pass-icon {
   display: block;
 }
+
 .forget {
   display: flex;
   flex-direction: column;
