@@ -43,9 +43,9 @@
             <div class="radio-inputs">
               <template v-for="rolei in roles" v-if="!loadingroles">
               <label>
-                <input v-model="role" type="radio" value="{{ rolei.roleName.toString() }}" class="radio-input"/>
+                <input v-model="role" type="radio" v-bind:value="rolei.roleName.toString()" class="radio-input"/>
                 <span class="radio-tile">
-                  <span class="radio-icon"><img alt="{{ rolei.roleName.toString().toLowerCase() }}" src="../assets/professor.png"></span>
+                  <span class="radio-icon"><img v-bind:alt="rolei.roleName.toString().toLowerCase()" src="../assets/professor.png"></span>
                   <span class="radio-label">{{ rolei.roleName.toString().charAt(0)+rolei.roleName.toString().substring(1).toLowerCase() }}</span>
                 </span>
               </label>
@@ -59,9 +59,9 @@
             <div class="radio-inputs">
               <template v-for="camp in campuses" v-if="!loadingcampuses">
                 <label>
-                  <input v-model="campus" type="radio" value="{{ camp.campusName }}" class="radio-input"/>
+                  <input v-model="campus" type="radio" v-bind:value="camp.campusName" class="radio-input"/>
                   <span class="radio-tile">
-                  <span class="radio-icon"><img alt="{{ camp.campusName }}" src="../assets/campus.png"></span>
+                  <span class="radio-icon"><img v-bind:alt="camp.campusName" src="../assets/campus.png"></span>
                   <span class="radio-label">{{ camp.campusName }}</span>
                 </span>
                 </label>
