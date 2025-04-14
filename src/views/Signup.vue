@@ -212,13 +212,13 @@ export default defineComponent({
       this.loading = true;
 
       try {
-        const formData = new FormData();
+        const formData = new URLSearchParams();
         formData.append('UUID', this.identifier);
         formData.append('name', this.displayName);
         formData.append('passwd', this.password);
         formData.append('role', this.role);
         formData.append('campus', this.campus);
-
+        console.log(formData.toString())
         const response = await fetch(apiurl + 'signup.cgi', {
           method: "POST",
           headers: {
@@ -237,8 +237,8 @@ export default defineComponent({
             isAuthenticated.value = true;
             userDisplayName.value = this.displayName;
             await Swal.fire({
-              title: "Login successfully !",
-              text: `Welcome back,${this.displayName} !`,
+              title: "Account created successfully!",
+              text: `Welcome, ${this.displayName}!`,
               icon: "success",
               iconColor: "#4A90E2",
               draggable: true,
