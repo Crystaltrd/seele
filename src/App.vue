@@ -5,7 +5,7 @@
     <main>
       <router-view />
     </main>
-    <Footer />
+    <Footer v-if="showFooter" />
   </div>
 </template>
 
@@ -18,8 +18,10 @@ import Footer from "./components/Footer.vue";
 
 const route = useRoute();
 const showHeader = ref(true);
+const showFooter= ref(true);
 
 watchEffect(() => {
   showHeader.value = route.path !== "/login" && route.path !== "/signup";
+  showFooter.value = route.path !== "/login" && route.path !== "/signup";
 });
 </script>

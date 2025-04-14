@@ -331,6 +331,10 @@ h2 {
   accent-color: #FFFFFF;
 }
 
+.remember-block label{
+  font-size: 12px ;
+}
+
 .forget label {
   display: flex;
   align-items: center;
