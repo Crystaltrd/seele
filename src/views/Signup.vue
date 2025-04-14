@@ -51,7 +51,10 @@
               </label>
               </template>
 
-              <p v-else class="register">Loading Roles. Please wait!</p>
+              <svg viewBox="25 25 50 50" v-else >
+                <circle r="20" cy="50" cx="50"></circle>
+              </svg>
+
             </div>
           </div>
           <div class="right-section">
@@ -66,7 +69,10 @@
                 </span>
                 </label>
               </template>
-              <p v-else class="register">Loading Campuses. Please wait!</p>
+
+              <svg viewBox="25 25 50 50" v-else >
+                <circle r="20" cy="50" cx="50"></circle>
+              </svg>
             </div>
 
             <div class="form-footer">
@@ -592,6 +598,22 @@ h2 {
 }
 
 .loader-container circle {
+  fill: none;
+  stroke: hsl(214, 97%, 59%);
+  stroke-width: 2;
+  stroke-dasharray: 1, 200;
+  stroke-dashoffset: 0;
+  stroke-linecap: round;
+  animation: dash4 1.5s ease-in-out infinite;
+}
+
+svg {
+  width: 3.25em;
+  transform-origin: center;
+  animation: rotate4 2s linear infinite;
+}
+
+circle {
   fill: none;
   stroke: hsl(214, 97%, 59%);
   stroke-width: 2;
