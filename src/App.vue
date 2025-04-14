@@ -2,7 +2,10 @@
   <div id="app">
     <Background />
     <Header v-if="showHeader" />
-    <router-view />
+    <main>
+      <router-view />
+    </main>
+    <Footer />
   </div>
 </template>
 
@@ -11,6 +14,7 @@ import { ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 import Background from './components/background.vue';
 import Header from './components/Header.vue';
+import Footer from "./components/Footer.vue";
 
 const route = useRoute();
 const showHeader = ref(true);
