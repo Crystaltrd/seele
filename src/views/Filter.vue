@@ -68,16 +68,16 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  padding: 2rem;
+  padding: 2rem 1rem;
 }
 
 .wrapper {
   position: relative;
-  margin-top: 6rem;
   z-index: 1;
+  margin: 6rem auto;
+  padding: 2.5rem 3rem;
   width: 1020px;
   border-radius: 16px;
-  padding: 2.5rem;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -156,11 +156,12 @@ label {
 }
 
 .btn {
-  display: inline-flex;
+  display: block;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   background: #4A90E2;
+  width: fit-content;
   color: white;
   font-weight: 600;
   padding: 0.8rem 2rem;
