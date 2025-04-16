@@ -218,7 +218,7 @@ export default defineComponent({
       this.loading = true;
 
       try {
-        const formData = new URLSearchParams();
+        const formData = new FormData();
         formData.append('UUID', this.identifier);
         formData.append('name', this.displayName);
         formData.append('passwd', this.password);
@@ -229,7 +229,6 @@ export default defineComponent({
           method: "POST",
           headers: {
             Accept: 'application/json',
-            "Content-Type": "application/x-www-form-urlencoded",
           },
           body: formData
         });
