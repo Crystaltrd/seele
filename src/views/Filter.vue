@@ -81,7 +81,7 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
 }
 
 header {
@@ -171,6 +171,10 @@ label {
   border: none;
   transition: all 0.3s ease;
   margin-left: 55rem;
+}
+
+.btn i{
+  margin-left: 5px;
 }
 
 .btn:hover {
