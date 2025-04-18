@@ -10,11 +10,21 @@
 
       <nav class="col-6 d-flex justify-content-center">
         <ul class="nav-links">
-          <li><router-link to="/home" exact-active-class="active">Home</router-link></li>
-          <li><router-link to="/filter" exact-active-class="active">Advanced Search</router-link></li>
-          <li><router-link to="/history" exact-active-class="active">History</router-link></li>
-          <li><router-link to="/about" exact-active-class="active">About</router-link></li>
-          <li><router-link to="/help" exact-active-class="active">Help</router-link></li>
+          <li>
+            <router-link to="/home" exact-active-class="active">Home</router-link>
+          </li>
+          <li>
+            <router-link to="/filter" exact-active-class="active">Advanced Search</router-link>
+          </li>
+          <li>
+            <router-link to="/history" exact-active-class="active">History</router-link>
+          </li>
+          <li>
+            <router-link to="/about" exact-active-class="active">About</router-link>
+          </li>
+          <li>
+            <router-link to="/help" exact-active-class="active">Help</router-link>
+          </li>
         </ul>
       </nav>
 
@@ -60,9 +70,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import {isAuthenticated, sessionID, setAuth, userDisplayName} from '../authStore';
-import { useRouter } from 'vue-router';
+import {ref} from 'vue';
+import {isAuthenticated, setAuth, userDisplayName} from '../authStore';
+import {useRouter} from 'vue-router';
 
 const router = useRouter();
 const showDropdown = ref(false);
@@ -73,14 +83,12 @@ const toggleDropdown = () => {
 
 const handleLogout = async () => {
   try {
-/*FIXME*/
-    console.log(localStorage.getItem('sessionID'))
-    const response = await fetch('/api/deauth', {
+    const response = await fetch(apiurl + 'deauth', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
       },
-        body: new FormData({ sessionID: localStorage.getItem('sessionID') }),
+      credentials: 'include'
     });
 
     const rawText = await response.text();
@@ -115,9 +123,10 @@ const handleLogout = async () => {
 </script>
 
 <style scoped>
-header{
-  position: fixed ;
+header {
+  position: fixed;
 }
+
 .container-fluid {
   display: flex;
   padding: 15px 40px;
@@ -140,6 +149,7 @@ header{
   align-items: center;
   width: 100%;
 }
+
 #logo {
   width: 150px;
   height: auto;

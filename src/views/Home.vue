@@ -62,13 +62,13 @@ export default defineComponent({
 
         const queryParams = new URLSearchParams({
           limit: this.limit,
-          sessionID: localStorage.getItem('sessionID')
         });
         const response = await fetch(apiurl+`query/book?${queryParams.toString()}`, {
           method: "GET",
           headers: {
             Accept: 'application/json',
           },
+          credentials: 'include'
         });
 
         const rawText = await response.text();
