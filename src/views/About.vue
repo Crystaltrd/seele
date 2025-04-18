@@ -8,7 +8,7 @@
           <h2>About Alexandria</h2>
         </div>
 
-        <div class="content-grid">
+        <div>
           <div class="text-content">
             <p>
               The name <strong>Alexandria</strong> is not random. It pays homage to the famous
@@ -25,12 +25,6 @@
             </p>
           </div>
 
-          <div class="image-content">
-            <figure>
-              <img src="../assets/alexandria_library.jpg" alt="Ancient Library of Alexandria" class="section-image" />
-              <figcaption>Artistic impression of the Ancient Library</figcaption>
-            </figure>
-          </div>
         </div>
       </div>
 
@@ -39,7 +33,7 @@
           <h2>Why Alexandria ?</h2>
         </div>
 
-        <div class="content-grid reverse">
+        <div>
           <div class="text-content">
             <p>
               The Alexandria website was created to meet a simple yet essential need: to
@@ -60,12 +54,6 @@
             </p>
           </div>
 
-          <div class="image-content">
-            <figure>
-              <img src="../assets/alexandriaaa.jpg" alt="Alexandria website interface" class="section-image" />
-              <figcaption>Alexandria website interface</figcaption>
-            </figure>
-          </div>
         </div>
       </div>
 
@@ -74,7 +62,7 @@
           <h2>About University</h2>
         </div>
 
-        <div class="content-grid">
+        <div>
           <div class="text-content">
             <p>
               Abderrahmane Mira University of Béjaïa, located in the beautiful coastal city
@@ -94,12 +82,6 @@
             </p>
           </div>
 
-          <div class="image-content">
-            <figure>
-              <img src="../assets/univpic.jpg" alt="University campus" class="section-image" />
-              <figcaption>Abderrahmane Mira University campus</figcaption>
-            </figure>
-          </div>
         </div>
       </div>
 
@@ -108,7 +90,7 @@
           <h2>About Us</h2>
         </div>
 
-        <div class="content-grid reverse">
+        <div>
           <div class="text-content">
             <p>
               Alexandria is the result of a collaborative university project,
@@ -129,12 +111,6 @@
             </p>
           </div>
 
-          <div class="image-content">
-            <figure>
-              <img src="../assets/team_pic.jpg" alt="Development team" class="section-image" />
-              <figcaption>The Alexandria development team</figcaption>
-            </figure>
-          </div>
         </div>
       </div>
     </section>
@@ -198,26 +174,6 @@ section {
   border-radius: 2px;
 }
 
-.content-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 3rem;
-  align-items: center;
-  margin-bottom: 4rem;
-}
-
-.content-grid.reverse {
-  grid-template-columns: 0.8fr 1.2fr;
-}
-
-.content-grid.reverse .text-content {
-  order: 2;
-}
-
-.content-grid.reverse .image-content {
-  order: 1;
-}
-
 .text-content p {
   color: white;
   line-height: 1.8;
@@ -246,25 +202,6 @@ section {
   margin-left: -1em;
 }
 
-.image-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.section-image {
-  width: 100%;
-  max-width: 400px;
-  border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
-}
-
-.section-image:hover {
-  transform: scale(1.02);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-}
-
 figcaption {
   color: rgba(255, 255, 255, 0.7);
   font-size: 0.9rem;
@@ -274,20 +211,6 @@ figcaption {
 }
 
 @media (max-width: 768px) {
-  .content-grid,
-  .content-grid.reverse {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-
-  .content-grid.reverse .text-content,
-  .content-grid.reverse .image-content {
-    order: initial;
-  }
-
-  .image-content {
-    order: -1;
-  }
 
   .section-header h2 {
     font-size: 2rem;
