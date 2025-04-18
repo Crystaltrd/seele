@@ -42,16 +42,19 @@
             <h2>Select Your Role</h2>
             <div class="radio-inputs">
               <template v-for="rolei in roles" v-if="!loadingroles">
-              <label>
-                <input v-model="role" type="radio" v-bind:value="rolei.roleName.toString()" class="radio-input"/>
-                <span class="radio-tile">
-                  <span class="radio-icon"><img v-bind:alt="rolei.roleName.toString().toLowerCase()" src="../assets/professor.png"></span>
-                  <span class="radio-label">{{ rolei.roleName.toString().charAt(0)+rolei.roleName.toString().substring(1).toLowerCase() }}</span>
+                <label>
+                  <input v-model="role" type="radio" v-bind:value="rolei.roleName.toString()" class="radio-input"/>
+                  <span class="radio-tile">
+                  <span class="radio-icon"><img v-bind:alt="rolei.roleName.toString().toLowerCase()"
+                                                src="../assets/professor.png"></span>
+                  <span class="radio-label">{{
+                      rolei.roleName.toString().charAt(0) + rolei.roleName.toString().substring(1).toLowerCase()
+                    }}</span>
                 </span>
-              </label>
+                </label>
               </template>
 
-              <svg viewBox="25 25 50 50" v-else >
+              <svg viewBox="25 25 50 50" v-else>
                 <circle r="20" cy="50" cx="50"></circle>
               </svg>
 
@@ -70,7 +73,7 @@
                 </label>
               </template>
 
-              <svg viewBox="25 25 50 50" v-else >
+              <svg viewBox="25 25 50 50" v-else>
                 <circle r="20" cy="50" cx="50"></circle>
               </svg>
             </div>
@@ -159,11 +162,12 @@ export default defineComponent({
     async getCampuses() {
       this.serverError = "";
       try {
-        const response = await fetch(apiurl + 'query.cgi?campus', {
+        const response = await fetch(apiurl + 'query/campus', {
           method: "GET",
           headers: {
             Accept: 'application/json',
           },
+          credentials: 'include'
         });
 
         const rawText = await response.text();
@@ -187,11 +191,12 @@ export default defineComponent({
     async getRoles() {
       this.serverError = "";
       try {
-        const response = await fetch(apiurl + 'query.cgi?role&by_perm=1', {
+        const response = await fetch(apiurl + 'query/role?by_perm=1', {
           method: "GET",
           headers: {
             Accept: 'application/json',
           },
+          credentials: 'include'
         });
 
         const rawText = await response.text();
@@ -218,20 +223,20 @@ export default defineComponent({
       this.loading = true;
 
       try {
-        const formData = new URLSearchParams();
-        formData.append('UUID', this.identifier);
-        formData.append('name', this.displayName);
-        formData.append('passwd', this.password);
-        formData.append('role', this.role);
-        formData.append('campus', this.campus);
-        console.log(formData.toString())
-        const response = await fetch(apiurl + 'signup.cgi', {
+        const userForm = new FormData();
+        userForm.append('UUID', this.identifier);
+        userForm.append('name', this.displayName);
+        userForm.append('passwd', this.password);
+        userForm.append('role', this.role);
+        userForm.append('campus', this.campus);
+        console.log(userForm.toString())
+        const response = await fetch(apiurl + 'signup', {
           method: "POST",
           headers: {
             Accept: 'application/json',
-            "Content-Type": "application/x-www-form-urlencoded",
           },
-          body: formData
+          body: userForm,
+          credentials: 'include'
         });
 
         const rawText = await response.text();
@@ -256,7 +261,7 @@ export default defineComponent({
             const redirectTo = this.$route.query.redirect || '/';
             this.$router.push(redirectTo);
           } else {
-              this.serverError = jsonResponse.error || "Registration failed. Please check your information.";
+            this.serverError = jsonResponse.error || "Registration failed. Please check your information.";
           }
         } catch (parseError) {
           this.serverError = "Server error. Please try again later.";

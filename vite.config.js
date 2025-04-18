@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
@@ -6,9 +6,10 @@ export default defineConfig({
     server: {
         port: 5179,
         open: true,
+        allowedHosts: ['seele.serveo.net']
     },
     define: {
-        apiurl: JSON.stringify('https://crystal.tilde.institute/mellow/'),
+        apiurl: JSON.stringify('https://mellow.serveo.net/'),
         assetsurl: JSON.stringify('https://crystal.tilde.institute/mellow/')
     }
 })

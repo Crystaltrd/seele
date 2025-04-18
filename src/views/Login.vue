@@ -66,7 +66,7 @@ import Background from "../components/background.vue";
 import visibleIcon from "../assets/visible.png";
 import hiddenIcon from "../assets/hidden.png";
 import router from "../router";
-import {isAuthenticated, sessionID, userDisplayName} from "../authStore";
+import {isAuthenticated, userDisplayName} from "../authStore";
 import Swal from 'sweetalert2';
 
 
@@ -108,22 +108,20 @@ export default {
       loginError.value = ''
 
       try {
-        const queryParams = new URLSearchParams({
-          UUID: identifier.value,
-          passwd: password.value,
-        });
-
+        const loginData = new FormData();
+        loginData.append("UUID", identifier.value);
+        loginData.append("passwd", password.value);
         if (rememberMe.value) {
-          queryParams.append("remember", "true");
+          loginData.append("remember", "true");
         }
-        console.log(queryParams.toString());
-        const response = await fetch(apiurl + `auth.cgi`, {
+        console.log(loginData.toString());
+        const response = await fetch(apiurl + 'auth', {
           method: "POST",
           headers: {
             Accept: 'application/json',
-            "Content-Type": "application/x-www-form-urlencoded",
           },
-          body: queryParams
+          credentials: 'include',
+          body: loginData
         });
 
         const rawText = await response.text();
@@ -137,11 +135,7 @@ export default {
             console.log("Login successful", jsonResponse);
             isAuthenticated.value = true;
             localStorage.setItem('isAuthenticated', true);
-            if (jsonResponse.sessionid) {
-              sessionID.value= jsonResponse.sessionid;
-              localStorage.setItem('sessionID', jsonResponse.sessionid);
-              console.log(sessionID.value)
-            }
+
             if (jsonResponse.user && jsonResponse.user.disp_name) {
               userDisplayName.value = jsonResponse.user.disp_name;
               localStorage.setItem('userDisplayName', jsonResponse.user.disp_name);
@@ -331,8 +325,8 @@ h2 {
   accent-color: #FFFFFF;
 }
 
-.remember-block label{
-  font-size: 12px ;
+.remember-block label {
+  font-size: 12px;
 }
 
 .forget label {
