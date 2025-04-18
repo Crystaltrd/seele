@@ -159,7 +159,7 @@ export default defineComponent({
     async getCampuses() {
       this.serverError = "";
       try {
-        const response = await fetch(apiurl + 'query.cgi?campus', {
+        const response = await fetch(apiurl+'query/campus', {
           method: "GET",
           headers: {
             Accept: 'application/json',
@@ -187,7 +187,7 @@ export default defineComponent({
     async getRoles() {
       this.serverError = "";
       try {
-        const response = await fetch(apiurl + 'query.cgi?role&by_perm=1', {
+        const response = await fetch(apiurl+'query/role?by_perm=1', {
           method: "GET",
           headers: {
             Accept: 'application/json',
@@ -225,7 +225,7 @@ export default defineComponent({
         formData.append('role', this.role);
         formData.append('campus', this.campus);
         console.log(formData.toString())
-        const response = await fetch(apiurl + 'signup.cgi', {
+        const response = await fetch(apiurl + 'signup', {
           method: "POST",
           headers: {
             Accept: 'application/json',

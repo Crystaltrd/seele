@@ -64,7 +64,7 @@ export default defineComponent({
           limit: this.limit,
           sessionID: localStorage.getItem('sessionID')
         });
-        const response = await fetch(apiurl + `query.cgi?book&${queryParams.toString()}`, {
+        const response = await fetch(apiurl+`query/book?${queryParams.toString()}`, {
           method: "GET",
           headers: {
             Accept: 'application/json',

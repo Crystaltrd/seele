@@ -108,7 +108,7 @@ export default {
       loginError.value = ''
 
       try {
-        const queryParams = new URLSearchParams({
+        const queryParams = new FormData({
           UUID: identifier.value,
           passwd: password.value,
         });
@@ -117,11 +117,10 @@ export default {
           queryParams.append("remember", "true");
         }
         console.log(queryParams.toString());
-        const response = await fetch(apiurl + `auth.cgi`, {
+        const response = await fetch( apiurl+'auth', {
           method: "POST",
           headers: {
             Accept: 'application/json',
-            "Content-Type": "application/x-www-form-urlencoded",
           },
           body: queryParams
         });

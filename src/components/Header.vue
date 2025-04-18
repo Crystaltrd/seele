@@ -75,13 +75,12 @@ const handleLogout = async () => {
   try {
 /*FIXME*/
     console.log(localStorage.getItem('sessionID'))
-    const response = await fetch(apiurl + 'deauth.cgi', {
+    const response = await fetch('/api/deauth', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
-        "Content-Type": "application/x-www-form-urlencoded",
       },
-        body: new URLSearchParams({ sessionID: localStorage.getItem('sessionID') }),
+        body: new FormData({ sessionID: localStorage.getItem('sessionID') }),
     });
 
     const rawText = await response.text();
