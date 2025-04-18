@@ -16,9 +16,9 @@
                 <span class="release-year">{{ book.bookreleaseyear }}</span>
                 <div class="publication-info">
 
-                    <span class="availability avail" v-if="this.isAvailable(book) > 0">Available</span>
-                    <span class="availability" v-else>Unavailable</span>
-                    <h4 class="title">{{ book.booktitle }}</h4>
+                  <span class="availability avail" v-if="this.isAvailable(book) > 0">Available</span>
+                  <span class="availability" v-else>Unavailable</span>
+                  <h4 class="title">{{ book.booktitle }}</h4>
 
                 </div>
               </div>
