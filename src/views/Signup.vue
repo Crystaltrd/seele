@@ -191,7 +191,7 @@ export default defineComponent({
     async getRoles() {
       this.serverError = "";
       try {
-        const response = await fetch(apiurl + 'query/role?by_perm=1', {
+        const response = await fetch(apiurl + 'query/role?perms=1', {
           method: "GET",
           headers: {
             Accept: 'application/json',
