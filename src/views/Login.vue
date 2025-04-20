@@ -1,9 +1,13 @@
 <template>
   <div class="login-container">
     <Background/>
+    <button type="button" class="go-back-btn" @click="goBack">
+      <i class="fas fa-arrow-left"></i> Go Back
+    </button>
 
     <div class="wrapper">
       <form @submit.prevent="handleLogin">
+
         <img id="logo" src="../assets/univLogo.png" alt="LOGO"/>
         <h2>Welcome back !</h2>
 
@@ -81,7 +85,9 @@ export default {
     const loginError = ref("");
     const isLoading = ref(false);
 
-
+    const goBack = () => {
+      router.push('/');
+    };
     const togglePassword = () => {
       showPassword.value = !showPassword.value;
     };
@@ -170,6 +176,7 @@ export default {
     };
 
     return {
+      goBack,
       identifier,
       password,
       showPassword,
@@ -216,6 +223,7 @@ body {
 }
 
 .wrapper {
+  position: relative;
   width: 400px;
   padding: 20px;
   border-radius: 8px;
@@ -225,6 +233,31 @@ body {
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
   -webkit-backdrop-filter: blur(9px);
   max-height: 500px;
+}
+.go-back-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(74, 144, 226, 0.1);
+  color: #FFFFFF;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.go-back-btn:hover {
+  background: rgba(74, 144, 226, 0.1);
+  transform: translateX(-3px);
+}
+
+.go-back-btn i {
+  font-size: 0.8rem;
 }
 
 form {

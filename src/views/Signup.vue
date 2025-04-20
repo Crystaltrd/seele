@@ -1,6 +1,9 @@
 <template>
   <div class="signup-container">
     <Background/>
+    <button type="button" class="go-back-btn" @click="goBack">
+      <i class="fas fa-arrow-left"></i> Go Back
+    </button>
 
     <div class="wrapper">
       <header class="header">
@@ -110,6 +113,7 @@ import visibleIcon from "../assets/visible.png";
 import hiddenIcon from "../assets/hidden.png";
 import {isAuthenticated, userDisplayName} from "../authStore.js";
 import Swal from 'sweetalert2';
+import router from "../router";
 
 
 export default defineComponent({
@@ -137,6 +141,10 @@ export default defineComponent({
     };
   },
   methods: {
+
+    goBack() {
+      router.push('/');
+    },
     togglePassword() {
       this.passwordVisible = !this.passwordVisible;
     },
@@ -316,6 +324,31 @@ body, html {
   backdrop-filter: blur(9px);
   -webkit-backdrop-filter: blur(9px);
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+}
+.go-back-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(74, 144, 226, 0.1);
+  color: #FFFFFF;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.go-back-btn:hover {
+  background: rgba(74, 144, 226, 0.1);
+  transform: translateX(-3px);
+}
+
+.go-back-btn i {
+  font-size: 0.8rem;
 }
 
 .header {
