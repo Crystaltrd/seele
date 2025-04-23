@@ -196,6 +196,68 @@ label {
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 1200px) {
+  .wrapper {
+    width: 900px;
+  }
+}
+
+@media (max-width: 992px) {
+  .wrapper {
+    width: 750px;
+    padding: 2rem;
+  }
+
+  .btn {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    width: 90%;
+    padding: 1.5rem;
+    margin: 3rem auto;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .btn {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .wrapper {
+    padding: 1.5rem 1rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.8rem;
+  }
+
+  .input, .select {
+    padding: 0.7rem 0.9rem;
+    font-size: 0.9rem;
+  }
+
+  .btn {
+    padding: 0.7rem 1.5rem;
+  }
+}
 </style>
 
 <script setup lang="ts">

@@ -307,18 +307,21 @@ body, html {
 
 .signup-container {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
+  padding: 20px 0;
 }
 
 .wrapper {
   position: relative;
   z-index: 1;
   width: 1020px;
+  max-width: 95%;
   border-radius: 8px;
-  padding: 20px;
+  padding: 30px;
+  margin: 20px auto;
   text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(9px);
@@ -683,13 +686,14 @@ circle {
 
 @media (max-width: 768px) {
   .wrapper {
-    flex-direction: column;
-    padding: 15px;
-    max-height: 95vh;
+    padding: 25px;
+    margin: 20px auto;
+    max-height: none;
+    overflow-y: auto;
   }
 
   .left-section, .right-section {
-    width: 100%;
+    gap: 20px;
   }
 
   h1 {
@@ -706,4 +710,84 @@ circle {
   }
 }
 
+@media (max-width: 992px) {
+  .wrapper {
+    padding: 25px;
+  }
+
+  .form-content {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 20px;
+    margin: 40px auto;
+  }
+
+  .form-content {
+    flex-direction: column;
+    gap: 25px;
+  }
+
+  h1 {
+    font-size: 1.7rem;
+  }
+
+  .radio-inputs {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .wrapper {
+    padding: 20px;
+    margin: 15px auto;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  #logo {
+    width: 100px;
+  }
+
+  .input-field input {
+    height: 45px;
+    font-size: 0.9rem;
+  }
+
+  .radio-tile {
+    width: 85px;
+    min-height: 85px;
+  }
+
+  .btn {
+    padding: 12px;
+  }
+
+  .form-footer {
+    margin-top: 30px;
+  }
+}
+
+@media (max-width: 400px) {
+  .go-back-btn {
+    top: 10px;
+    left: 10px;
+    font-size: 0.8rem;
+    padding: 6px 10px;
+  }
+
+  .radio-tile {
+    width: 75px;
+    min-height: 75px;
+  }
+
+  .radio-label {
+    font-size: 0.8rem;
+  }
+}
 </style>
