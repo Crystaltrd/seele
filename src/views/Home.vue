@@ -9,7 +9,7 @@
 
           <div class="publications-grid">
             <template v-for="book in books" v-if="!loadingbooks">
-              <div class="publication" v-bind:id="'PUBSN'+book.serialnum">
+              <div class="publication" v-bind:id="'PUBSN'+book.serialnum" @click="goToBookDetails(book.serialnum)">
                 <img v-bind:alt="book.booktitle+'\'s Cover'" v-if="book.bookcover" v-bind:src="assetsurl+book.bookcover"/>
                 <img v-bind:alt="book.booktitle+'\'s Cover PLACEHOLDER'" v-else src="../assets/bookcover.jpg"/>
 
@@ -48,6 +48,9 @@ export default defineComponent({
     };
   },
   methods: {
+    goToBookDetails(serialnum) {
+      this.$router.push(`/book/${serialnum}`);
+    },
     isAvailable(book) {
       let n = 0;
       for (const stockElement of book.stock) {
@@ -313,5 +316,44 @@ circle {
     font-size: 0.65rem;
     padding: 0.2rem 0.5rem;
   }
+
+  @media (max-width: 768px) {
+    .content-wrapper {
+      width: 100%;
+      padding: 1rem;
+    }
+
+    .publications-grid {
+      gap: 1rem;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .publication {
+      width: 45%;
+      min-width: 120px;
+    }
+
+    .publication img {
+      height: auto;
+      aspect-ratio: 2/3;
+    }
+  }
+
+  .content-wrapper {
+    width: 100%;
+    max-width: 1100px;
+  }
+
+  .publication {
+    width: calc(20% - 2rem);
+  }
+
+  @media (max-width: 1024px) {
+    .publication {
+      width: calc(25% - 2rem);
+    }
+  }
+
 }
 </style>
