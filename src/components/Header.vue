@@ -586,6 +586,6 @@ input:not(:placeholder-shown) ~ .reset {
   border: none;
   color: white;
   font-size: 1.5rem;
-  cursor: pointer;
+  cursor: pointer; /*just added this to commit lol */
 }
 </style>
