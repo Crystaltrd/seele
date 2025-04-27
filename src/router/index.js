@@ -17,7 +17,7 @@ const routes = [
     { path: '/help', component: Help },
     { path: "/login", name: "Login", component: Login },
     { path: "/signup", name: "Signup", component: Signup },
-    { path: '/book/:id',name: "BookDetails", component: BookDetails },
+    { path: '/book/:serialnum',name: "BookDetails", component: BookDetails },
 ]
 
 const router = createRouter({
