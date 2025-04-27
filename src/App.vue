@@ -21,7 +21,7 @@ const showHeader = ref(true);
 const showFooter= ref(true);
 
 watchEffect(() => {
-  showHeader.value = route.path !== "/login" && route.path !== "/signup";
-  showFooter.value = route.path !== "/login" && route.path !== "/signup";
+  showHeader.value = route.path !== "/login" && route.path !== "/signup" && route.path !=="/admin";
+  showFooter.value = route.path !== "/login" && route.path !== "/signup" && route.path !=="/admin";
 });
 </script>

@@ -7,6 +7,7 @@ import Help from '../views/Help.vue'
 import Login from "../views/Login.vue";
 import Signup from "../views/Signup.vue";
 import BookDetails from "../views/BookDetails.vue";
+import AdminLayout from "../layouts/AdminLayout.vue";
 
 const routes = [
     { path: '/', redirect: '/home' },
@@ -18,6 +19,8 @@ const routes = [
     { path: "/login", name: "Login", component: Login },
     { path: "/signup", name: "Signup", component: Signup },
     { path: '/book/:serialnum',name: "BookDetails", component: BookDetails },
+    { path: '/admin', name:"adminLayout", component: AdminLayout },
+
 ]
 
 const router = createRouter({
