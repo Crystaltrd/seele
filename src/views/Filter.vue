@@ -10,8 +10,8 @@
       <form>
         <div class="form-grid">
           <div class="input-field">
-            <label for="title">* Title</label>
-            <input id="title" placeholder="Enter the title..." type="text" class="input" required>
+            <label for="title">Title</label>
+            <input id="title" placeholder="Enter the title..." type="text" class="input">
           </div>
 
           <div class="input-field">
@@ -20,26 +20,56 @@
           </div>
 
           <div class="input-field">
-            <label for="subject">Subject</label>
-            <input id="subject" placeholder="Enter the subject..." type="text" class="input">
+            <label for="subject">Category</label>
+            <select id="category" class="select">
+              <option value="">Any category</option>
+            </select>
           </div>
 
           <div class="input-field">
-            <label for="editor">Editor</label>
+            <label for="editor">Publisher</label>
             <input id="editor" placeholder="Enter editor..." type="text" class="input">
           </div>
 
           <div class="input-field">
-            <label for="year">Publication Year</label>
-            <select id="year" class="select">
-              <option value="">Any year</option>
-            </select>
+            <label>Type of year selection</label>
+            <div>
+              <label>
+                <input  v-model="yearSelectionType" name="year_selection_type" type="radio" value="single" @change="toggleYearSelection()"/>
+                <span>Single year</span>
+              </label>
+              <label>
+                <input  v-model="yearSelectionType" name="year_selection_type" type="radio" value="range" @change="toggleYearSelection()"/>
+                <span>interval</span>
+              </label>
+            </div>
           </div>
+
 
           <div class="input-field">
             <label for="doc-type">Document Type</label>
             <select id="doc-type" class="select">
               <option value="">Any type</option>
+            </select>
+          </div>
+
+          <div id="single-year-container" class="input-field">
+            <label for="year">publication year</label>
+            <select id="year" class="select">
+              <option value="">any year</option>
+            </select>
+          </div>
+
+          <div id="year-range-container" class="input-field" style="display: none;">
+            <label for="start-year">from</label>
+            <select id="start-year" class="select">
+              <option value="">any year</option>
+
+            </select>
+
+            <label for="end-year">to</label>
+            <select id="end-year" class="select">
+              <option value="">any year</option>
             </select>
           </div>
 
@@ -50,7 +80,6 @@
             </select>
           </div>
 
-          <div class="input-field"></div>
         </div>
 
         <button class="btn" type="submit">
@@ -187,6 +216,40 @@ label {
   transform: translateY(0);
 }
 
+
+#year-range-container {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-end;
+}
+
+#year-range-container .input-field {
+  flex: 1;
+  min-width: 0;
+}
+
+.select {
+  width: 100%;
+  min-width: 150px;
+}
+
+.input-field label {
+  margin-bottom: 0.8rem;
+}
+
+
+.input-field > div {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.input-field > div label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
 @media (max-width: 768px) {
   .wrapper {
     padding: 1.5rem;
@@ -261,6 +324,21 @@ label {
 </style>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import Background from "../components/background.vue";
 
+const yearSelectionType = ref('single');
+
+function toggleYearSelection() {
+  const singleYearContainer = document.getElementById('single-year-container');
+  const rangeContainer = document.getElementById('year-range-container');
+
+  if (yearSelectionType.value === 'single') {
+    singleYearContainer.style.display = 'block';
+    rangeContainer.style.display = 'none';
+  } else {
+    singleYearContainer.style.display = 'none';
+    rangeContainer.style.display = 'block';
+  }
+}
 </script>
