@@ -21,7 +21,7 @@ const showHeader = ref(true);
 const showFooter= ref(true);
 
 watchEffect(() => {
-  showHeader.value = route.path !== "/login" && route.path !== "/signup" && route.path !=="/admin";
-  showFooter.value = route.path !== "/login" && route.path !== "/signup" && route.path !=="/admin";
+  showHeader.value = route.path !== "/login" && route.path !== "/signup" && route.path !=="/admin" && route.path !=="/Account" && route.path !=="/Campus" && route.path !=="/Dashboard" && route.path !=="/Publication" ;
+  showFooter.value = route.path !== "/login" && route.path !== "/signup" && route.path !=="/admin" && route.path !=="/Account" && route.path !=="/Campus" && route.path !=="/Dashboard" && route.path !=="/Publication" ;
 });
 </script>

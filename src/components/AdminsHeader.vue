@@ -11,16 +11,16 @@
       <nav class="col-6 d-flex justify-content-center desktop-nav">
         <ul class="nav-links">
           <li>
-            <router-link to="/home" exact-active-class="active">General Dashbord</router-link>
+            <router-link to="/Dashboard" exact-active-class="active">General Dashboard</router-link>
           </li>
           <li>
-            <router-link to="/filter" exact-active-class="active">Account management</router-link>
+            <router-link to="/Account" exact-active-class="active">Account management</router-link>
           </li>
           <li>
-            <router-link to="/history" exact-active-class="active">Publication management</router-link>
+            <router-link to="/Publication" exact-active-class="active">Publication management</router-link>
           </li>
           <li>
-            <router-link to="/about" exact-active-class="active">Campus management</router-link>
+            <router-link to="/Campus" exact-active-class="active">Campus management</router-link>
           </li>
         </ul>
       </nav>
@@ -54,7 +54,7 @@
       <div class="mobile-menu" v-if="mobileMenuOpen && showMobileMenu">
         <ul>
           <li @click="toggleMobileMenu">
-            <router-link to="/home" exact-active-class="active">General Dashbord</router-link>
+            <router-link to="/home" exact-active-class="active">General Dashboard</router-link>
           </li>
           <li @click="toggleMobileMenu">
             <router-link to="/filter" exact-active-class="active">Account management</router-link>
