@@ -31,6 +31,9 @@
         </div>
       </div>
     </section>
+    <button type="button" class="see-all-btn" @click="seeAll">
+      <i class="fas fa-arrow-right"></i>See All
+    </button>
   </div>
 </template>
 
@@ -48,6 +51,9 @@ export default defineComponent({
     };
   },
   methods: {
+    seeAll (){
+      this.$router.push('/');
+    },
     goToBookDetails(serialnum) {
       this.$router.push(`/book/${serialnum}`);
     },
@@ -252,6 +258,33 @@ circle {
   stroke-dashoffset: 0;
   stroke-linecap: round;
   animation: dash4 1.5s ease-in-out infinite;
+}
+
+.see-all-btn {
+  margin-left: auto;
+  margin-top: 1.5rem;
+  background: rgba(74, 144, 226, 0.2);
+  color: #FFFFFF;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9rem;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  z-index: 9999; /* just temporary to make the btn work */
+  position: relative;
+}
+
+.see-all-btn:hover {
+  background: rgba(74, 144, 226, 0.1);
+  transform: translateX(-3px);
+}
+
+.see-all-btn i {
+  font-size: 0.8rem;
 }
 
 @keyframes rotate4 {
