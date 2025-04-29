@@ -2,18 +2,11 @@
   <router-view />
   <div class="admin-container">
       <Background/>
+      <AdminsHeader/>
 
     <button type="button" class="go-back-btn" @click="goBack">
       <i class="fas fa-arrow-left"></i>
     </button>
-
-    <div class="wrapper">
-      <header class="header">
-        <img alt="LOGO" id="logo" src="../assets/univLogo.png">
-        <h1>Welcome to the alexandria's management page</h1>
-      </header>
-
-    </div>
   </div>
 
 </template>
@@ -21,6 +14,7 @@
 <script setup>
 import Background from "../components/background.vue";
 import router from "../router";
+import AdminsHeader from "../components/AdminsHeader.vue";
 
 const goBack = () => {
   router.push('/');
@@ -66,32 +60,6 @@ const goBack = () => {
   font-size: 0.8rem;
 }
 
-.wrapper {
-  position: relative;
-  z-index: 1;
-  width: 1150px;
-  max-width: 95%;
-  border-radius: 8px;
-  padding: 30px;
-  margin: 10px auto;
-  text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(9px);
-  -webkit-backdrop-filter: blur(9px);
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
-}
-
-.header {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-#logo {
-  width: 130px;
-  height: auto;
-  margin-bottom: 5px;
-}
-
 h1 {
   font-size: 1.8rem;
   margin-bottom: 5px;
@@ -100,32 +68,15 @@ h1 {
 }
 
 @media (max-width: 768px) {
-  .wrapper {
-    padding: 25px;
-    margin: 20px auto;
-    max-height: none;
-    overflow-y: auto;
-  }
 }
 
 @media (max-width: 992px) {
-  .wrapper {
-    padding: 25px;
-  }
 }
 
 @media (max-width: 768px) {
-  .wrapper {
-    padding: 20px;
-    margin: 40px auto;
-  }
 }
 
 @media (max-width: 576px) {
-  .wrapper {
-    padding: 20px;
-    margin: 15px auto;
-  }
 }
 
 @media (max-width: 400px) {

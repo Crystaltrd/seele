@@ -32,7 +32,7 @@
       </div>
     </section>
     <button type="button" class="see-all-btn" @click="seeAll">
-      <i class="fas fa-arrow-right"></i>See All
+      <i class="fas fa-arrow-right"></i>View All
     </button>
   </div>
 </template>
@@ -52,7 +52,7 @@ export default defineComponent({
   },
   methods: {
     seeAll (){
-      this.$router.push('/');
+      this.$router.push('/view');
     },
     goToBookDetails(serialnum) {
       this.$router.push(`/book/${serialnum}`);
