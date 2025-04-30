@@ -11,7 +11,7 @@
       <nav class="col-6 d-flex justify-content-center desktop-nav">
         <ul class="nav-links">
           <li>
-            <router-link to="/Dashboard" exact-active-class="active">General Dashboard</router-link>
+            <router-link to="/Dashboard" exact-active-class="active">General dashboard</router-link>
           </li>
           <li>
             <router-link to="/Account" exact-active-class="active">Account management</router-link>
