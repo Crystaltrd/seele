@@ -15,6 +15,11 @@
           </div>
 
           <div class="input-field">
+            <label for="isbn">ISBN,ISSN..</label>
+            <input id="isbn" placeholder="Enter the ISBN,ISSN..." type="text" class="input">
+          </div>
+
+          <div class="input-field">
             <label for="author">Author</label>
             <input id="author" placeholder="Enter the author's name..." type="text" class="input">
           </div>
