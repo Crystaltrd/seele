@@ -8,6 +8,13 @@
         <div class="content-wrapper">
           <h3 class="section-heading">General History</h3>
           <div class="history-grid">
+            <div class="filter-wrapper">
+              <div class="input-field">
+                <select id="filter" class="select">
+                  <option value="">Filter</option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -95,5 +102,46 @@ import AdminsHeader from "../components/AdminsHeader.vue";
 
 .history-grid , .alert-grid::-webkit-scrollbar {
   display: none;
+}
+
+.select {
+  width: 100%;
+  min-width: 150px;
+}
+
+.input-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.select {
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #4A90E2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+  width: 100%;
+  min-width: 150px;
+}
+
+.filter-wrapper {
+  margin-left: auto;
 }
 </style>

@@ -19,9 +19,6 @@
           <li>
             <router-link to="/Publication" exact-active-class="active">Publication management</router-link>
           </li>
-          <li>
-            <router-link to="/Campus" exact-active-class="active">Campus management</router-link>
-          </li>
         </ul>
       </nav>
 
