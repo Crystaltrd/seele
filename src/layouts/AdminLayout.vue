@@ -15,14 +15,20 @@
 import Background from "../components/background.vue";
 import router from "../router";
 import AdminsHeader from "../components/AdminsHeader.vue";
+import {useRoute} from "vue-router";
+import {onMounted} from "vue";
 
 const goBack = () => {
   router.push('/');
 };
+const route = useRoute();
 
+onMounted(() => {
+  if (route.path === '/admin') {
+    router.replace('/Dashboard');
+  }
+});
 </script>
-
-
 
 <style scoped>
 .admin-container {
