@@ -2,6 +2,10 @@
   <div class="book-detail-container">
     <Background/>
 
+    <button type="button" class="go-back-btn" @click="goBack">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+
     <section id="detail">
       <div class="container">
         <div class="content-wrapper">
@@ -91,6 +95,7 @@
 <script>
 import { defineComponent } from 'vue'
 import Background from "../components/background.vue"
+import router from "../router";
 
 export default defineComponent({
   components: { Background },
@@ -108,6 +113,9 @@ export default defineComponent({
     }
   },
   methods: {
+    goBack() {
+      router.push('/');
+    },
     calculateStock() {
       if (!this.book.stock) return 0
       return this.book.stock.reduce((total, item) => total + item.stock, 0)
@@ -388,6 +396,32 @@ label {
   color: white;
   font-size: 1rem;
   font-weight: 500;
+}
+
+.go-back-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(74, 144, 226, 0.1);
+  color: #FFFFFF;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.go-back-btn:hover {
+  background: rgba(74, 144, 226, 0.1);
+  transform: translateX(-3px);
+}
+
+.go-back-btn i {
+  font-size: 0.8rem;
 }
 
 @keyframes rotate4 {
