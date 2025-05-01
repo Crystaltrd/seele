@@ -5,22 +5,24 @@
     <section id="detail">
       <div class="container">
         <div class="content-wrapper">
-          <h3 class="book-title">{{ book.booktitle }}</h3>
 
-          <div class="detail-content">
+           <div class="detail-content">
             <div class="book-cover">
               <img v-bind:alt="book.booktitle+'\'s Cover'" v-if="book.bookcover" v-bind:src="assetsurl+book.bookcover"/>
               <img v-bind:alt="book.booktitle+'\'s Cover PLACEHOLDER'" v-else src="../assets/bookcover.jpg"/>
             </div>
 
-            <div class="publication-description">
-              <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-                deserunt mollit anim id est laborum."</p>
-            </div>
+             <div class="book-header">
+               <h1 class="book-title">{{ book.booktitle }}</h1>
+               <div class="book-description">
+                 <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                   incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                   exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+                   irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                   pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
+                   deserunt mollit anim id est laborum."</p>
+               </div>
+             </div>
           </div>
 
           <div class="separator"></div>
@@ -43,34 +45,35 @@
             </div>
 
             <div class="book-info">
-              <div class="info-card">
-                <label>Publisher:</label>
-                <div class="info-value">{{ book.publisher || 'Unknown' }}</div>
+                <div class="info-item">
+                  <span class="info-label">Publisher:</span>
+                  <span class="info-value">{{ book.publisher || 'Unknown' }}</span>
+                </div>
+
+
+              <div class="info-item">
+                <span class="info-label">Publication Year:</span>
+                <span class="info-value">{{ book.bookreleaseyear || 'Unknown' }}</span>
               </div>
 
-              <div class="info-card">
-                <label>Publication Year:</label>
-                <div class="info-value">{{ book.bookreleaseyear || 'Unknown' }}</div>
+              <div class="info-item">
+                <span class="info-label">Category:</span>
+                <span class="info-value">{{ book.category || 'Unknown' }}</span>
               </div>
 
-              <div class="info-card">
-                <label>Categorie(s):</label>
-                <div class="info-value">{{ book.category || 'Unknown' }}</div>
+              <div class="info-item">
+                <span class="info-label">Language:</span>
+                <span class="info-value">{{ book.langs || 'Unknown' }}</span>
               </div>
 
-              <div class="info-card">
-                <label>language:</label>
-                <div class="info-value">{{ book.langs }}</div>
+              <div class="info-item">
+                <span class="info-label">Campus:</span>
+                <span class="info-value">{{ book.campus || 'Unknown' }}</span>
               </div>
 
-              <div class="info-card">
-                <label>Campus:</label>
-                <div class="info-value">{{ book.campus || 'Unknown' }}</div>
-              </div>
-
-              <div class="info-card">
-                <label>Available quantity:</label>
-                <div class="info-value">{{ totalStock || 'Unknown' }}</div>
+              <div class="info-item">
+                <span class="info-label">Available:</span>
+                <span class="info-value">{{ totalStock || 'Unknown' }} copies</span>
               </div>
             </div>
           </div>
@@ -167,15 +170,33 @@ export default defineComponent({
   border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
+.book-header {
+  flex: 1;
+}
+
+
 .book-title {
   font-size: 2.2rem;
   color: white;
-  text-align: center;
-  margin-bottom: 2rem;
+  text-align: left;
+  margin-bottom: 1rem;
   position: relative;
   padding-bottom: 0.5rem;
   font-weight: 600;
   letter-spacing: 1px;
+  margin-left: 0;
+}
+
+.book-description {
+  margin-top: 1.5rem;
+}
+
+.book-description p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+  line-height: 1.7;
+  text-align: justify;
+  margin: 0;
 }
 
 #detail {
@@ -191,7 +212,7 @@ export default defineComponent({
 }
 
 .book-cover {
-  width: 200px;
+  width: 240px;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
@@ -202,10 +223,6 @@ export default defineComponent({
   width: 100%;
   height: auto;
   display: block;
-}
-
-.publication-description {
-  flex: 1;
 }
 
 .publication-description p {
@@ -338,26 +355,39 @@ label {
 
 .book-info {
   display: grid;
-  grid-template-columns: repeat(2, minmax(100px, 1fr));
-  gap: 0.8rem;
+  grid-template-columns: repeat(3, minmax(100px, 1fr));
+  gap: 1rem;
   width: 100%;
 }
 
-.info-card {
+.info-item {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
-  padding: 0.6rem 0.8rem;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+.info-item:hover {
   background: rgba(255, 255, 255, 0.1);
-  min-width: 100px;
+  transform: translateY(-2px);
+}
+
+.info-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .info-value {
   color: white;
-  font-size: 0.9rem;
-  padding: 0.2rem 0;
+  font-size: 1rem;
+  font-weight: 500;
 }
 
 @keyframes rotate4 {
