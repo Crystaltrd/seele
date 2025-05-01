@@ -262,7 +262,7 @@ circle {
 
 .see-all-btn {
   margin-left: auto;
-  margin-top: 1.5rem;
+  margin-bottom: 5rem;
   background: rgba(74, 144, 226, 0.2);
   color: #FFFFFF;
   border: none;
