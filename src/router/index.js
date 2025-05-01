@@ -22,7 +22,7 @@ const routes = [
     { path: '/help', component: Help },
     { path: "/login", name: "Login", component: Login },
     { path: "/signup", name: "Signup", component: Signup },
-    { path: '/book/:serialnum',name: "BookDetails", component: BookDetails },
+    { path: '/book/:serialnum',name: "BookDetails", component: BookDetails , props: true},
     { path: '/admin', name:"adminLayout", component: AdminLayout },
     { path: '/view', name:"viewAll", component: viewAll },
     { path: '/Account', name:"AccountManagement", component: Account},
