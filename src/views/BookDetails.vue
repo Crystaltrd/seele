@@ -38,7 +38,6 @@ export default defineComponent({
     return {
       book: {},
       loading: true,
-      assetsurl: "https://crystal.tilde.institute/mellow/",
       totalStock: 0
     }
   },
@@ -49,7 +48,7 @@ export default defineComponent({
     },
     async fetchBookDetails() {
       try {
-        const response = await fetch(`https://crystal.midori-ai.xyz/cgi-bin/query/book/${this.serialnum}`)
+        const response = await fetch(`${apiurl}query/book/${this.serialnum}`)
         const data = await response.json()
         this.loading = true;
         this.book = {};
