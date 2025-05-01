@@ -5,16 +5,79 @@
     <section id="detail">
       <div class="container">
         <div class="content-wrapper">
-          <h3 class="book-title">{{ book.booktitle}}</h3>
+          <h3 class="book-title">{{ book.booktitle }}</h3>
 
+          <div class="detail-content">
+            <div class="book-cover">
+              <img v-bind:alt="book.booktitle+'\'s Cover'" v-if="book.bookcover" v-bind:src="assetsurl+book.bookcover"/>
+              <img v-bind:alt="book.booktitle+'\'s Cover PLACEHOLDER'" v-else src="../assets/bookcover.jpg"/>
+            </div>
+
+            <div class="publication-description">
+              <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+                irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
+                deserunt mollit anim id est laborum."</p>
+            </div>
+          </div>
+
+          <div class="separator"></div>
+
+          <div class="rent-section">
+            <div class="rent-controls">
+              <div class="input-field">
+                <label>borrow duration :</label>
+                <select id="category" class="select">
+                  <option value="">3 days</option>
+                  <option value="">5 days</option>
+                  <option value="">1 week</option>
+                </select>
+              </div>
+
+              <button class="btn" type="submit">
+                <i class="fa-solid fa-cart-plus" style="color: #ffffff;"></i>
+                <span>borrow</span>
+              </button>
+            </div>
+
+            <div class="book-info">
+              <div class="info-card">
+                <label>Publisher:</label>
+                <div class="info-value">{{ book.publisher || 'Unknown' }}</div>
+              </div>
+
+              <div class="info-card">
+                <label>Publication Year:</label>
+                <div class="info-value">{{ book.bookreleaseyear || 'Unknown' }}</div>
+              </div>
+
+              <div class="info-card">
+                <label>Categorie(s):</label>
+                <div class="info-value">{{ book.category || 'Unknown' }}</div>
+              </div>
+
+              <div class="info-card">
+                <label>language:</label>
+                <div class="info-value">{{ book.langs }}</div>
+              </div>
+
+              <div class="info-card">
+                <label>Campus:</label>
+                <div class="info-value">{{ book.campus || 'Unknown' }}</div>
+              </div>
+
+              <div class="info-card">
+                <label>Available quantity:</label>
+                <div class="info-value">{{ totalStock || 'Unknown' }}</div>
+              </div>
+            </div>
+          </div>
           <div v-if="loading" class="loading-spinner">
             <svg viewBox="25 25 50 50">
               <circle r="20" cy="50" cx="50"></circle>
             </svg>
-          </div>
-
-          <div class="publication-grid">
-
           </div>
         </div>
       </div>
@@ -56,9 +119,7 @@ export default defineComponent({
         if (data.booktitle) {
           this.book = data
         }
-
         else if (data.res) {
-
           const foundBook = data.res.find(book => book.serialnum === this.serialnum)
           if (foundBook) {
             this.book = foundBook
@@ -100,7 +161,7 @@ export default defineComponent({
   background: rgba(44, 44, 58, 0.1);
   backdrop-filter: blur(3px);
   border-radius: 20px;
-  padding: 0 1.5rem;
+  padding: 2rem;
   width: 1100px;
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.5);
@@ -110,7 +171,7 @@ export default defineComponent({
   font-size: 2.2rem;
   color: white;
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   position: relative;
   padding-bottom: 0.5rem;
   font-weight: 600;
@@ -123,33 +184,36 @@ export default defineComponent({
   align-items: center;
 }
 
-.publication-grid {
+.detail-content {
   display: flex;
   gap: 2rem;
-  padding: 2rem 0;
-  scrollbar-width: none;
-  justify-content: center;
-  flex-wrap: wrap;
+  align-items: flex-start;
 }
 
-.publication-grid::-webkit-scrollbar {
-  display: none;
+.book-cover {
+  width: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
 }
 
-svg {
-  width: 3.25em;
-  transform-origin: center;
-  animation: rotate4 2s linear infinite;
+.book-cover img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
-circle {
-  fill: none;
-  stroke: hsl(214, 97%, 59%);
-  stroke-width: 2;
-  stroke-dasharray: 1, 200;
-  stroke-dashoffset: 0;
-  stroke-linecap: round;
-  animation: dash4 1.5s ease-in-out infinite;
+.publication-description {
+  flex: 1;
+}
+
+.publication-description p {
+  color: white;
+  font-size: 1rem;
+  line-height: 1.6;
+  text-align: justify;
+  margin: 0;
 }
 
 .loading-spinner {
@@ -174,6 +238,126 @@ circle {
   stroke-dashoffset: 0;
   stroke-linecap: round;
   animation: dash4 1.5s ease-in-out infinite;
+}
+
+.input-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 200px;
+}
+
+label {
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: left;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #4A90E2;
+  width: 200px ;
+  color: white;
+  font-weight: 600;
+  padding: 0.8rem 2rem;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 1rem;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn i{
+  margin-left: 5px;
+}
+
+.btn:hover {
+  background: #3a7bc8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.separator {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.3);
+  margin: 1.5rem 0;
+}
+
+.rent-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-top: 1.5rem;
+}
+
+label {
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: left;
+}
+
+.select {
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #4A90E2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+}
+
+.rent-section {
+  display: flex;
+  gap: 3rem;
+  margin-top: 1.5rem;
+}
+
+.book-info {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(100px, 1fr));
+  gap: 0.8rem;
+  width: 100%;
+}
+
+.info-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  min-width: 100px;
+}
+
+.info-value {
+  color: white;
+  font-size: 0.9rem;
+  padding: 0.2rem 0;
 }
 
 @keyframes rotate4 {
