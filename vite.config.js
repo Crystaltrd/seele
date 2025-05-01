@@ -9,7 +9,7 @@ export default defineConfig({
         allowedHosts: ['seele.serveo.net']
     },
     define: {
-        apiurl: JSON.stringify('https://mellow.serveo.net/'),
+        apiurl: JSON.stringify('https://crystal.midori-ai.xyz/cgi-bin/'),
         assetsurl: JSON.stringify('https://crystal.tilde.institute/mellow/')
     }
 })
