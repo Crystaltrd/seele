@@ -49,6 +49,10 @@
             </div>
 
             <div class="book-info">
+              <div class="info-item">
+                <span class="info-label">Authors:</span>
+                <span class="info-value" v-for="author in book.authors" v-if="book.authors && !loading">{{ author || 'Unknown' }}</span>
+              </div>
                 <div class="info-item">
                   <span class="info-label">Publisher:</span>
                   <span class="info-value">{{ book.publisher || 'Unknown' }}</span>
@@ -62,22 +66,18 @@
 
               <div class="info-item">
                 <span class="info-label">Category:</span>
-                <span class="info-value">{{ book.category || 'Unknown' }}</span>
+                <span class="info-value">{{ book.category + ' - ' + book.categoryName || 'Unknown' }}</span>
               </div>
 
               <div class="info-item">
                 <span class="info-label">Language:</span>
-                <span class="info-value">{{ book.langs || 'Unknown' }}</span>
+                <span class="info-value" v-for="lang in book.langs" v-if="book.langs && !loading">{{ lang || 'Unknown' }}</span>
               </div>
 
-              <div class="info-item">
-                <span class="info-label">Campus:</span>
-                <span class="info-value">{{ book.campus || 'Unknown' }}</span>
-              </div>
 
               <div class="info-item">
-                <span class="info-label">Available:</span>
-                <span class="info-value">{{ totalStock || 'Unknown' }} copies</span>
+                <span class="info-label">Available Copies:</span>
+                <span class="info-value" v-for="stock in book.stock" v-if="book.stock && !loading"><span :class="{highlight : userCampus === stock.campus}">{{ stock.campus+': '+stock.stock || 'Unknown: Unknown' }}</span> </span>
               </div>
             </div>
           </div>
@@ -108,38 +108,37 @@ export default defineComponent({
   data() {
     return {
       book: {},
+      userCampus: "",
       loading: true,
-      totalStock: 0
     }
   },
   methods: {
     goBack() {
       router.push('/');
     },
-    calculateStock() {
-      if (!this.book.stock) return 0
-      return this.book.stock.reduce((total, item) => total + item.stock, 0)
-    },
+
     async fetchBookDetails() {
       try {
-        const response = await fetch(`${apiurl}query/book/${this.serialnum}`)
+        const response = await fetch(apiurl + `query/book/${this.serialnum}`, {
+          method: "GET",
+          headers: {
+            Accept: 'application/json',
+          },
+          credentials: 'include'
+        });
         const data = await response.json()
-        this.loading = true;
-        this.book = {};
-
-        if (data.booktitle) {
-          this.book = data
-        }
-        else if (data.res) {
+        if (data.res) {
           const foundBook = data.res.find(book => book.serialnum === this.serialnum)
           if (foundBook) {
             this.book = foundBook
+            if(data.user.authenticated){
+              this.userCampus = data.user.campus;
+            }
           } else {
             console.error("book not found")
           }
         }
 
-        this.totalStock = this.calculateStock()
       } catch (error) {
         console.error("Error fetching book details:", error)
       } finally {
@@ -154,6 +153,9 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.highlight {
+  color: green;
+}
 .book-detail-container {
   position: relative;
   min-height: 100vh;
