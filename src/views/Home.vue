@@ -10,7 +10,7 @@
           <div class="publications-grid">
             <template v-for="book in books" v-if="!loadingbooks">
               <div class="publication" v-bind:id="'PUBSN'+book.serialnum" @click="goToBookDetails(book.serialnum)">
-                <img v-bind:alt="book.booktitle+'\'s Cover'" v-if="book.bookcover" v-bind:src="assetsurl+book.bookcover"/>
+                <img v-bind:alt="book.booktitle+'\'s Cover'" v-if="book.bookcover" v-bind:src="covers_url+book.bookcover"/>
                 <img v-bind:alt="book.booktitle+'\'s Cover PLACEHOLDER'" v-else src="../assets/bookcover.jpg"/>
 
                 <span class="release-year">{{ book.bookreleaseyear }}</span>
@@ -47,6 +47,7 @@ export default defineComponent({
     return {
       books: "",
       limit: 5,
+      covers_url: pubURL,
       loadingbooks: true,
     };
   },

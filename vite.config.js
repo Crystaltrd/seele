@@ -10,6 +10,6 @@ export default defineConfig({
     },
     define: {
         apiurl: JSON.stringify('https://crystal.midori-ai.xyz/cgi-bin/'),
-        assetsurl: JSON.stringify('https://crystal.tilde.institute/mellow/')
+        pubURL: JSON.stringify('https://crystal.midori-ai.xyz/pub/')
     }
 })

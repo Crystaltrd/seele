@@ -12,19 +12,14 @@
 
            <div class="detail-content">
             <div class="book-cover">
-              <img v-bind:alt="book.booktitle+'\'s Cover'" v-if="book.bookcover" v-bind:src="assetsurl+book.bookcover"/>
+              <img v-bind:alt="book.booktitle+'\'s Cover'" v-if="book.bookcover" v-bind:src="covers_url+book.bookcover"/>
               <img v-bind:alt="book.booktitle+'\'s Cover PLACEHOLDER'" v-else src="../assets/bookcover.jpg"/>
             </div>
 
              <div class="book-header">
                <h1 class="book-title">{{ book.booktitle }}</h1>
                <div class="book-description">
-                 <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                   incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                   exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                   irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                   pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-                   deserunt mollit anim id est laborum."</p>
+                 <p>{{ book.description }}</p>
                </div>
              </div>
           </div>
@@ -109,6 +104,7 @@ export default defineComponent({
     return {
       book: {},
       userCampus: "",
+      covers_url: pubURL,
       loading: true,
     }
   },

@@ -257,7 +257,7 @@ export default defineComponent({
             userDisplayName.value = this.displayName;
             await Swal.fire({
               title: "Account created successfully!",
-              text: `Welcome, ${this.displayName}!`,
+              text: `You are being redirected to the login page, ${this.displayName}!`,
               icon: "success",
               iconColor: "#4A90E2",
               draggable: true,
@@ -266,7 +266,7 @@ export default defineComponent({
               timer: 3000,
               timerProgressBar: true
             });
-            const redirectTo = this.$route.query.redirect || '/';
+            const redirectTo = this.$route.query.redirect || '/login';
             this.$router.push(redirectTo);
           } else {
             this.serverError = jsonResponse.error || "Registration failed. Please check your information.";
