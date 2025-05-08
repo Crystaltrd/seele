@@ -3,6 +3,16 @@
      <Background/>
       <AdminsHeader/>
 
+    <section id="alert">
+      <div class="container">
+        <div class="content-wrapper">
+          <h3 class="section-heading">Delay Alerts</h3>
+          <div class="alert-grid">
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="history">
       <div class="container">
         <div class="content-wrapper">
@@ -20,15 +30,6 @@
       </div>
     </section>
 
-    <section id="alert">
-      <div class="container">
-        <div class="content-wrapper">
-          <h3 class="section-heading">Delay Alerts</h3>
-          <div class="alert-grid">
-          </div>
-        </div>
-      </div>
-    </section>
   </div>
 </template>
 

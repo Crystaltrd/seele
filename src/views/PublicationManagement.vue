@@ -29,7 +29,7 @@
 
               <button class="btn" type="submit">
                 <i class="fa-solid fa-pen" style="color: #ffffff;"></i>
-                <span>modify</span>
+                <span>Edit</span>
               </button>
             </div>
           </div>
