@@ -148,6 +148,11 @@ const toggleSearchModal = () => {
 };
 
 const handleLogout = async () => {
+
+  localStorage.removeItem('isAuthenticated');
+  localStorage.removeItem('userRole');
+  localStorage.removeItem('userDisplayName');
+
   try {
     const response = await fetch(apiurl + 'deauth', {
       method: 'POST',

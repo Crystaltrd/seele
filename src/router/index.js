@@ -33,6 +33,21 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(),
     routes
-})
+});
+
+router.beforeEach((to, from, next) => {
+    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+    const userRole = localStorage.getItem('userRole');
+
+    if (to.path.startsWith('/admin')) {
+        if (!isAuthenticated) {
+            return next('/login');
+        }
+        if (!["ADMIN", "STAFF", "SHELF MANAGER", "LIBRARIAN"].includes(userRole)) {
+            return next('/');
+        }
+    }
+    next();
+});
 
 export default router
