@@ -166,6 +166,20 @@ export default {
             });
 
 
+            if (jsonResponse.user?.frozen === true) {
+              await Swal.fire({
+                title: "Account Frozen",
+                text: "Your account has been frozen. Please contact support.",
+                icon: "warning",
+                iconColor: "#FFA500",
+                background: "#2c2c3a",
+                color: "#fff",
+                confirmButtonColor: "#FFA500",
+                allowOutsideClick: false
+              });
+            }
+
+
             let redirectTo = router.currentRoute.value.query.redirect || '/';
             if (jsonResponse.user?.role === "ADMIN" || jsonResponse.user?.role === "STAFF" || jsonResponse.user?.role === "SHELF MANAGER" || jsonResponse.user?.role === "LIBRARIAN") {
               redirectTo = '/admin';
