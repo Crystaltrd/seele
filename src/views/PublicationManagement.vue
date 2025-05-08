@@ -15,7 +15,7 @@
                   <span>add</span>
                 </button>
 
-                <button class="btn" type="submit">
+                <button class="btn" type="button" @click="deleteBook">
                   <i class="fa-solid fa-minus" style="color: #ffffff;"></i>
                   <span>delete</span>
                 </button>
@@ -47,7 +47,13 @@
             </div>
 
             <div class="books-list">
-              <div class="book-item" v-for="book in books" :key="book.serialnum">
+              <div
+                  class="book-item"
+                  v-for="book in books"
+                  :key="book.serialnum"
+                  :class="{ selected: selectedBook?.serialnum === book.serialnum }"
+                  @click="selectBook(book)"
+              >
                 <div class="book-info">
                   <h4>{{ book.booktitle }}</h4>
                   <div class="meta">
@@ -265,6 +271,7 @@
 import { ref, onMounted } from 'vue'
 import Background from "../components/background.vue"
 import AdminsHeader from "../components/AdminsHeader.vue"
+import Swal from 'sweetalert2'
 
 const books = ref([])
 const isLoading = ref(true)
@@ -278,6 +285,72 @@ const languages = ref([])
 const loadingLanguages = ref(false)
 const docTypes = ref([])
 const loadingDocTypes = ref(false)
+const selectedBook = ref(null);
+
+function selectBook(book) {
+  selectedBook.value = selectedBook.value?.serialnum === book.serialnum
+      ? null
+      : book;
+}
+
+async function deleteBook() {
+  if (!selectedBook.value) {
+    await Swal.fire({
+      title: "No publication selected",
+      text: "Please select a publication first",
+      icon: "warning",
+      iconColor: "#FFA726",
+      background: "#2c2c3a",
+      color: "#fff"
+    });
+    return;
+  }
+
+  const result = await Swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    iconColor: "#FFA726",
+    showCancelButton: true,
+    confirmButtonColor: "#4A90E2",
+    cancelButtonColor: "#FF5252",
+    background: "#2c2c3a",
+    color: "#fff",
+    confirmButtonText: "Yes, delete it!"
+  });
+
+  if (result.isConfirmed) {
+    try {
+      // API call here
+      const response = await fetch(`${apiurl}book/${selectedBook.value.serialnum}`, {
+        method: "DELETE",
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        await Swal.fire({
+          title: "Deleted!",
+          text: "The publication has been deleted.",
+          icon: "success",
+          iconColor: "#4A90E2",
+          background: "#2c2c3a",
+          color: "#fff"
+        });
+        await fetchBooks();
+        selectedBook.value = null;
+      }
+    } catch (error) {
+      await Swal.fire({
+        title: "Error!",
+        text: "An error occurred while deleting the publication.",
+        icon: "error",
+        iconColor: "#FF5252",
+        background: "#2c2c3a",
+        color: "#fff"
+      });
+    }
+  }
+}
 
 async function getLanguages() {
   serverError.value = ""
@@ -612,6 +685,13 @@ select[multiple] option:checked {
   flex-direction: column;
   gap: 0.5rem;
 }
+
+.book-item.selected {
+  background: rgba(74, 144, 226, 0.1) !important;
+  transform: translateX(5px);
+  border-left: 3px solid #4A90E2;
+}
+
 .image-upload-container {
   position: relative;
   margin-top: 0.5rem;
