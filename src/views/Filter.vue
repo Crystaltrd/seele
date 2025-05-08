@@ -26,9 +26,17 @@
 
           <div class="input-field">
             <label for="subject">Category</label>
-            <select id="category" class="select">
+            <select id="category" class="select" v-if="!loadingCategories">
               <option value="">Any category</option>
+              <option
+                  v-for="category in categories"
+                  :key="category.categoryClass"
+                  :value="category.categoryClass"
+              >
+                {{ category.categoryName }}
+              </option>
             </select>
+            <div v-else class="loading">Loading categories...</div>
           </div>
 
           <div class="input-field">
@@ -53,36 +61,72 @@
 
           <div class="input-field">
             <label for="doc-type">Document Type</label>
-            <select id="doc-type" class="select">
+            <select id="doc-type" class="select" v-if="!loadingDocTypes">
               <option value="">Any type</option>
+              <option
+                  v-for="docType in docTypes"
+                  :key="docType"
+                  :value="docType"
+              >
+                {{ docType }}
+              </option>
             </select>
+            <div v-else class="loading">Loading document types...</div>
           </div>
 
           <div id="single-year-container" class="input-field">
-            <label for="year">publication year</label>
+            <label for="year">Publication year</label>
             <select id="year" class="select">
-              <option value="">any year</option>
+              <option value="">Any year</option>
+              <option
+                  v-for="year in years"
+                  :key="year"
+                  :value="year"
+              >
+                {{ year }}
+              </option>
             </select>
           </div>
 
           <div id="year-range-container" class="input-field" style="display: none;">
-            <label for="start-year">from</label>
+            <label for="start-year">From</label>
             <select id="start-year" class="select">
-              <option value="">any year</option>
-
+              <option value="">Any year</option>
+              <option
+                  v-for="year in years"
+                  :key="'start-'+year"
+                  :value="year"
+              >
+                {{ year }}
+              </option>
             </select>
 
-            <label for="end-year">to</label>
+            <label for="end-year">To</label>
             <select id="end-year" class="select">
-              <option value="">any year</option>
+              <option value="">Any year</option>
+              <option
+                  v-for="year in years"
+                  :key="'end-'+year"
+                  :value="year"
+              >
+                {{ year }}
+              </option>
             </select>
           </div>
 
           <div class="input-field">
             <label for="language">Language</label>
-            <select id="language" class="select">
+            <select id="language" class="select" v-if="!loadingLanguages">
               <option value="">Any language</option>
+              <option
+                  v-for="language in languages"
+                  :key="language"
+                  :value="language"
+              >
+                {{ language.toUpperCase() }}
+              </option>
             </select>
+            <div v-else class="loading">Loading languages...</div>
           </div>
 
         </div>
@@ -255,6 +299,19 @@ label {
   gap: 0.5rem;
   cursor: pointer;
 }
+
+.loading {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  padding: 0.5rem 0;
+}
+
+.error-message {
+  color: #ff6b6b;
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
 @media (max-width: 768px) {
   .wrapper {
     padding: 1.5rem;
@@ -328,11 +385,23 @@ label {
 }
 </style>
 
-<script setup lang="ts">
-import { ref } from 'vue';
+<script setup>
+import { ref, onMounted } from 'vue';
 import Background from "../components/background.vue";
 
 const yearSelectionType = ref('single');
+const categories = ref([]);
+const languages = ref([]);
+const docTypes = ref([]);
+const loadingCategories = ref(false);
+const loadingLanguages = ref(false);
+const loadingDocTypes = ref(false);
+const serverError = ref("");
+
+
+const currentYear = new Date().getFullYear();
+const years = Array.from({length: currentYear - 1500 + 1}, (_, i) => currentYear - i);
+
 
 function toggleYearSelection() {
   const singleYearContainer = document.getElementById('single-year-container');
@@ -346,4 +415,78 @@ function toggleYearSelection() {
     rangeContainer.style.display = 'block';
   }
 }
+
+async function getCategories() {
+  serverError.value = "";
+  loadingCategories.value = true;
+  try {
+    const response = await fetch(`${apiurl}query/category`, {
+      method: "GET",
+      headers: { 'Accept': 'application/json' },
+      credentials: 'include'
+    });
+
+    const data = await response.json();
+    if (data.res) {
+      categories.value = data.res.sort((a, b) =>
+          a.categoryClass.localeCompare(b.categoryClass)
+      );
+    }
+  } catch (error) {
+    serverError.value = "Failed to load categories";
+  } finally {
+    loadingCategories.value = false;
+  }
+}
+
+async function getLanguages() {
+  serverError.value = "";
+  loadingLanguages.value = true;
+  try {
+    const response = await fetch(`${apiurl}query/lang`, {
+      method: "GET",
+      headers: { 'Accept': 'application/json' },
+      credentials: 'include'
+    });
+
+    const data = await response.json();
+    if (data.res) {
+      languages.value = data.res.map(lang => lang.langcode);
+    }
+  } catch (error) {
+    serverError.value = "Failed to load languages";
+  } finally {
+    loadingLanguages.value = false;
+  }
+}
+
+async function getDocTypes() {
+  serverError.value = "";
+  loadingDocTypes.value = true;
+  try {
+    const response = await fetch(`${apiurl}query/doctype`, {
+      method: "GET",
+      headers: { 'Accept': 'application/json' },
+      credentials: 'include'
+    });
+
+    const data = await response.json();
+    if (data.res) {
+      docTypes.value = data.res.map(type => type.typeName);
+    }
+  } catch (error) {
+    serverError.value = "Failed to load document types";
+  } finally {
+    loadingDocTypes.value = false;
+  }
+}
+
+onMounted(async () => {
+  await Promise.all([
+    getCategories(),
+    getLanguages(),
+    getDocTypes()
+  ]);
+  toggleYearSelection();
+});
 </script>
