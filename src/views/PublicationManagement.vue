@@ -20,7 +20,7 @@
                   <span>delete</span>
                 </button>
 
-                <button class="btn" type="submit">
+                <button class="btn" type="button" @click="showEditAlert">
                   <i class="fa-solid fa-pen" style="color: #ffffff;"></i>
                   <span>Edit</span>
                 </button>
@@ -28,11 +28,44 @@
 
               <div class="filter-wrapper">
                 <div class="input-field">
-                  <select id="filter" class="select">
-                    <option value="">Filter</option>
+                  <select id="filter-type" class="select" v-model="filterType">
+                    <option value="">Filter by...</option>
+                    <option value="category">Category</option>
+                    <option value="type">Type</option>
+                    <option value="language">Language</option>
+                    <option value="campus">Campus</option>
+                  </select>
+                </div>
+
+                <div class="input-field" v-if="filterType">
+                  <select
+                      id="filter-value"
+                      class="select"
+                      v-model="filterValue"
+                      @change="applyFilter"
+                  >
+                    <option value="">All {{ filterType }}</option>
+                    <option
+                        v-for="option in filterOptions"
+                        :key="option.value"
+                        :value="option.value"
+                    >
+                      {{ option.label }}
+                    </option>
                   </select>
                 </div>
               </div>
+
+              <button
+                  class="btn"
+                  type="button"
+                  @click="resetFilters"
+                  v-if="filterType"
+              >
+                <i class="fa-solid fa-rotate-left"></i>
+                <span>Reset</span>
+              </button>
+
             </div>
 
 
@@ -268,7 +301,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch} from 'vue'
 import Background from "../components/background.vue"
 import AdminsHeader from "../components/AdminsHeader.vue"
 import Swal from 'sweetalert2'
@@ -285,12 +318,95 @@ const languages = ref([])
 const loadingLanguages = ref(false)
 const docTypes = ref([])
 const loadingDocTypes = ref(false)
-const selectedBook = ref(null);
+const selectedBook = ref(null)
+const filterType = ref('')
+const filterValue = ref('')
+const filterOptions = ref([])
+const originalBooks = ref([])
+
+function resetFilters() {
+  filterType.value = '';
+  filterValue.value = '';
+  books.value = [...originalBooks.value];
+}
+
+watch(filterType, (newType) => {
+  filterValue.value = '';
+  updateFilterOptions(newType);
+});
+
+function updateFilterOptions(type) {
+  if (!type) {
+    filterOptions.value = [];
+    return;
+  }
+
+  switch(type) {
+    case 'category':
+      filterOptions.value = categories.value.map(cat => ({
+        value: cat.categoryClass,
+        label: cat.categoryName
+      }));
+      break;
+    case 'type':
+      filterOptions.value = docTypes.value.map(type => ({
+        value: type,
+        label: type
+      }));
+      break;
+    case 'language':
+      filterOptions.value = languages.value.map(lang => ({
+        value: lang,
+        label: lang.toUpperCase()
+      }));
+      break;
+    case 'campus':
+      filterOptions.value = campuses.value.map(campus => ({
+        value: campus,
+        label: campus
+      }));
+      break;
+  }
+}
+
+function applyFilter() {
+  if (!filterValue.value) {
+    books.value = [...originalBooks.value];
+    return;
+  }
+
+  books.value = originalBooks.value.filter(book => {
+    switch(filterType.value) {
+      case 'category':
+        return book.category === filterValue.value;
+      case 'type':
+        return book.type === filterValue.value;
+      case 'language':
+        return book.langs?.includes(filterValue.value);
+      case 'campus':
+        return book.stock?.some(s => s.campus === filterValue.value && s.stock > 0);
+      default:
+        return true;
+    }
+  });
+}
 
 function selectBook(book) {
   selectedBook.value = selectedBook.value?.serialnum === book.serialnum
       ? null
       : book;
+}
+
+function showEditAlert() {
+  Swal.fire({
+    title: "Option not available yet",
+    text: "This feature is not yet available but will be soon!",
+    icon: "info",
+    iconColor: "#4A90E2",
+    background: "#2c2c3a",
+    color: "#fff",
+    confirmButtonColor: "#4A90E2"
+  });
 }
 
 async function deleteBook() {
@@ -525,30 +641,37 @@ function removeImage() {
 
 async function fetchBooks() {
   try {
+    isLoading.value = true;
     const response = await fetch(`${apiurl}query/book`, {
       method: "GET",
       headers: { 'Accept': 'application/json' },
       credentials: 'include'
-    })
+    });
 
-    const data = await response.json()
+    const data = await response.json();
     if (data.res) {
-      books.value = data.res
+      books.value = data.res;
+      originalBooks.value = [...data.res];
     }
+    return data.res;
   } catch (error) {
-    console.error("Error fetching books:", error)
+    console.error("Error fetching books:", error);
+    return [];
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
 }
 
-onMounted(() => {
-  fetchBooks()
-  getCampuses()
-  getCategories()
-  getLanguages()
-  getDocTypes()
-})
+onMounted(async () => {
+  await fetchBooks();
+  await Promise.all([
+    getCampuses(),
+    getCategories(),
+    getLanguages(),
+    getDocTypes()
+  ]);
+  updateFilterOptions(filterType.value);
+});
 </script>
 
 <style scoped>
@@ -847,7 +970,15 @@ select[multiple] option {
 }
 
 .filter-wrapper {
-  justify-content: center;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+@media (max-width: 768px) {
+  .filter-wrapper {
+    flex-direction: column;
+  }
 }
 
 .btn {
