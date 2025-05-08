@@ -8,13 +8,33 @@
         <div class="content-wrapper">
           <h3 class="section-heading">Publications list</h3>
           <div class="account-grid">
-            <div class="filter-wrapper">
-              <div class="input-field">
-                <select id="filter" class="select">
-                  <option value="">Filter</option>
-                </select>
+            <div class="filter-actions-wrapper">
+              <div class="btn-wrapper">
+                <button class="btn" type="submit">
+                  <i class="fa-solid fa-plus" style="color: #ffffff;"></i>
+                  <span>add</span>
+                </button>
+
+                <button class="btn" type="submit">
+                  <i class="fa-solid fa-minus" style="color: #ffffff;"></i>
+                  <span>delete</span>
+                </button>
+
+                <button class="btn" type="submit">
+                  <i class="fa-solid fa-pen" style="color: #ffffff;"></i>
+                  <span>Edit</span>
+                </button>
+              </div>
+
+              <div class="filter-wrapper">
+                <div class="input-field">
+                  <select id="filter" class="select">
+                    <option value="">Filter</option>
+                  </select>
+                </div>
               </div>
             </div>
+
 
             <div v-if="isLoading" class="loading">
               <svg viewBox="25 25 50 50" class="spinner">
@@ -41,23 +61,6 @@
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div class="btn-wrapper">
-              <button class="btn" type="submit">
-                <i class="fa-solid fa-plus" style="color: #ffffff;"></i>
-                <span>add</span>
-              </button>
-
-              <button class="btn" type="submit">
-                <i class="fa-solid fa-minus" style="color: #ffffff;"></i>
-                <span>delete</span>
-              </button>
-
-              <button class="btn" type="submit">
-                <i class="fa-solid fa-pen" style="color: #ffffff;"></i>
-                <span>Edit</span>
-              </button>
             </div>
           </div>
         </div>
@@ -202,8 +205,17 @@ onMounted(() => {
   min-width: 150px;
 }
 
+.filter-actions-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
 .filter-wrapper {
-  margin-left: auto;
+  justify-content: center;
 }
 
 .btn {
@@ -225,10 +237,9 @@ onMounted(() => {
 
 .btn-wrapper {
   display: flex;
-  gap: 1rem;
+  gap: 2rem;
   justify-content: center;
-  width: 100%;
-  margin-top: 1rem;
+  margin-top: 0;
 }
 
 .btn i{
@@ -295,38 +306,54 @@ onMounted(() => {
 .loading {
   display: flex;
   justify-content: center;
-  padding: 2rem;
+  align-items: center;
+  height: 200px;
+  width: 100%;
 }
 
 .spinner {
-  width: 3em;
-  animation: rotate4 2s linear infinite;
+  width: 50px;
+  height: 50px;
 }
 
 .spinner circle {
   fill: none;
   stroke: #4A90E2;
-  stroke-width: 2;
+  stroke-width: 4;
+  stroke-linecap: round;
   stroke-dasharray: 1, 200;
   stroke-dashoffset: 0;
-  stroke-linecap: round;
-  animation: dash4 1.5s ease-in-out infinite;
+  animation: dash 1.5s ease-in-out infinite, rotate 2s linear infinite;
+  transform-origin: center;
 }
 
 .empty {
   text-align: center;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.2rem;
   padding: 2rem;
+  width: 100%;
 }
 
-@keyframes rotate4 {
-  100% { transform: rotate(360deg); }
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-@keyframes dash4 {
-  0% { stroke-dasharray: 1, 200; stroke-dashoffset: 0; }
-  50% { stroke-dasharray: 90, 200; stroke-dashoffset: -35px; }
-  100% { stroke-dashoffset: -125px; }
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -124;
+  }
 }
 
 </style>
