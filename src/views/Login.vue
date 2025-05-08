@@ -142,10 +142,17 @@ export default {
             isAuthenticated.value = true;
             localStorage.setItem('isAuthenticated', true);
 
+            if (jsonResponse.user?.role) {
+              localStorage.setItem('userRole', jsonResponse.user.role);
+            }
+
             if (jsonResponse.user && jsonResponse.user.disp_name) {
               userDisplayName.value = jsonResponse.user.disp_name;
               localStorage.setItem('userDisplayName', jsonResponse.user.disp_name);
             }
+
+
+
             await Swal.fire({
               title: "Login successfully !",
               text: `Welcome,  ${jsonResponse.user.disp_name} !`,
@@ -157,7 +164,12 @@ export default {
               timer: 3000,
               timerProgressBar: true
             });
-            const redirectTo = router.currentRoute.value.query.redirect || '/';
+
+
+            let redirectTo = router.currentRoute.value.query.redirect || '/';
+            if (jsonResponse.user?.role === "ADMIN" || jsonResponse.user?.role === "STAFF" || jsonResponse.user?.role === "SHELF MANAGER" || jsonResponse.user?.role === "LIBRARIAN") {
+              redirectTo = '/admin';
+            }
             await router.push(redirectTo);
           } else {
             console.warn("Login failed:", jsonResponse.error || "Unknown error");
