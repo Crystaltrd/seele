@@ -27,15 +27,11 @@
           <div class="separator"></div>
 
           <div class="rent-section">
-            <div class="rent-controls">
-              <div class="input-field">
-                <label>borrow duration :</label>
-                <select id="category" class="select">
-                  <option value="">3 days</option>
-                  <option value="">5 days</option>
-                  <option value="">1 week</option>
-                </select>
-              </div>
+            <div class="rent-controls" v-if="showRentControls">
+              <button class="btn" type="submit">
+                <i class="fa-solid fa-arrow-rotate-left" style="color: #ffffff;"></i>
+                <span>take back</span>
+              </button>
 
               <button class="btn" type="submit">
                 <i class="fa-solid fa-cart-plus" style="color: #ffffff;"></i>
@@ -62,6 +58,8 @@
               <div class="info-item">
                 <span class="info-label">Category:</span>
                 <span class="info-value">{{ book.category + ' - ' + book.categoryName || 'Unknown' }}</span>
+                <span class="info-label">Type:</span>
+                <span class="info-value">{{ book.type || 'Unknown' }}</span>
               </div>
 
               <div class="info-item">
@@ -106,6 +104,7 @@ export default defineComponent({
       userCampus: "",
       covers_url: pubURL,
       loading: true,
+      userRole: null
     }
   },
   methods: {
@@ -127,8 +126,9 @@ export default defineComponent({
           const foundBook = data.res.find(book => book.serialnum === this.serialnum)
           if (foundBook) {
             this.book = foundBook
-            if(data.user.authenticated){
+            if(data.user){
               this.userCampus = data.user.campus;
+              this.userRole = data.user.role;
             }
           } else {
             console.error("book not found")
@@ -140,6 +140,16 @@ export default defineComponent({
       } finally {
         this.loading = false
       }
+    }
+  },
+  computed: {
+    showRentControls() {
+      return this.userRole && (
+          this.userRole === "ADMIN" ||
+          this.userRole === "STAFF" ||
+          this.userRole === "SHELF MANAGER" ||
+          this.userRole === "LIBRARIAN"
+      );
     }
   },
   mounted() {
