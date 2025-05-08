@@ -104,58 +104,56 @@ export default defineComponent({
       userCampus: "",
       covers_url: pubURL,
       loading: true,
-      userRole: null
+      userRole: localStorage.getItem('userRole') || null // Récupération du rôle
     }
   },
   methods: {
     goBack() {
       router.push('/');
     },
-
     async fetchBookDetails() {
       try {
         const response = await fetch(apiurl + `query/book/${this.serialnum}`, {
           method: "GET",
-          headers: {
-            Accept: 'application/json',
-          },
+          headers: { 'Accept': 'application/json' },
           credentials: 'include'
         });
-        const data = await response.json()
+
+        const data = await response.json();
+        console.log("API Response:", data);
+
         if (data.res) {
-          const foundBook = data.res.find(book => book.serialnum === this.serialnum)
+          const foundBook = data.res.find(book => book.serialnum === this.serialnum);
           if (foundBook) {
-            this.book = foundBook
-            if(data.user){
-              this.userCampus = data.user.campus;
-              this.userRole = data.user.role;
-            }
-          } else {
-            console.error("book not found")
+            this.book = foundBook;
+          }
+        }
+
+        if (data.user) {
+          this.userCampus = data.user.campus;
+          if (data.user.role && !this.userRole) {
+            this.userRole = data.user.role;
           }
         }
 
       } catch (error) {
-        console.error("Error fetching book details:", error)
+        console.error("Error:", error);
       } finally {
-        this.loading = false
+        this.loading = false;
       }
     }
   },
   computed: {
     showRentControls() {
-      return this.userRole && (
-          this.userRole === "ADMIN" ||
-          this.userRole === "STAFF" ||
-          this.userRole === "SHELF MANAGER" ||
-          this.userRole === "LIBRARIAN"
-      );
+      console.log("Current role:", this.userRole); // Debug
+      const allowedRoles = ["ADMIN", "STAFF", "SHELF MANAGER", "LIBRARIAN"];
+      return this.userRole && allowedRoles.includes(this.userRole.toUpperCase());
     }
   },
   mounted() {
-    this.fetchBookDetails()
+    this.fetchBookDetails();
   }
-})
+});
 </script>
 
 <style scoped>
