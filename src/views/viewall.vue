@@ -28,18 +28,30 @@
             <div class="pagination-controls" v-if="totalPages > 1">
               <button
                   @click="prevPage"
-                  :disabled="currentPage === 1"
+                  :disabled="currentPage === 0"
                   class="pagination-btn"
               >
-                Previous
+                <i class="fas fa-chevron-left"></i>
               </button>
-              <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+
+              <div class="page-numbers">
+                <button
+                    v-for="page in visiblePages"
+                    :key="page"
+                    @click="goToPage(page)"
+                    :class="{ active: currentPage === page }"
+                    class="page-btn"
+                >
+                  {{ page + 1 }}
+                </button>
+              </div>
+
               <button
                   @click="nextPage"
-                  :disabled="currentPage === totalPages"
+                  :disabled="currentPage === totalPages - 1"
                   class="pagination-btn"
               >
-                Next
+                <i class="fas fa-chevron-right"></i>
               </button>
             </div>
           </div>
@@ -61,57 +73,45 @@ export default defineComponent({
   components: {Background},
   data() {
     return {
-      books: "",
+      books: [],
       loadingbooks: true,
-      currentPage: 1,
-      itemsPerPage: 10,
+      currentPage: 0,
+      itemsPerPage: 8,
       totalBooks: 0,
+      maxVisiblePages: 5
     };
   },
   computed: {
     totalPages() {
       return Math.ceil(this.totalBooks / this.itemsPerPage);
+    },
+    visiblePages() {
+      const range = [];
+      const start = Math.max(0, this.currentPage - Math.floor(this.maxVisiblePages / 2));
+      const end = Math.min(this.totalPages - 1, start + this.maxVisiblePages - 1);
+
+      for (let i = start; i <= end; i++) {
+        range.push(i);
+      }
+
+      return range;
     }
   },
   methods: {
-    goToBookDetails(serialnum) {
-      this.$router.push(`/book/${serialnum}`);
-    },
-    isAvailable(book) {
-      if (!book.stock) return 0;
-      let n = 0;
-      for (const stockElement of book.stock) {
-        n += stockElement.stock;
-      }
-      return n;
-    },
     async fetchBooks() {
       this.loadingbooks = true;
       try {
-        const queryParams = new URLSearchParams({
-          //page: this.currentPage,
-          limit: this.itemsPerPage
-        });
-
-        const response = await fetch(`${apiurl}query/book?${queryParams.toString()}`, {
+        const response = await fetch(`${apiurl}query/book?limit=${this.itemsPerPage}&page=${this.currentPage}`, {
           method: "GET",
-          headers: {
-            'Accept': 'application/json',
-          },
+          headers: { 'Accept': 'application/json' },
           credentials: 'include'
         });
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const rawText = await response.text();
-        console.log("Response text:", rawText);
-        const data = JSON.parse(rawText);
+        const data = await response.json();
 
         if (data.res) {
           this.books = data.res;
-          this.totalBooks = data.nbrres || data.res.length;
+          this.totalBooks = data.nbrres || 0;
         }
       } catch (error) {
         console.error("Error fetching books:", error);
@@ -120,19 +120,26 @@ export default defineComponent({
       }
     },
     nextPage() {
-      if (this.currentPage < this.totalPages) {
+      if (this.currentPage < this.totalPages - 1) {
         this.currentPage++;
         this.fetchBooks();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     },
     prevPage() {
-      if (this.currentPage > 1) {
+      if (this.currentPage > 0) {
         this.currentPage--;
         this.fetchBooks();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
+    },
+    goToPage(page) {
+      this.currentPage = page;
+      this.fetchBooks();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   },
-  beforeMount() {
+  mounted() {
     this.fetchBooks();
   }
 });
@@ -262,30 +269,71 @@ export default defineComponent({
   align-items: center;
   gap: 1rem;
   margin-top: 2rem;
-  color: white;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
 }
 
 .pagination-btn {
   background: rgba(74, 144, 226, 0.3);
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .pagination-btn:hover:not(:disabled) {
-  background: rgba(74, 144, 226, 0.5);
+  background: rgba(74, 144, 226, 0.7);
+  transform: translateY(-2px);
 }
 
 .pagination-btn:disabled {
-  opacity: 0.5;
+  opacity: 0.3;
   cursor: not-allowed;
 }
+.page-numbers {
+  display: flex;
+  gap: 0.5rem;
+}
+.page-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
-.page-info {
-  font-size: 0.9rem;
+.page-btn:hover {
+  background: rgba(74, 144, 226, 0.5);
+}
+
+.page-btn.active {
+  background: #4a90e2;
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .page-numbers {
+    gap: 0.3rem;
+  }
+
+  .page-btn, .pagination-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 0.8rem;
+  }
 }
 
 .loading-spinner {
