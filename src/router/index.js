@@ -12,6 +12,7 @@ import viewAll from "../views/viewall.vue" ;
 import Account from "../views/AccountManagement.vue";
 import Dashboard from "../views/GeneralDashboard.vue";
 import Publication from "../views/PublicationManagement.vue";
+import test from "../views/test.vue"
 
 const routes = [
     { path: '/', redirect: '/home' },
@@ -28,6 +29,7 @@ const routes = [
     { path: '/Account', name:"AccountManagement", component: Account},
     { path: '/Dashboard', name:"GeneralDashboard", component: Dashboard},
     { path: '/Publication', name:"PublicationManagement", component: Publication},
+    { path :'/test' , name:"test" , component: test},
 ]
 
 const router = createRouter({
