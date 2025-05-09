@@ -291,11 +291,9 @@ async function getCampuses() {
 async function fetchAccounts() {
   try {
     isLoading.value = true;
-    const userRole = localStorage.getItem('userRole');
     const response = await fetch(`${apiurl}query/account`, {
       method: "GET",
-      headers: { 'Accept': 'application/json',
-        'Authorization': `Bearer ${userRole}`},
+      headers: { 'Accept': 'application/json',},
       credentials: 'include'
     });
 
