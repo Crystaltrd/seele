@@ -59,8 +59,11 @@
         <router-link to="/signup" class="btn" id="signup" v-if="!isAuthenticated">Signup</router-link>
 
         <div class="user-profile" v-else @click="toggleDropdown">
-          <i class="fas fa-user-circle user-icon"></i>
-          <span class="username">{{ userDisplayName }}</span>
+          <div class="avatar-container">
+            <i class="fas fa-user-circle user-icon"></i>
+          </div>
+          <span class="username" :title="userDisplayName">
+               {{ getDisplayName(userDisplayName) }}</span>
           <div class="dropdown-menu" v-show="showDropdown" @click.stop>
             <ul>
               <li @click="goToSettings">
@@ -152,6 +155,12 @@ const toggleSearchModal = () => {
 
 const goToSettings = () => {
   showDropdown.value = false;
+};
+
+const getDisplayName = (fullName) => {
+  if (!fullName) return '';
+  if (fullName.length <= 20) return fullName;
+  return `${fullName.substring(0, 17)}...`;
 };
 
 const handleLogout = async () => {
@@ -375,7 +384,11 @@ input:not(:placeholder-shown) ~ .reset {
   cursor: pointer;
   padding: 5px 10px;
   border-radius: 20px;
+  max-width: 200px;
   transition: background-color 0.3s ease;
+}
+.avatar-container {
+  flex-shrink: 0;
 }
 
 .user-icon {
@@ -428,6 +441,11 @@ input:not(:placeholder-shown) ~ .reset {
 .username {
   font-weight: 600;
   font-size: 14px;
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.3s ease;
 }
 
 ::v-deep(.nav-links li .active) {
@@ -447,6 +465,12 @@ input:not(:placeholder-shown) ~ .reset {
   .desktop-nav, .desktop-search {
     display: none !important;
   }
+
+  .username {
+    max-width: 100px;
+    font-size: 13px;
+  }
+
 }
 
 @media (max-width: 500px) {
