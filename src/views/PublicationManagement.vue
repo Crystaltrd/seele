@@ -94,6 +94,9 @@
                   @click="selectBook(book)"
               >
                 <div class="book-info">
+                  <div class="selected-indicator" v-if="selectedBook?.serialnum === book.serialnum">
+                    <i class="fa-solid fa-check"></i>
+                  </div>
                   <h4>{{ book.booktitle }}</h4>
                   <div class="meta">
                     <span>{{ book.authors.join(', ') }}</span>
@@ -831,9 +834,12 @@ select[multiple] option:checked {
 }
 
 .book-item.selected {
-  background: rgba(74, 144, 226, 0.1) !important;
+  background: rgba(74, 144, 226, 0.2) !important;
   transform: translateX(5px);
-  border-left: 3px solid #4A90E2;
+  border-left: 4px solid #4A90E2;
+  box-shadow: 0 0 15px rgba(74, 144, 226, 0.3);
+  position: relative;
+  z-index: 1;
 }
 
 .image-upload-container {
@@ -969,6 +975,23 @@ label{
   min-width: 150px;
 }
 
+.selected-indicator {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 25px;
+  height: 25px;
+  background: #4A90E2;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.8rem;
+  box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+  z-index: 2;
+}
+
 select[multiple] option:checked {
   background: #4A90E2;
   color: white;
@@ -1083,6 +1106,31 @@ select[multiple] option {
   border-radius: 8px;
   padding: 1rem;
   transition: all 0.3s ease;
+}
+
+.book-item.selected::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 2px solid rgba(74, 144, 226, 0.5);
+  border-radius: 8px;
+  pointer-events: none;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    border-color: rgba(74, 144, 226, 0.5);
+  }
+  50% {
+    border-color: rgba(74, 144, 226, 0.8);
+  }
+  100% {
+    border-color: rgba(74, 144, 226, 0.5);
+  }
 }
 
 .book-item:hover {
