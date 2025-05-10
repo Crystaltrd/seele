@@ -3,6 +3,12 @@
     <Background/>
     <AdminsHeader/>
 
+    <div class="admin-btn-container" v-if="showAdminButton">
+      <button type="button" class="admin-btn" @click="goToAdmin">
+        <i class="fa-solid fa-house" style="color: #ffffff;"></i>
+      </button>
+    </div>
+
     <section id="account">
       <div class="container">
         <div class="content-wrapper">
@@ -108,6 +114,7 @@ import { ref, onMounted, watch } from 'vue'
 import Background from "../components/background.vue"
 import AdminsHeader from "../components/AdminsHeader.vue"
 import Swal from 'sweetalert2'
+import {useRouter} from "vue-router";
 
 const accounts = ref([])
 const isLoading = ref(true)
@@ -120,6 +127,8 @@ const filterType = ref('')
 const filterValue = ref('')
 const filterOptions = ref([])
 const originalAccounts = ref([])
+const router = useRouter();
+const showAdminButton = ref(false);
 
 
 const roles = ref(['admin', 'user', 'librarian'])
@@ -130,6 +139,16 @@ function resetFilters() {
   filterValue.value = '';
   accounts.value = [...originalAccounts.value];
 }
+
+const goToAdmin = () => {
+  router.push('/');
+};
+
+const checkAdminAccess = () => {
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+  const userRole = localStorage.getItem('userRole');
+  showAdminButton.value = isAuthenticated && ["ADMIN", "STAFF", "SHELF MANAGER", "LIBRARIAN"].includes(userRole);
+};
 
 watch(filterType, (newType) => {
   filterValue.value = '';
@@ -315,6 +334,7 @@ onMounted(async () => {
     getCampuses()
   ]);
   updateFilterOptions(filterType.value);
+  checkAdminAccess();
 });
 </script>
 
@@ -398,6 +418,37 @@ onMounted(async () => {
   display: flex;
   gap: 1rem;
   align-items: flex-end;
+}
+
+.admin-btn-container {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1000;
+}
+
+.admin-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9rem;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.admin-btn:hover {
+  background: rgba(74, 144, 226, 0.3);
+  transform: translateY(-2px);
+}
+
+.admin-btn i {
+  font-size: 0.8rem;
 }
 
 @media (max-width: 768px) {

@@ -3,6 +3,12 @@
      <Background/>
       <AdminsHeader/>
 
+    <div class="admin-btn-container" v-if="showAdminButton">
+      <button type="button" class="admin-btn" @click="goToAdmin">
+        <i class="fa-solid fa-house" style="color: #ffffff;"></i>
+      </button>
+    </div>
+
     <section id="alert">
       <div class="container">
         <div class="content-wrapper">
@@ -37,6 +43,26 @@
 
 import Background from "../components/background.vue";
 import AdminsHeader from "../components/AdminsHeader.vue";
+import {useRouter} from "vue-router";
+import {onMounted, ref} from "vue";
+
+const router = useRouter();
+const showAdminButton = ref(false);
+
+const goToAdmin = () => {
+  router.push('/');
+};
+
+const checkAdminAccess = () => {
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+  const userRole = localStorage.getItem('userRole');
+  showAdminButton.value = isAuthenticated && ["ADMIN", "STAFF", "SHELF MANAGER", "LIBRARIAN"].includes(userRole);
+};
+
+onMounted(async () => {
+  checkAdminAccess();
+});
+
 </script>
 
 <style scoped>
@@ -144,5 +170,36 @@ import AdminsHeader from "../components/AdminsHeader.vue";
 
 .filter-wrapper {
   margin-left: auto;
+}
+
+.admin-btn-container {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1000;
+}
+
+.admin-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9rem;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.admin-btn:hover {
+  background: rgba(74, 144, 226, 0.3);
+  transform: translateY(-2px);
+}
+
+.admin-btn i {
+  font-size: 0.8rem;
 }
 </style>

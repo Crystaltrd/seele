@@ -3,6 +3,12 @@
     <Background/>
     <AdminsHeader/>
 
+    <div class="admin-btn-container" v-if="showAdminButton">
+      <button type="button" class="admin-btn" @click="goToAdmin">
+        <i class="fa-solid fa-house" style="color: #ffffff;"></i>
+      </button>
+    </div>
+
     <section id="publication">
       <div class="container">
         <div class="content-wrapper">
@@ -305,6 +311,7 @@ import { ref, onMounted, watch} from 'vue'
 import Background from "../components/background.vue"
 import AdminsHeader from "../components/AdminsHeader.vue"
 import Swal from 'sweetalert2'
+import {useRouter} from "vue-router";
 
 const books = ref([])
 const isLoading = ref(true)
@@ -323,6 +330,19 @@ const filterType = ref('')
 const filterValue = ref('')
 const filterOptions = ref([])
 const originalBooks = ref([])
+const router = useRouter();
+const showAdminButton = ref(false);
+
+
+const goToAdmin = () => {
+  router.push('/');
+};
+
+const checkAdminAccess = () => {
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+  const userRole = localStorage.getItem('userRole');
+  showAdminButton.value = isAuthenticated && ["ADMIN", "STAFF", "SHELF MANAGER", "LIBRARIAN"].includes(userRole);
+};
 
 function resetFilters() {
   filterType.value = '';
@@ -671,6 +691,7 @@ onMounted(async () => {
     getDocTypes()
   ]);
   updateFilterOptions(filterType.value);
+  checkAdminAccess();
 });
 </script>
 
@@ -973,6 +994,37 @@ select[multiple] option {
   display: flex;
   gap: 1rem;
   align-items: flex-end;
+}
+
+.admin-btn-container {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1000;
+}
+
+.admin-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9rem;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.admin-btn:hover {
+  background: rgba(74, 144, 226, 0.3);
+  transform: translateY(-2px);
+}
+
+.admin-btn i {
+  font-size: 0.8rem;
 }
 
 @media (max-width: 768px) {
@@ -1380,6 +1432,38 @@ select[multiple] option {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
 }
+
+.admin-btn-container {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1000;
+}
+
+.admin-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9rem;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.admin-btn:hover {
+  background: rgba(74, 144, 226, 0.3);
+  transform: translateY(-2px);
+}
+
+.admin-btn i {
+  font-size: 0.8rem;
+}
+
 @media (max-width: 1200px) {
   .modal-wrapper {
     width: 900px;
