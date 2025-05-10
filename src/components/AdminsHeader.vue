@@ -39,6 +39,9 @@
           <span class="username">{{ userDisplayName }}</span>
           <div class="dropdown-menu" v-show="showDropdown" @click.stop>
             <ul>
+              <li @click="goToSettings">
+                <i class="fas fa-cog"></i> Settings
+              </li>
               <li @click="handleLogout">
                 <i class="fas fa-sign-out-alt"></i> Logout
               </li>
@@ -118,6 +121,10 @@ const toggleMobileMenu = () => {
 const toggleSearchModal = () => {
   searchModalOpen.value = !searchModalOpen.value;
   if (mobileMenuOpen.value) mobileMenuOpen.value = false;
+};
+
+const goToSettings = () => {
+  showDropdown.value = false;
 };
 
 const handleLogout = async () => {
