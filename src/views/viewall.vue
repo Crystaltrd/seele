@@ -5,10 +5,11 @@
     <section id="view-all">
       <div class="container">
         <div class="content-wrapper">
-          <h3 class="section-heading">All Publications</h3>
+          <h3 class="section-heading">{{ searchQuery ? `Search Results for "${searchQuery}"` : 'All Publications' }}
+            <span v-if="searchQuery" class="clear-search" @click.stop="clearSearch">(Clear)</span></h3>
 
           <div class="publications-list" v-if="!loadingbooks">
-            <div class="publication-row" v-for="book in books" :key="book.serialnum" @click="goToBookDetails(book.serialnum)">
+            <div class="publication-row" v-for="book in filteredBooks" :key="book.serialnum" @click="goToBookDetails(book.serialnum)">
               <div class="cover-container">
                 <img v-bind:alt="book.booktitle+'\'s Cover'" v-if="book.bookcover" v-bind:src="assetsurl+book.bookcover"/>
                 <img v-bind:alt="book.booktitle+'\'s Cover PLACEHOLDER'" v-else src="../assets/bookcover.jpg"/>
@@ -23,6 +24,11 @@
                 <span class="availability avail" v-if="isAvailable(book) > 0">Available</span>
                 <span class="availability" v-else>Unavailable</span>
               </div>
+            </div>
+
+            <div v-if="filteredBooks.length === 0" class="no-results">
+              <p>No publications found for "{{ searchQuery }}"</p>
+              <button @click="clearSearch" class="btn">Show all publications</button>
             </div>
 
             <div class="pagination-controls" v-if="totalPages > 1">
@@ -68,6 +74,8 @@
 <script>
 import {defineComponent} from "vue";
 import Background from "../components/background.vue";
+import { useRoute } from 'vue-router';
+
 
 export default defineComponent({
   components: {Background},
@@ -78,10 +86,22 @@ export default defineComponent({
       currentPage: 0,
       itemsPerPage: 8,
       totalBooks: 0,
-      maxVisiblePages: 5
+      maxVisiblePages: 5,
+      searchQuery: '',
+      isSearching: false,
+
     };
   },
   computed: {
+    filteredBooks() {
+      if (!this.searchQuery) return this.books;
+      const query = this.searchQuery.toLowerCase();
+      return this.books.filter(book =>
+          book.booktitle.toLowerCase().includes(query) ||
+          (book.publisher && book.publisher.toLowerCase().includes(query)) ||
+          (book.bookreleaseyear && book.bookreleaseyear.toString().includes(query))
+      );
+    },
     totalPages() {
       return Math.ceil(this.totalBooks / this.itemsPerPage);
     },
@@ -101,7 +121,15 @@ export default defineComponent({
     async fetchBooks() {
       this.loadingbooks = true;
       try {
-        const response = await fetch(`${apiurl}query/book?limit=${this.itemsPerPage}&page=${this.currentPage}`, {
+        let url ;
+
+        if (this.searchQuery) {
+          url = `${apiurl}search?q=${encodeURIComponent(this.searchQuery)}&limit=${this.itemsPerPage}&page=${this.currentPage}`;
+        }else {
+          url = `${apiurl}query/book?limit=${this.itemsPerPage}&page=${this.currentPage}`;
+        }
+
+        const response = await fetch(url, {
           method: "GET",
           headers: { 'Accept': 'application/json' },
           credentials: 'include'
@@ -118,6 +146,20 @@ export default defineComponent({
       } finally {
         this.loadingbooks = false;
       }
+    },
+    clearSearch() {
+      this.searchQuery = '';
+      this.currentPage = 0;
+      this.$router.push({ path: '/view', query: {} });
+      this.fetchBooks();
+    },
+
+    goToBookDetails(serialnum) {
+      this.$router.push(`/book/${serialnum}`);
+    },
+    performSearch() {
+      this.currentPage = 0;
+      this.fetchBooks();
     },
     nextPage() {
       if (this.currentPage < this.totalPages - 1) {
@@ -140,8 +182,22 @@ export default defineComponent({
     }
   },
   mounted() {
+    const route = useRoute();
+
+    if (route.query.q) {
+      this.searchQuery = route.query.q;
+    }
     this.fetchBooks();
-  }
+
+    this.$watch(
+        () => this.$route.query.q,
+        (newQuery) => {
+          this.searchQuery = newQuery || '';
+          this.currentPage = 0;
+          this.fetchBooks();
+        }
+    );
+  },
 });
 </script>
 
@@ -263,6 +319,20 @@ export default defineComponent({
   background: #4a90e2;
 }
 
+.btn {
+  background: #4a90e2;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn:hover {
+  background: #3a7bc8;
+}
+
 .pagination-controls {
   display: flex;
   justify-content: center;
@@ -313,6 +383,28 @@ export default defineComponent({
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
+}
+
+.clear-search {
+  font-size: 1rem;
+  color: #4a90e2;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.clear-search:hover {
+  opacity: 0.8;
+}
+
+.no-results {
+  text-align: center;
+  padding: 2rem;
+  color: white;
+}
+
+.no-results p {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
 }
 
 .page-btn:hover {

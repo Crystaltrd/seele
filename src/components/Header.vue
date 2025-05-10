@@ -33,8 +33,8 @@
       </button>
 
       <div class="col-3 d-flex justify-content-end user-actions">
-        <form class="form desktop-search">
-          <button>
+        <form class="form desktop-search" @submit.prevent="handleSearch">
+          <button type="submit">
             <svg aria-labelledby="search" fill="none" height="16" role="img" width="17"
                  xmlns="http://www.w3.org/2000/svg">
               <path d="M7.667 12.667A5.333 5.333 0 107.667 2a5.333 5.333 0 000 10.667zM14.334 14l-2.9-2.9"
@@ -42,8 +42,8 @@
                     stroke-width="1.333"></path>
             </svg>
           </button>
-          <input class="input" placeholder="Search" required="" type="text">
-          <button class="reset" type="reset">
+          <input  v-model="searchQuery" class="input" placeholder="Search" required type="text">
+          <button class="reset" type="reset" @click="resetSearch">
             <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2"
                  viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -51,7 +51,7 @@
           </button>
         </form>
 
-        <button class="search-icon-mobile" @click="toggleSearchModal" v-if="showMobileMenu">
+        <button class="search-icon-mobile" @click="toggleSearchModal" v-if="showMobileMenu" >
           <i class="fas fa-search"></i>
         </button>
 
@@ -100,8 +100,8 @@
 
       <div class="search-modal-overlay" v-if="searchModalOpen" @click="toggleSearchModal"></div>
       <div class="search-modal" v-if="searchModalOpen">
-        <form class="form">
-          <input class="input" placeholder="Search" required="" type="text" autofocus>
+        <form class="form" @submit.prevent="handleSearch">
+          <input v-model="searchQuery" class="input" placeholder="Search" required type="text" autofocus>
           <button type="submit">
             <i class="fas fa-search"></i>
           </button>
@@ -124,6 +124,25 @@ const showDropdown = ref(false);
 const mobileMenuOpen = ref(false);
 const searchModalOpen = ref(false);
 const windowWidth = ref(window.innerWidth);
+const searchQuery = ref('');
+
+const handleSearch = () => {
+  if (searchQuery.value.trim()) {
+    if (searchModalOpen.value) {
+      searchModalOpen.value = false;
+    }
+
+    router.push({
+      path: '/view',
+      query: { q: searchQuery.value.trim() }
+    });
+  }
+};
+
+const resetSearch = () => {
+  searchQuery.value = '';
+    router.push('/view');
+};
 
 const updateWindowWidth = () => {
   windowWidth.value = window.innerWidth;
