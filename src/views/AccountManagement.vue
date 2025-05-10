@@ -59,19 +59,18 @@
                     </option>
                   </select>
                 </div>
+
+                <button
+                    class="btn"
+                    type="button"
+                    @click="resetFilters"
+                    v-if="filterType"
+                >
+                  <i class="fa-solid fa-rotate-left"></i>
+                  <span>Reset</span>
+                </button>
               </div>
-
-              <button
-                  class="btn"
-                  type="button"
-                  @click="resetFilters"
-                  v-if="filterType"
-              >
-                <i class="fa-solid fa-rotate-left"></i>
-                <span>Reset</span>
-              </button>
             </div>
-
             <div v-if="isLoading" class="loading">
               <svg viewBox="25 25 50 50" class="spinner">
                 <circle r="20" cy="50" cx="50"></circle>
@@ -530,8 +529,10 @@ onMounted(async () => {
 
 <style scoped>
 .account-container {
-  position: relative;
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
   width: 100%;
 }
 
@@ -597,20 +598,19 @@ onMounted(async () => {
 
 .filter-actions-wrapper {
   display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  gap: 2rem;
   width: 100%;
-  gap: 1rem;
   margin-bottom: 2rem;
-  overflow-x: auto;
-  padding-bottom: 10px;
+  flex-wrap: wrap;
 }
 
 .filter-wrapper {
   display: flex;
   gap: 1rem;
-  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .admin-btn-container {
@@ -645,8 +645,23 @@ onMounted(async () => {
 }
 
 @media (max-width: 768px) {
-  .filter-wrapper {
+  .filter-actions-wrapper {
     flex-direction: column;
+    gap: 1rem;
+  }
+
+  .btn-wrapper, .filter-wrapper {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .filter-wrapper {
+    flex-wrap: wrap;
+  }
+
+  .filter-wrapper .input-field,
+  .filter-wrapper .btn {
+    width: 100%;
   }
 }
 
@@ -675,9 +690,7 @@ onMounted(async () => {
 
 .btn-wrapper {
   display: flex;
-  gap: 2rem;
-  align-items: center;
-  margin-top: 0;
+  gap: 1rem;
 }
 
 .btn i {
