@@ -11,7 +11,7 @@
           <div class="publications-list" v-if="!loadingbooks">
             <div class="publication-row" v-for="book in filteredBooks" :key="book.serialnum" @click="goToBookDetails(book.serialnum)">
               <div class="cover-container">
-                <img v-bind:alt="book.booktitle+'\'s Cover'" v-if="book.bookcover" v-bind:src="assetsurl+book.bookcover"/>
+                <img v-bind:alt="book.booktitle+'\'s Cover'" v-if="book.bookcover" v-bind:src="covers_url+book.bookcover"/>
                 <img v-bind:alt="book.booktitle+'\'s Cover PLACEHOLDER'" v-else src="../assets/bookcover.jpg"/>
               </div>
 
@@ -21,8 +21,7 @@
                   <span class="book-year">{{ book.bookreleaseyear }}</span>
                   <span class="book-publisher">{{ book.publisher }}</span>
                 </div>
-                <span class="availability avail" v-if="isAvailable(book) > 0">Available</span>
-                <span class="availability" v-else>Unavailable</span>
+                <span class="availability" :class="{ 'avail': isAvailable(book) > 0 }">{{isAvailable(book) > 0 ? 'Available' : 'Unavailable' }}</span>
               </div>
             </div>
 
@@ -89,18 +88,12 @@ export default defineComponent({
       maxVisiblePages: 5,
       searchQuery: '',
       isSearching: false,
-
+      covers_url: pubURL,
     };
   },
   computed: {
     filteredBooks() {
-      if (!this.searchQuery) return this.books;
-      const query = this.searchQuery.toLowerCase();
-      return this.books.filter(book =>
-          book.booktitle.toLowerCase().includes(query) ||
-          (book.publisher && book.publisher.toLowerCase().includes(query)) ||
-          (book.bookreleaseyear && book.bookreleaseyear.toString().includes(query))
-      );
+      return this.books ;
     },
     totalPages() {
       return Math.ceil(this.totalBooks / this.itemsPerPage);
@@ -121,28 +114,42 @@ export default defineComponent({
     async fetchBooks() {
       this.loadingbooks = true;
       try {
-        let url ;
+        let url;
+        let params = {};
 
         if (this.searchQuery) {
-          url = `${apiurl}search?q=${encodeURIComponent(this.searchQuery)}&limit=${this.itemsPerPage}&page=${this.currentPage}`;
-        }else {
-          url = `${apiurl}query/book?limit=${this.itemsPerPage}&page=${this.currentPage}`;
+          url = `${apiurl}search`;
+          params = { q: this.searchQuery};
+        } else {
+          url = `${apiurl}query/book`;
+          params = {
+            limit: this.itemsPerPage,
+            page: this.currentPage
+          };
         }
 
-        const response = await fetch(url, {
+        const queryString = new URLSearchParams(params).toString();
+        const fullUrl = `${url}?${queryString}`;
+
+        const response = await fetch(fullUrl, {
           method: "GET",
           headers: { 'Accept': 'application/json' },
           credentials: 'include'
         });
 
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
 
-        if (data.res) {
-          this.books = data.res;
-          this.totalBooks = data.nbrres || 0;
-        }
+        this.books = Array.isArray(data.res) ? data.res : [];
+        this.totalBooks = data.nbrres || data.res?.length || 0;
+
       } catch (error) {
         console.error("Error fetching books:", error);
+        this.books = [];
+        this.totalBooks = 0;
       } finally {
         this.loadingbooks = false;
       }
@@ -152,6 +159,19 @@ export default defineComponent({
       this.currentPage = 0;
       this.$router.push({ path: '/view', query: {} });
       this.fetchBooks();
+    },
+    isAvailable(book) {
+      if (typeof book.available === 'number') {
+        return book.available;
+      }
+
+      try {
+        if (!book?.stock || !Array.isArray(book.stock)) return 0;
+        return book.stock.reduce((total, item) => total + (item.stock || 0), 0);
+      } catch (e) {
+        console.error("Error calculating availability:", e, book);
+        return 0;
+      }
     },
 
     goToBookDetails(serialnum) {
@@ -278,7 +298,7 @@ export default defineComponent({
 .cover-container img {
   width: 110px;
   height: 160px;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 4px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }

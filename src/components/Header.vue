@@ -127,15 +127,20 @@ const windowWidth = ref(window.innerWidth);
 const searchQuery = ref('');
 
 const handleSearch = () => {
-  if (searchQuery.value.trim()) {
-    if (searchModalOpen.value) {
-      searchModalOpen.value = false;
+  try {
+    if (searchQuery.value.trim()) {
+      if (searchModalOpen.value) {
+        searchModalOpen.value = false;
+      }
+      router.push({
+        path: '/view',
+        query: { q: searchQuery.value.trim() }
+      });
+    } else {
+      router.push('/view');
     }
-
-    router.push({
-      path: '/view',
-      query: { q: searchQuery.value.trim() }
-    });
+  } catch (error) {
+    console.error("Search error:", error);
   }
 };
 
