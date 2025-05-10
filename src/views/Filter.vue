@@ -1,6 +1,13 @@
 <template>
   <div class="filter-container">
     <Background />
+
+    <div class="admin-btn-container" v-if="showAdminButton">
+      <button type="button" class="admin-btn" @click="goToAdmin">
+        <i class="fas fa-cog"></i>
+      </button>
+    </div>
+
     <div class="wrapper">
       <header>
         <h1>Advanced Search</h1>
@@ -306,10 +313,35 @@ label {
   padding: 0.5rem 0;
 }
 
-.error-message {
-  color: #ff6b6b;
-  padding: 0.5rem 0;
+.admin-btn-container {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1000;
+}
+
+.admin-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
   font-size: 0.9rem;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.admin-btn:hover {
+  background: rgba(74, 144, 226, 0.3);
+  transform: translateY(-2px);
+}
+
+.admin-btn i {
+  font-size: 0.8rem;
 }
 
 @media (max-width: 768px) {
@@ -388,6 +420,7 @@ label {
 <script setup>
 import { ref, onMounted } from 'vue';
 import Background from "../components/background.vue";
+import { useRouter } from 'vue-router';
 
 const yearSelectionType = ref('single');
 const categories = ref([]);
@@ -397,11 +430,22 @@ const loadingCategories = ref(false);
 const loadingLanguages = ref(false);
 const loadingDocTypes = ref(false);
 const serverError = ref("");
+const router = useRouter();
+const showAdminButton = ref(false);
 
 
 const currentYear = new Date().getFullYear();
 const years = Array.from({length: currentYear - 1500 + 1}, (_, i) => currentYear - i);
 
+const goToAdmin = () => {
+  router.push('/admin');
+};
+
+const checkAdminAccess = () => {
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+  const userRole = localStorage.getItem('userRole');
+  showAdminButton.value = isAuthenticated && ["ADMIN", "STAFF", "SHELF MANAGER", "LIBRARIAN"].includes(userRole);
+};
 
 function toggleYearSelection() {
   const singleYearContainer = document.getElementById('single-year-container');
@@ -488,5 +532,6 @@ onMounted(async () => {
     getDocTypes()
   ]);
   toggleYearSelection();
+  checkAdminAccess();
 });
 </script>

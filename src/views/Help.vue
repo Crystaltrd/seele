@@ -1,6 +1,13 @@
 <template>
   <div class="help-container">
     <Background />
+
+    <div class="admin-btn-container" v-if="showAdminButton">
+      <button type="button" class="admin-btn" @click="goToAdmin">
+        <i class="fas fa-cog"></i>
+      </button>
+    </div>
+
     <div class="wrapper">
       <div class="section-header">
         <h2>Looking for help?</h2>
@@ -311,6 +318,37 @@
   background: rgba(255, 255, 255, 0.08);
 }
 
+.admin-btn-container {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1000;
+}
+
+.admin-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9rem;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.admin-btn:hover {
+  background: rgba(74, 144, 226, 0.3);
+  transform: translateY(-2px);
+}
+
+.admin-btn i {
+  font-size: 0.8rem;
+}
+
 @media (max-width: 768px) {
   .wrapper {
     padding: 1.5rem;
@@ -335,11 +373,28 @@
 
 <script setup lang="ts">
 import Background from "../components/background.vue";
-import { ref } from 'vue';
+import {onMounted, ref} from 'vue';
+import {useRouter} from "vue-router";
+
+const router = useRouter();
+const showAdminButton = ref(false);
 
 const activeItem = ref<number | null>(null);
 
 const toggleFAQ = (index: number) => {
   activeItem.value = activeItem.value === index ? null : index;
 };
+
+const goToAdmin = () => {
+  router.push('/admin');
+};
+
+const checkAdminAccess = () => {
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+  const userRole = localStorage.getItem('userRole');
+  showAdminButton.value = isAuthenticated && ["ADMIN", "STAFF", "SHELF MANAGER", "LIBRARIAN"].includes(userRole);
+};
+onMounted(async () => {
+  checkAdminAccess();
+});
 </script>
