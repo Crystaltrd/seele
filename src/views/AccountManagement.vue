@@ -38,7 +38,7 @@
                     <option value="">Filter by...</option>
                     <option value="role">Role</option>
                     <option value="campus">Campus</option>
-                    <option value="status">Status</option>
+                    <option value="status">Frozen</option>
                   </select>
                 </div>
 
@@ -91,13 +91,16 @@
                   @click="selectAccount(account)"
               >
                 <div class="account-info">
-                  <h4>{{ account.username }}</h4>
+                  <div class="selected-indicator" v-if="selectedAccount?.['ACCOUNT.UUID'] === account['ACCOUNT.UUID']">
+                    <i class="fa-solid fa-check"></i>
+                  </div>
+                  <h4>{{ account['ACCOUNT.UUID'] }}</h4>
                   <div class="meta">
-                    <span>{{ account.email }}</span>
+                    <span>{{ account.disp_name}}</span>
                     <span>{{ account.role }} ({{ account.campus }})</span>
                   </div>
                   <div class="status-info">
-                    <span :class="account.status">{{ account.status }}</span>
+                    <span :class="account.frozen ? 'inactive' : 'active'"> {{ account.frozen ? 'Frozen' : 'Active' }}</span>
                   </div>
                 </div>
               </div>
@@ -131,8 +134,8 @@ const router = useRouter();
 const showAdminButton = ref(false);
 
 
-const roles = ref(['admin', 'user', 'librarian'])
-const statuses = ref(['active', 'inactive', 'pending'])
+const roles = ref(['ADMIN', 'USER', 'LIBRARIAN', 'STAFF', 'SHELF MANAGER'])
+const statuses = ref(['Active', 'Frozen'])
 
 function resetFilters() {
   filterType.value = '';
@@ -196,7 +199,11 @@ function applyFilter() {
       case 'campus':
         return account.campus === filterValue.value;
       case 'status':
-        return account.status === filterValue.value;
+        if (filterValue.value === 'Active') {
+          return account.frozen === 0;
+        } else {
+          return account.frozen === 1;
+        }
       default:
         return true;
     }
@@ -204,7 +211,7 @@ function applyFilter() {
 }
 
 function selectAccount(account) {
-  selectedAccount.value = selectedAccount.value?.id === account.id
+  selectedAccount.value = selectedAccount.value?.['ACCOUNT.UUID'] === account['ACCOUNT.UUID']
       ? null
       : account;
 }
@@ -249,7 +256,7 @@ async function deleteAccount() {
 
   if (result.isConfirmed) {
     try {
-      const response = await fetch(`${apiurl}account/${selectedAccount.value.id}`, {
+      const response = await fetch(`${apiurl}account/${selectedAccount.value['ACCOUNT.UUID']}`, {
         method: "DELETE",
         credentials: 'include'
       });
@@ -289,15 +296,10 @@ async function getCampuses() {
       credentials: 'include'
     })
 
-    const rawText = await response.text()
-    try {
-      const jsonResponse = JSON.parse(rawText)
-      if (jsonResponse.hasOwnProperty("res")) {
-        campuses.value = jsonResponse.res.map(c => c.campusName)
-      } else {
-        serverError.value = "Server error. Please try again later."
-      }
-    } catch (parseError) {
+    const data = await response.json();
+    if (data.res) {
+      campuses.value = data.res.map(c => c.campusName).filter(Boolean);
+    } else {
       serverError.value = "Server error. Please try again later."
     }
   } catch (error) {
@@ -520,10 +522,16 @@ onMounted(async () => {
   border-left: 3px solid #4A90E2;
 }
 
+.account-info {
+  position: relative;
+  padding-right: 1rem;
+}
+
 .account-info h4 {
   margin: 0 0 0.5rem 0;
   color: white;
   font-size: 1.1rem;
+  transition: color 0.3s ease;
 }
 
 .meta {
@@ -535,10 +543,15 @@ onMounted(async () => {
   flex-wrap: wrap;
 }
 
+.meta span {
+  transition: color 0.3s ease;
+}
+
 .status-info span {
   padding: 0.3rem 0.6rem;
   border-radius: 4px;
   font-size: 0.8rem;
+  font-weight: 500;
 }
 
 .status-info .active {
@@ -625,6 +638,84 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.account-item {
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.account-item:hover {
+  background: rgba(74, 144, 226, 0.1);
+  transform: translateX(5px);
+}
+
+.account-item.selected {
+  background: rgba(74, 144, 226, 0.2) !important;
+  transform: translateX(5px);
+  border-left: 4px solid #4A90E2;
+  box-shadow: 0 0 15px rgba(74, 144, 226, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.account-item.selected::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 2px solid rgba(74, 144, 226, 0.5);
+  border-radius: 8px;
+  pointer-events: none;
+  animation: pulse 2s infinite;
+}
+
+.account-item.selected .account-info h4 {
+  color: #4A90E2;
+  font-weight: 600;
+}
+
+.account-item.selected .meta span {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.account-item.selected .status-info span {
+  font-weight: 500;
+}
+
+.selected-indicator {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 25px;
+  height: 25px;
+  background: #4A90E2;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.8rem;
+  box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+  z-index: 2;
+}
+
+@keyframes pulse {
+  0% {
+    border-color: rgba(74, 144, 226, 0.5);
+  }
+  50% {
+    border-color: rgba(74, 144, 226, 0.8);
+  }
+  100% {
+    border-color: rgba(74, 144, 226, 0.5);
+  }
 }
 
 @keyframes rotate {
