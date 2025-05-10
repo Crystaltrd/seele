@@ -38,7 +38,7 @@
                     <option value="">Filter by...</option>
                     <option value="role">Role</option>
                     <option value="campus">Campus</option>
-                    <option value="status">Frozen</option>
+                    <option value="status">Status</option>
                   </select>
                 </div>
 
@@ -106,6 +106,86 @@
               </div>
             </div>
           </div>
+          <div v-if="showAddModal" class="modal-overlay">
+            <div class="modal-wrapper">
+              <div class="modal-header">
+                <h3>Add a new account</h3>
+                <p class="subtitle">Fill all required fields to add a new user account</p>
+                <button class="modal-close" @click="showAddModal = false">
+                  <i class="fa-solid fa-times"></i>
+                </button>
+              </div>
+
+              <div class="modal-body">
+                <form @submit.prevent="handleAccountSubmit">
+                  <div class="form-grid">
+                    <div class="form-column">
+                      <div class="input-field">
+                        <label for="username">Username</label>
+                        <input id="username" v-model="newAccount.username" type="text" class="input" required>
+                      </div>
+
+                      <div class="input-field">
+                        <label for="displayName">Display Name</label>
+                        <input id="displayName" v-model="newAccount.displayName" type="text" class="input" required>
+                      </div>
+
+                      <div class="input-field">
+                        <label for="password">Password</label>
+                        <input id="password" v-model="newAccount.password" type="password" class="input" required>
+                      </div>
+
+                      <div class="input-field">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input id="confirmPassword" v-model="newAccount.confirmPassword" type="password" class="input" required>
+                      </div>
+                    </div>
+
+                    <div class="form-column">
+                      <div class="input-field">
+                        <label for="role">Role</label>
+                        <select id="role" v-model="newAccount.role" class="select" required>
+                          <option value="">Select a role</option>
+                          <option v-for="role in roles" :key="role" :value="role">
+                            {{ role }}
+                          </option>
+                        </select>
+                      </div>
+
+                      <div class="input-field">
+                        <label for="campus">Campus</label>
+                        <select id="campus" v-model="newAccount.campus" class="select" required>
+                          <option value="">Select a campus</option>
+                          <option v-for="campus in campuses" :key="campus" :value="campus">
+                            {{ campus }}
+                          </option>
+                        </select>
+                      </div>
+
+                      <div class="input-field">
+                        <label for="status">Status</label>
+                        <select id="status" v-model="newAccount.status" class="select" required>
+                          <option value="">Select status</option>
+                          <option value="active">Active</option>
+                          <option value="frozen">Frozen</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="modal-actions">
+                    <button type="button" class="btn btn-cancel" @click="showAddModal = false">
+                      <span>Cancel</span>
+                    </button>
+                    <button type="submit" class="btn btn-submit">
+                      <span>Add Account</span>
+                      <i class="fa-solid fa-plus" style="color: #ffffff;"></i>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -132,10 +212,36 @@ const filterOptions = ref([])
 const originalAccounts = ref([])
 const router = useRouter();
 const showAdminButton = ref(false);
+const newAccount = ref({
+  username: '',
+  displayName: '',
+  password: '',
+  confirmPassword: '',
+  role: '',
+  campus: '',
+  status: 'active'
+});
 
 
-const roles = ref(['ADMIN', 'USER', 'LIBRARIAN', 'STAFF', 'SHELF MANAGER'])
+const roles = ref([])
 const statuses = ref(['Active', 'Frozen'])
+
+async function fetchRoles() {
+  try {
+    const response = await fetch(`${apiurl}query/role`, {
+      method: "GET",
+      headers: { 'Accept': 'application/json' },
+      credentials: 'include'
+    });
+
+    const data = await response.json();
+    if (data.res) {
+      roles.value = data.res.map(role => role.roleName);
+    }
+  } catch (error) {
+    console.error("Error fetching roles:", error);
+  }
+}
 
 function resetFilters() {
   filterType.value = '';
@@ -309,6 +415,87 @@ async function getCampuses() {
   }
 }
 
+async function handleAccountSubmit() {
+  if (newAccount.value.password !== newAccount.value.confirmPassword) {
+    await Swal.fire({
+      title: "Password Mismatch",
+      text: "The passwords do not match",
+      icon: "error",
+      iconColor: "#FF5252",
+      background: "#2c2c3a",
+      color: "#fff"
+    });
+    return;
+  }
+
+  if (newAccount.value.password.length < 8) {
+    await Swal.fire({
+      title: "Weak Password",
+      text: "Password must be at least 8 characters long",
+      icon: "error",
+      iconColor: "#FF5252",
+      background: "#2c2c3a",
+      color: "#fff"
+    });
+    return;
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append('UUID', newAccount.value.username);
+    formData.append('name', newAccount.value.displayName);
+    formData.append('passwd', newAccount.value.password);
+    formData.append('role', newAccount.value.role);
+    formData.append('campus', newAccount.value.campus);
+    formData.append('frozen', newAccount.value.status === 'frozen' ? '1' : '0');
+
+    const response = await fetch(apiurl + 'signup', {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+      },
+      body: formData,
+      credentials: 'include'
+    });
+
+    const data = await response.json();
+    if (data.account_created) {
+      await Swal.fire({
+        title: "Success!",
+        text: "Account created successfully",
+        icon: "success",
+        iconColor: "#4A90E2",
+        background: "#2c2c3a",
+        color: "#fff"
+      });
+
+      newAccount.value = {
+        username: '',
+        displayName: '',
+        password: '',
+        confirmPassword: '',
+        role: '',
+        campus: '',
+        status: 'active'
+      };
+
+      showAddModal.value = false;
+      await fetchAccounts();
+    } else {
+      throw new Error(data.error || "Failed to create account");
+    }
+  } catch (error) {
+    await Swal.fire({
+      title: "Error!",
+      text: error.message || "An error occurred while creating the account",
+      icon: "error",
+      iconColor: "#FF5252",
+      background: "#2c2c3a",
+      color: "#fff"
+    });
+  }
+}
+
 async function fetchAccounts() {
   try {
     isLoading.value = true;
@@ -333,7 +520,8 @@ async function fetchAccounts() {
 onMounted(async () => {
   await Promise.all([
     fetchAccounts(),
-    getCampuses()
+    getCampuses(),
+    fetchRoles()
   ]);
   updateFilterOptions(filterType.value);
   checkAdminAccess();
@@ -409,17 +597,20 @@ onMounted(async () => {
 
 .filter-actions-wrapper {
   display: flex;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: center;
   width: 100%;
-  gap: 2rem;
+  gap: 1rem;
   margin-bottom: 2rem;
+  overflow-x: auto;
+  padding-bottom: 10px;
 }
 
 .filter-wrapper {
   display: flex;
   gap: 1rem;
-  align-items: flex-end;
+  align-items: center;
 }
 
 .admin-btn-container {
@@ -459,10 +650,16 @@ onMounted(async () => {
   }
 }
 
+.input-field {
+  margin-bottom: 0;
+}
+
 .btn {
   display: flex;
+  height: 44px;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
   gap: 0.5rem;
   background: #4A90E2;
   width: fit-content;
@@ -479,7 +676,7 @@ onMounted(async () => {
 .btn-wrapper {
   display: flex;
   gap: 2rem;
-  justify-content: center;
+  align-items: center;
   margin-top: 0;
 }
 
@@ -495,6 +692,14 @@ onMounted(async () => {
 
 .btn:active {
   transform: translateY(0);
+}
+
+.btn, .select {
+  height: 44px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .accounts-list {
@@ -564,7 +769,7 @@ onMounted(async () => {
   color: #F44336;
 }
 
-.status-info .pending {
+.status-info {
   background: rgba(255, 152, 0, 0.2);
   color: #FF9800;
 }
@@ -604,6 +809,7 @@ onMounted(async () => {
 .select {
   width: 100%;
   min-width: 150px;
+  height: 44px;
   padding: 0.8rem 1rem;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -704,6 +910,180 @@ onMounted(async () => {
   font-size: 0.8rem;
   box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
   z-index: 2;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 1000;
+  padding-top: 5rem;
+}
+
+.modal-wrapper {
+  background: rgba(44, 44, 58, 0.95);
+  border-radius: 12px;
+  padding: 2rem;
+  width: 800px;
+  max-width: 95%;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.modal-header {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.modal-header h3 {
+  color: white;
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.modal-header .subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+
+.modal-close {
+  color: rgba(255, 255, 255, 0.7);
+  transition: color 0.2s;
+}
+
+.modal-close:hover {
+  color: white;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.btn-cancel {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-submit {
+  background: #4A90E2;
+}
+
+.btn-submit:hover {
+  background: #3a7bc8;
+}
+
+.modal-body .input-field label {
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+
+.modal-body .input,
+.modal-body .select {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.modal-body .input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.modal-body .input:hover,
+.modal-body .select:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.modal-body .input:focus,
+.modal-body .select:focus {
+  outline: none;
+  border-color: #4A90E2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.modal-body .select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+}
+
+.modal-body .select option {
+  background-color: #2c2c3a;
+  color: white;
+}
+
+
+.input-field {
+  position: relative;
+  margin-bottom: 1.2rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn-cancel {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-submit {
+  background: #4A90E2;
+  color: white;
+}
+
+.btn-submit:hover {
+  background: #3a7bc8;
 }
 
 @keyframes pulse {
