@@ -28,15 +28,16 @@
 
           <div class="rent-section">
             <div class="rent-controls" v-if="showRentControls">
-              <button class="btn" type="submit">
+              <button class="btn" type="submit" @click="openBorrowModal">
+                <i class="fa-solid fa-cart-plus" style="color: #ffffff;"></i>
+                <span>borrow</span>
+              </button>
+
+              <button class="btn" type="button" >
                 <i class="fa-solid fa-arrow-rotate-left" style="color: #ffffff;"></i>
                 <span>take back</span>
               </button>
 
-              <button class="btn" type="submit">
-                <i class="fa-solid fa-cart-plus" style="color: #ffffff;"></i>
-                <span>borrow</span>
-              </button>
             </div>
 
             <div class="book-info">
@@ -82,6 +83,24 @@
         </div>
       </div>
     </section>
+    <div v-if="showBorrowModal" class="modal-overlay">
+      <div class="modal-wrapper">
+        <div class="modal-header">
+          <h3>Welcome</h3>
+          <button class="modal-close" @click="closeBorrowModal">
+            <i class="fa-solid fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>You clicked on the borrow button!</p>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-cancel" @click="closeBorrowModal">
+              <span>Close</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -104,13 +123,22 @@ export default defineComponent({
       userCampus: "",
       covers_url: pubURL,
       loading: true,
-      userRole: localStorage.getItem('userRole') || null // Récupération du rôle
+      userRole: localStorage.getItem('userRole') || null,
+      showBorrowModal: false
     }
   },
   methods: {
     goBack() {
       router.push('/');
     },
+    openBorrowModal() {
+      this.showBorrowModal = true;
+    },
+
+    closeBorrowModal() {
+      this.showBorrowModal = false;
+    },
+
     async fetchBookDetails() {
       try {
         const response = await fetch(apiurl + `query/book/${this.serialnum}`, {
@@ -145,7 +173,6 @@ export default defineComponent({
   },
   computed: {
     showRentControls() {
-      console.log("Current role:", this.userRole); // Debug
       const allowedRoles = ["ADMIN", "STAFF", "SHELF MANAGER", "LIBRARIAN"];
       return this.userRole && allowedRoles.includes(this.userRole.toUpperCase());
     }
@@ -271,13 +298,6 @@ export default defineComponent({
   animation: dash4 1.5s ease-in-out infinite;
 }
 
-.input-field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  width: 200px;
-}
-
 label {
   color: white;
   font-size: 0.9rem;
@@ -337,30 +357,6 @@ label {
   text-align: left;
 }
 
-.select {
-  padding: 0.8rem 1rem;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  font-size: 0.95rem;
-  transition: all 0.3s ease;
-}
-
-.select:focus {
-  outline: none;
-  border-color: #4A90E2;
-  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
-}
-
-.select {
-  appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-  background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 1rem;
-}
-
 .rent-section {
   display: flex;
   gap: 3rem;
@@ -405,7 +401,7 @@ label {
 }
 
 .go-back-btn {
-  position: absolute;
+  position: fixed;
   top: 20px;
   left: 20px;
   background: rgba(74, 144, 226, 0.1);
@@ -426,8 +422,117 @@ label {
   transform: translateX(-3px);
 }
 
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-wrapper {
+  position: relative;
+  background: rgba(44, 44, 58, 0.95);
+  border-radius: 16px;
+  padding: 2rem;
+  width: 500px;
+  max-width: 90%;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.modal-header h3 {
+  color: white;
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.modal-close:hover {
+  color: white;
+}
+
+.modal-body p {
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.btn-cancel {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
 .go-back-btn i {
   font-size: 0.8rem;
+}
+
+.spinner circle {
+  fill: none;
+  stroke: #4A90E2;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 1, 200;
+  stroke-dashoffset: 0;
+  animation: dash 1.5s ease-in-out infinite, rotate 2s linear infinite;
+  transform-origin: center;
+}
+
+.user-info h4 {
+  margin: 0 0 0.5rem 0;
+  color: white;
+  font-size: 1.1rem;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -124;
+  }
 }
 
 @keyframes rotate4 {
