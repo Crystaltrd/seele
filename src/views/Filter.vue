@@ -14,26 +14,26 @@
         <p class="subtitle">Find exactly what you're looking for in our extensive collection</p>
       </header>
 
-      <form>
+      <form @submit.prevent="performAdvancedSearch">
         <div class="form-grid">
           <div class="input-field">
             <label for="title">Title</label>
-            <input id="title" placeholder="Enter the title..." type="text" class="input">
+            <input id="title" v-model="searchParams.title" placeholder="Enter the title..." type="text" class="input">
           </div>
 
           <div class="input-field">
             <label for="isbn">ISBN,ISSN..</label>
-            <input id="isbn" placeholder="Enter the ISBN,ISSN..." type="text" class="input">
+            <input id="isbn" v-model="searchParams.isbn" placeholder="Enter the ISBN,ISSN..." type="text" class="input">
           </div>
 
           <div class="input-field">
             <label for="author">Author</label>
-            <input id="author" placeholder="Enter the author's name..." type="text" class="input">
+            <input id="author" v-model="searchParams.author" placeholder="Enter the author's name..." type="text" class="input">
           </div>
 
           <div class="input-field">
             <label for="subject">Category</label>
-            <select id="category" class="select" v-if="!loadingCategories">
+            <select id="category" v-model="searchParams.category" class="select" v-if="!loadingCategories">
               <option value="">Any category</option>
               <option
                   v-for="category in categories"
@@ -48,7 +48,7 @@
 
           <div class="input-field">
             <label for="editor">Publisher</label>
-            <input id="editor" placeholder="Enter editor..." type="text" class="input">
+            <input id="editor" v-model="searchParams.publisher" placeholder="Enter editor..." type="text" class="input">
           </div>
 
           <div class="input-field">
@@ -68,7 +68,7 @@
 
           <div class="input-field">
             <label for="doc-type">Document Type</label>
-            <select id="doc-type" class="select" v-if="!loadingDocTypes">
+            <select id="doc-type" v-model="searchParams.docType"class="select" v-if="!loadingDocTypes">
               <option value="">Any type</option>
               <option
                   v-for="docType in docTypes"
@@ -83,7 +83,7 @@
 
           <div id="single-year-container" class="input-field">
             <label for="year">Publication year</label>
-            <select id="year" class="select">
+            <select id="year" v-model="searchParams.year" class="select">
               <option value="">Any year</option>
               <option
                   v-for="year in years"
@@ -97,7 +97,7 @@
 
           <div id="year-range-container" class="input-field" style="display: none;">
             <label for="start-year">From</label>
-            <select id="start-year" class="select">
+            <select id="start-year" v-model="searchParams.startYear" class="select">
               <option value="">Any year</option>
               <option
                   v-for="year in years"
@@ -109,7 +109,7 @@
             </select>
 
             <label for="end-year">To</label>
-            <select id="end-year" class="select">
+            <select id="end-year" v-model="searchParams.endYear" class="select">
               <option value="">Any year</option>
               <option
                   v-for="year in years"
@@ -123,7 +123,7 @@
 
           <div class="input-field">
             <label for="language">Language</label>
-            <select id="language" class="select" v-if="!loadingLanguages">
+            <select id="language" v-model="searchParams.language" class="select" v-if="!loadingLanguages">
               <option value="">Any language</option>
               <option
                   v-for="language in languages"
@@ -432,7 +432,23 @@ const loadingDocTypes = ref(false);
 const serverError = ref("");
 const router = useRouter();
 const showAdminButton = ref(false);
+const searchResults = ref([]);
+const loadingSearch = ref(false);
+const searchError = ref("");
+const totalResults = ref(0);
 
+const searchParams = ref({
+  title: '',
+  isbn: '',
+  author: '',
+  category: '',
+  publisher: '',
+  docType: '',
+  year: '',
+  startYear: '',
+  endYear: '',
+  language: ''
+});
 
 const currentYear = new Date().getFullYear();
 const years = Array.from({length: currentYear - 1500 + 1}, (_, i) => currentYear - i);
@@ -460,6 +476,50 @@ function toggleYearSelection() {
   }
 }
 
+const performAdvancedSearch = async () => {
+  loadingSearch.value = true;
+  searchError.value = "";
+
+  try {
+    const params = {
+      name: searchParams.value.title,
+      serialnum: searchParams.value.isbn,
+      author: searchParams.value.author,
+      class: searchParams.value.category,
+      publisher: searchParams.value.publisher,
+      type: searchParams.value.docType,
+      lang: searchParams.value.language
+    };
+
+    if (yearSelectionType.value === 'single' && searchParams.value.year) {
+      params.loweryear = searchParams.value.year;
+      params.upperyear = searchParams.value.year;
+    } else if (yearSelectionType.value === 'range') {
+      if (searchParams.value.startYear) params.loweryear = searchParams.value.startYear;
+      if (searchParams.value.endYear) params.upperyear  = searchParams.value.endYear;
+    }
+
+    Object.keys(params).forEach(key => {
+      if (params[key] === '' || params[key] === null || params[key] === undefined) {
+        delete params[key];
+      }
+    });
+
+    router.push({
+      path: '/view',
+      query: {
+        advanced: true,
+        ...params
+      }
+    });
+
+  } catch (error) {
+    console.error("Search error:", error);
+    searchError.value = "An error occurred during the search";
+  } finally {
+    loadingSearch.value = false;
+  }
+};
 async function getCategories() {
   serverError.value = "";
   loadingCategories.value = true;
@@ -498,7 +558,7 @@ async function getLanguages() {
       languages.value = data.res.map(lang => lang.langcode);
     }
   } catch (error) {
-    serverError.value = "Failed to load languages";
+    serverError.value = "Failed to load languagenpms";
   } finally {
     loadingLanguages.value = false;
   }

@@ -9,8 +9,9 @@
     <section id="view-all">
       <div class="container">
         <div class="content-wrapper">
-          <h3 class="section-heading">{{ searchQuery ? `Search Results for "${searchQuery}"` : 'All Publications' }}
-            <span v-if="searchQuery" class="clear-search" @click.stop="clearSearch">(Clear)</span></h3>
+          <h3 class="section-heading">{{ searchTitle }}
+            <span v-if="searchQuery || $route.query.advanced" class="clear-search" @click.stop="clearSearch">(Clear)</span>
+          </h3>
 
           <div class="publications-list" v-if="!loadingbooks">
             <div class="publication-row" v-for="book in filteredBooks" :key="book.serialnum" @click="goToBookDetails(book.serialnum)">
@@ -78,7 +79,7 @@
 import {defineComponent} from "vue";
 import Background from "../components/background.vue";
 import { useRoute } from 'vue-router';
-import router from "@/router";
+import router from "../router";
 
 
 export default defineComponent({
@@ -97,6 +98,14 @@ export default defineComponent({
     };
   },
   computed: {
+    searchTitle() {
+      if (this.searchQuery) {
+        return `Search Results for "${this.searchQuery}"`;
+      } else if (this.$route.query.advanced) {
+        return "Advanced Search Results";
+      }
+      return 'All Publications';
+    },
     filteredBooks() {
       return this.books ;
     },
@@ -128,7 +137,11 @@ export default defineComponent({
         if (this.searchQuery) {
           url = `${apiurl}search`;
           params = { q: this.searchQuery};
-        } else {
+        } else if (this.$route.query.advanced) {
+          url = `${apiurl}query/book`;
+          params = { ...this.$route.query };
+          delete params.advanced;
+        }else {
           url = `${apiurl}query/book`;
           params = {
             limit: this.itemsPerPage,
