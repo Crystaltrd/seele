@@ -123,7 +123,8 @@ export default defineComponent({
       userCampus: "",
       covers_url: pubURL,
       loading: true,
-      userRole: localStorage.getItem('userRole') || null,
+      //userRole: localStorage.getItem('userRole') || null,
+      userRole : null,
       showBorrowModal: false
     }
   },
@@ -137,6 +138,18 @@ export default defineComponent({
 
     closeBorrowModal() {
       this.showBorrowModal = false;
+    },
+
+    async beforeMount() {
+      try {
+        const response = await fetch(`${apiurl}me`, {
+          credentials: 'include'
+        });
+        const userData = await response.json();
+        this.userRole = userData.role;
+      } catch (error) {
+        console.error("Failed to fetch user data", error);
+      }
     },
 
     async fetchBookDetails() {
