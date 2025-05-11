@@ -171,7 +171,7 @@ export default defineComponent({
 }
 
 #popular {
-  padding: 8rem 0;
+  padding: 8rem 0 5rem 0;
   display: flex;
   align-items: center;
 }
@@ -278,7 +278,7 @@ circle {
 }
 
 .see-all-btn {
-  margin-left: auto;
+  margin-left: 78rem;
   margin-bottom: 5rem;
   background: rgba(74, 144, 226, 0.2);
   color: #FFFFFF;
