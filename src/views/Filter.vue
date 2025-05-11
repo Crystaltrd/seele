@@ -344,6 +344,19 @@ label {
   font-size: 0.8rem;
 }
 
+.select option {
+  background-color: #2c2c3a;
+  color: white;
+}
+
+.select option:hover {
+  background-color: #4A90E2;
+}
+
+.select option:checked {
+  background-color: #4A90E2;
+}
+
 @media (max-width: 768px) {
   .wrapper {
     padding: 1.5rem;
