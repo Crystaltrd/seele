@@ -85,21 +85,23 @@
               <div
                   class="account-item"
                   v-for="account in accounts"
-                  :key="account.id"
-                  :class="{ selected: selectedAccount?.id === account.id }"
+                  :key="account['ACCOUNT.UUID']"
+                  :class="{ selected: selectedAccount?.['ACCOUNT.UUID'] === account['ACCOUNT.UUID'] }"
                   @click="selectAccount(account)"
               >
                 <div class="account-info">
                   <div class="selected-indicator" v-if="selectedAccount?.['ACCOUNT.UUID'] === account['ACCOUNT.UUID']">
                     <i class="fa-solid fa-check"></i>
                   </div>
-                  <h4>{{ account['ACCOUNT.UUID'] }}</h4>
+                  <h4 id="display-name">{{ account.disp_name }}</h4>
                   <div class="meta">
-                    <span>{{ account.disp_name}}</span>
+                    <span>{{ account['ACCOUNT.UUID'] }}</span>
                     <span>{{ account.role }} ({{ account.campus }})</span>
                   </div>
                   <div class="status-info">
-                    <span :class="account.frozen ? 'inactive' : 'active'"> {{ account.frozen ? 'Frozen' : 'Active' }}</span>
+        <span :class="account.frozen ? 'inactive' : 'active'">
+          {{ account.frozen ? 'Frozen' : 'Active' }}
+        </span>
                   </div>
                 </div>
               </div>
@@ -609,8 +611,7 @@ onMounted(async () => {
 .filter-wrapper {
   display: flex;
   gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
+  align-items: center;
 }
 
 .admin-btn-container {
@@ -653,15 +654,11 @@ onMounted(async () => {
   .btn-wrapper, .filter-wrapper {
     width: 100%;
     justify-content: center;
-  }
-
-  .filter-wrapper {
     flex-wrap: wrap;
   }
 
-  .filter-wrapper .input-field,
-  .filter-wrapper .btn {
-    width: 100%;
+  .filter-wrapper .input-field {
+    min-width: 150px;
   }
 }
 
@@ -691,6 +688,8 @@ onMounted(async () => {
 .btn-wrapper {
   display: flex;
   gap: 1rem;
+  justify-content: center;
+  margin-top: 0;
 }
 
 .btn i {
@@ -730,31 +729,48 @@ onMounted(async () => {
 }
 
 .account-item:hover {
-  background: rgba(74, 144, 226, 0.1);
+  backackground: rgba(74, 144, 226, 0.1);
   transform: translateX(5px);
 }
 
 .account-item.selected {
-  background: rgba(74, 144, 226, 0.1) !important;
+  background: rgba(74, 144, 226, 0.2) !important;
   transform: translateX(5px);
-  border-left: 3px solid #4A90E2;
+  border-left: 4px solid #4A90E2;
+  box-shadow: 0 0 15px rgba(74, 144, 226, 0.3);
+  position: relative;
+  z-index: 1;
 }
 
-.account-info {
-  position: relative;
-  padding-right: 1rem;
+.account-item.selected::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 2px solid rgba(74, 144, 226, 0.5);
+  border-radius: 8px;
+  pointer-events: none;
+  animation: pulse 2s infinite;
 }
 
 .account-info h4 {
   margin: 0 0 0.5rem 0;
   color: white;
-  font-size: 1.1rem;
-  transition: color 0.3s ease;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.account-item.selected .account-info h4 {
+  color: #4A90E2;
+  font-weight: 600;
 }
 
 .meta {
   display: flex;
-  gap: 1rem;
+  gap: 0.3rem;
+  flex-direction: column;
   color: rgba(255, 255, 255, 0.7);
   font-size: 0.9rem;
   margin-bottom: 0.5rem;
@@ -765,9 +781,13 @@ onMounted(async () => {
   transition: color 0.3s ease;
 }
 
+.status-info {
+  margin-top: 0.5rem;
+}
+
 .status-info span {
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
+  padding: 0.3rem 0.8rem;
+  border-radius: 12px;
   font-size: 0.8rem;
   font-weight: 500;
 }
@@ -782,10 +802,6 @@ onMounted(async () => {
   color: #F44336;
 }
 
-.status-info {
-  background: rgba(255, 152, 0, 0.2);
-  color: #FF9800;
-}
 
 .loading {
   display: flex;
@@ -1097,6 +1113,208 @@ onMounted(async () => {
 
 .btn-submit:hover {
   background: #3a7bc8;
+}
+
+.accounts-list {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.account-item {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.account-item:hover {
+  background: rgba(74, 144, 226, 0.1);
+  transform: translateX(5px);
+}
+
+.account-item.selected {
+  background: rgba(74, 144, 226, 0.2) !important;
+  transform: translateX(5px);
+  border-left: 4px solid #4A90E2;
+  box-shadow: 0 0 15px rgba(74, 144, 226, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.account-item.selected::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 2px solid rgba(74, 144, 226, 0.5);
+  border-radius: 8px;
+  pointer-events: none;
+  animation: pulse 2s infinite;
+}
+
+.account-info h4 {
+  margin: 0 0 0.5rem 0;
+  color: white;
+  font-size: 1.1rem;
+}
+
+.account-item.selected .account-info h4 {
+  color: #4A90E2;
+  font-weight: 600;
+}
+
+.meta {
+  display: flex;
+  gap: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.status-info span {
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.status-info .active {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4CAF50;
+}
+
+.status-info .inactive {
+  background: rgba(244, 67, 54, 0.2);
+  color: #F44336;
+}
+
+.selected-indicator {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 25px;
+  height: 25px;
+  background: #4A90E2;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.8rem;
+  box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+  z-index: 2;
+}
+
+.accounts-list {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.account-item {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.account-item:hover {
+  background: rgba(74, 144, 226, 0.1);
+  transform: translateX(5px);
+}
+
+.account-item.selected {
+  background: rgba(74, 144, 226, 0.2) !important;
+  transform: translateX(5px);
+  border-left: 4px solid #4A90E2;
+  box-shadow: 0 0 15px rgba(74, 144, 226, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.account-item.selected::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 2px solid rgba(74, 144, 226, 0.5);
+  border-radius: 8px;
+  pointer-events: none;
+  animation: pulse 2s infinite;
+}
+
+.account-info h4 {
+  margin: 0 0 0.5rem 0;
+  color: white;
+  font-size: 1.1rem;
+}
+
+.meta {
+  display: flex;
+  gap: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.status-info span {
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.status-info .active {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4CAF50;
+}
+
+.status-info .inactive {
+  background: rgba(244, 67, 54, 0.2);
+  color: #F44336;
+}
+
+.selected-indicator {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 25px;
+  height: 25px;
+  background: #4A90E2;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.8rem;
+  box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+  z-index: 2;
+}
+
+
+@keyframes pulse {
+  0% {
+    border-color: rgba(74, 144, 226, 0.5);
+  }
+  50% {
+    border-color: rgba(74, 144, 226, 0.8);
+  }
+  100% {
+    border-color: rgba(74, 144, 226, 0.5);
+  }
 }
 
 @keyframes pulse {
