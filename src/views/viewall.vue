@@ -2,6 +2,10 @@
   <div class="view-all-container">
     <Background/>
 
+    <button type="button" class="go-back-btn" @click="goBack">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+
     <section id="view-all">
       <div class="container">
         <div class="content-wrapper">
@@ -74,6 +78,7 @@
 import {defineComponent} from "vue";
 import Background from "../components/background.vue";
 import { useRoute } from 'vue-router';
+import router from "@/router";
 
 
 export default defineComponent({
@@ -111,6 +116,9 @@ export default defineComponent({
     }
   },
   methods: {
+    goBack() {
+      router.push('/');
+    },
     async fetchBooks() {
       this.loadingbooks = true;
       try {
@@ -464,6 +472,28 @@ export default defineComponent({
   stroke-dashoffset: 0;
   stroke-linecap: round;
   animation: dash4 1.5s ease-in-out infinite;
+}
+
+.go-back-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: rgba(74, 144, 226, 0.1);
+  color: #FFFFFF;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.go-back-btn:hover {
+  background: rgba(74, 144, 226, 0.1);
+  transform: translateX(-3px);
 }
 
 @keyframes rotate4 {
