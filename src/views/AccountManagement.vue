@@ -111,7 +111,6 @@
             <div class="modal-wrapper">
               <div class="modal-header">
                 <h3>Add a new account</h3>
-                <p class="subtitle">Fill all required fields to add a new user account</p>
                 <button class="modal-close" @click="showAddModal = false">
                   <i class="fa-solid fa-times"></i>
                 </button>
@@ -970,6 +969,10 @@ onMounted(async () => {
 .modal-header {
   margin-bottom: 1.5rem;
   position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-right: 2rem;
 }
 
 .modal-header h3 {
@@ -977,20 +980,38 @@ onMounted(async () => {
   font-size: 1.8rem;
   margin-bottom: 0.5rem;
   font-weight: 700;
+  flex: 1;
 }
 
 .modal-header .subtitle {
   color: rgba(255, 255, 255, 0.7);
   font-size: 0.9rem;
+  flex: 1;
 }
 
 .modal-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: rgba(255, 255, 255, 0.7);
-  transition: color 0.2s;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
 }
 
 .modal-close:hover {
+  background: rgba(255, 255, 255, 0.2);
   color: white;
+  transform: rotate(90deg);
 }
 
 .form-grid {
