@@ -93,10 +93,23 @@
                   <div class="selected-indicator" v-if="selectedAccount?.['UUID'] === account['UUID']">
                     <i class="fa-solid fa-check"></i>
                   </div>
-                  <h4 id="display-name">{{ account.disp_name }}</h4>
+                  <div class="uuid-display">
+                    <span class="uuid-label">UUID:</span>
+                    <span class="uuid-value">{{ account['UUID'] }}</span>
+                  </div>
+                  <div class="display-name">
+                    <span class="name-label">Display Name:</span>
+                    <span class="name-value">{{ account.displayname }}</span>
+                  </div>
                   <div class="meta">
-                    <span>{{ account['UUID'] }}</span>
-                    <span>{{ account.role }} ({{ account.campus }})</span>
+                    <div class="meta-item">
+                      <span class="meta-label">Role:</span>
+                      <span class="meta-value">{{ account.role }}</span>
+                    </div>
+                    <div class="meta-item">
+                      <span class="meta-label">Campus:</span>
+                      <span class="meta-value">{{ account.campus }}</span>
+                    </div>
                   </div>
                   <div class="status-info">
         <span :class="account.frozen ? 'inactive' : 'active'">
@@ -121,7 +134,7 @@
                   <div class="form-grid">
                     <div class="form-column">
                       <div class="input-field">
-                        <label for="username">Username</label>
+                        <label for="username">UUID</label>
                         <input id="username" v-model="newAccount.username" type="text" class="input" required>
                       </div>
 
@@ -781,6 +794,66 @@ onMounted(async () => {
   font-weight: 600;
 }
 
+.uuid-display {
+  margin-bottom: 0.5rem;
+}
+
+.uuid-label {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  margin-right: 0.5rem;
+}
+
+.uuid-value {
+  font-weight: 600;
+  color: #4A90E2;
+  font-size: 1rem;
+}
+
+.display-name {
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.name-label {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  margin-right: 0.5rem;
+}
+
+.name-value {
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.meta-item {
+  display: flex;
+  align-items: baseline;
+}
+
+.meta-label {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  min-width: 70px;
+}
+
+.meta-value {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.status-info {
+  margin-top: 1rem;
+  text-align: right;
+}
+
 .meta {
   display: flex;
   gap: 0.3rem;
@@ -1295,6 +1368,45 @@ onMounted(async () => {
   margin: 0 0 0.5rem 0;
   color: white;
   font-size: 1.1rem;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.meta-item {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+
+.meta-label {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  min-width: 70px;
+}
+
+.meta-value {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.account-info h4 {
+  margin: 0 0 1rem 0;
+  color: white;
+  font-size: 1.3rem;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.5rem;
+}
+
+.status-info {
+  margin-top: 1rem;
+  text-align: right;
 }
 
 .meta {
