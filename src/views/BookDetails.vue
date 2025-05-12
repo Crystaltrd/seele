@@ -86,18 +86,110 @@
     <div v-if="showBorrowModal" class="modal-overlay">
       <div class="modal-wrapper">
         <div class="modal-header">
-          <h3>Welcome</h3>
+          <h3>{{ currentStep === 1 ? 'Select User' : 'Select Duration' }}</h3>
           <button class="modal-close" @click="closeBorrowModal">
             <i class="fa-solid fa-times"></i>
           </button>
         </div>
+
         <div class="modal-body">
-          <p>You clicked on the borrow button!</p>
-          <div class="modal-actions">
-            <button type="button" class="btn btn-cancel" @click="closeBorrowModal">
-              <span>Close</span>
-            </button>
+          <div v-if="currentStep === 1">
+            <div v-if="isLoadingUsers" class="loading">
+              <svg viewBox="25 25 50 50" class="spinner">
+                <circle r="20" cy="50" cx="50"></circle>
+              </svg>
+            </div>
+
+            <div v-else-if="eligibleUsers.length === 0" class="empty">
+              No eligible users found
+            </div>
+
+            <div v-else class="users-list">
+              <div
+                  class="user-item"
+                  v-for="user in eligibleUsers"
+                  :key="user['UUID']"
+                  :class="{ selected: selectedUser?.['UUID'] === user['UUID'] }"
+                  @click="selectUser(user)"
+              >
+                <div class="user-info">
+                  <div class="selected-indicator" v-if="selectedUser?.['UUID'] === user['UUID']">
+                    <i class="fa-solid fa-check"></i>
+                  </div>
+                  <div class="uuid-display">
+                    <span class="uuid-label">UUID:</span>
+                    <span class="uuid-value">{{ user['UUID'] }}</span>
+                  </div>
+                  <div class="display-name">
+                    <span class="name-label">Name:</span>
+                    <span class="name-value">{{ user.displayname }}</span>
+                  </div>
+                  <div class="meta">
+                    <div class="meta-item">
+                      <span class="meta-label">Role:</span>
+                      <span class="meta-value">{{ user.role }}</span>
+                    </div>
+                    <div class="meta-item">
+                      <span class="meta-label">Campus:</span>
+                      <span class="meta-value">{{ user.campus }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+
+          <div v-else class="duration-selection">
+            <div class="input-field">
+              <label for="duration">Duration (days):</label>
+              <select id="duration" v-model="selectedDuration" class="select">
+                <option v-for="days in durationOptions" :key="days" :value="days">
+                  {{ days }} days
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button
+              v-if="currentStep === 2"
+              type="button"
+              class="btn btn-back"
+              @click="currentStep = 1"
+          >
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Back</span>
+          </button>
+
+          <button
+              v-if="currentStep === 1 && selectedUser"
+              type="button"
+              class="btn btn-next"
+              @click="currentStep = 2"
+          >
+            <span>Next</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+
+          <button
+              v-if="currentStep === 2"
+              type="button"
+              class="btn btn-submit"
+              @click="processBorrow"
+              :disabled="isProcessing"
+          >
+            <span v-if="!isProcessing">Borrow Publication</span>
+            <span v-else>Processing...</span>
+          </button>
+
+          <button
+              type="button"
+              class="btn btn-cancel"
+              @click="closeBorrowModal"
+          >
+            <span>Cancel</span>
+          </button>
         </div>
       </div>
     </div>
@@ -123,9 +215,27 @@ export default defineComponent({
       userCampus: "",
       covers_url: pubURL,
       loading: true,
-      //userRole: localStorage.getItem('userRole') || null,
-      userRole : null,
-      showBorrowModal: false
+      userRole: null,
+      showBorrowModal: false,
+      currentStep: 1,
+      selectedUser: null,
+      selectedDuration: 7,
+      durationOptions: [7, 14, 21, 30],
+      users: [],
+      isLoadingUsers: false,
+      isProcessing: false
+    }
+  },
+  computed: {
+    showRentControls() {
+      const allowedRoles = ["ADMIN", "STAFF", "SHELF MANAGER", "LIBRARIAN"];
+      return this.userRole && allowedRoles.includes(this.userRole.toUpperCase());
+    },
+    eligibleUsers() {
+      return this.users.filter(user =>
+          ['STUDENT', 'PROFESSOR'].includes(user.role.toUpperCase()) &&
+          !user.frozen
+      );
     }
   },
   methods: {
@@ -134,10 +244,84 @@ export default defineComponent({
     },
     openBorrowModal() {
       this.showBorrowModal = true;
+      this.currentStep = 1;
+      this.selectedUser = null;
+      this.fetchEligibleUsers();
     },
 
     closeBorrowModal() {
       this.showBorrowModal = false;
+    },
+    selectUser(user) {
+      this.selectedUser = this.selectedUser?.UUID === user.UUID ? null : user;
+    },
+    async fetchEligibleUsers() {
+      this.isLoadingUsers = true;
+      try {
+        const response = await fetch(`${apiurl}query/account`, {
+          method: "GET",
+          headers: { 'Accept': 'application/json' },
+          credentials: 'include'
+        });
+
+        const data = await response.json();
+        if (data.res) {
+          this.users = data.res;
+        }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to fetch users",
+          icon: "error",
+          iconColor: "#FF5252",
+          background: "#2c2c3a",
+          color: "#fff"
+        });
+      } finally {
+        this.isLoadingUsers = false;
+      }
+    },
+    async processBorrow() {
+      if (!this.selectedUser || !this.selectedDuration) return;
+
+      this.isProcessing = true;
+
+      try {
+        const response = await fetch(`${apiurl}borrow?uuid=${encodeURIComponent(this.selectedUser.UUID)}
+        &serialnum=${encodeURIComponent(this.serialnum)}&duration=${this.selectedDuration}`, {
+          method: "GET",
+          credentials: 'include'
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          await Swal.fire({
+            title: "Success!",
+            text: "Book borrowed successfully",
+            icon: "success",
+            iconColor: "#4A90E2",
+            background: "#2c2c3a",
+            color: "#fff"
+          });
+          this.closeBorrowModal();
+          this.fetchBookDetails();
+        } else {
+          throw new Error(data.error || "Failed to borrow book");
+        }
+      } catch (error) {
+        await Swal.fire({
+          title: "Error!",
+          text: error.message,
+          icon: "error",
+          iconColor: "#FF5252",
+          background: "#2c2c3a",
+          color: "#fff"
+        });
+      } finally {
+        this.isProcessing = false;
+      }
     },
 
     async beforeMount() {
@@ -182,12 +366,6 @@ export default defineComponent({
       } finally {
         this.loading = false;
       }
-    }
-  },
-  computed: {
-    showRentControls() {
-      const allowedRoles = ["ADMIN", "STAFF", "SHELF MANAGER", "LIBRARIAN"];
-      return this.userRole && allowedRoles.includes(this.userRole.toUpperCase());
     }
   },
   mounted() {
@@ -525,6 +703,199 @@ label {
   margin: 0 0 0.5rem 0;
   color: white;
   font-size: 1.1rem;
+}
+
+.modal-wrapper {
+  width: 600px;
+  max-width: 95%;
+}
+
+.users-list {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+  color: white ;
+}
+
+.user-item {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.user-item:hover {
+  background: rgba(74, 144, 226, 0.1);
+}
+
+.user-item.selected {
+  background: rgba(74, 144, 226, 0.2);
+  border-left: 3px solid #4A90E2;
+}
+
+.user-info {
+  position: relative;
+}
+
+.selected-indicator {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 20px;
+  height: 20px;
+  background: #4A90E2;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.7rem;
+}
+
+.duration-selection {
+  padding: 1.5rem 0;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.duration-selection .input-field {
+  margin-bottom: 1.5rem;
+}
+
+.duration-selection label {
+  display: block;
+  margin-bottom: 0.75rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.duration-selection .select {
+  width: 100%;
+  padding: 0.85rem 1.25rem;
+  border-radius: 10px;
+  border: 1px solid rgba(74, 144, 226, 0.5);
+  background: rgba(44, 44, 58, 0.8);
+  color: white;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234A90E2'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1rem;
+}
+
+.duration-selection .select:focus {
+  outline: none;
+  border-color: #4A90E2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
+  transform: translateY(-2px);
+}
+
+.duration-selection .select:hover {
+  border-color: rgba(74, 144, 226, 0.8);
+}
+
+.duration-selection .select option {
+  background-color: #2c2c3a;
+  color: white;
+  padding: 0.5rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.duration-option {
+  display: inline-block;
+  margin: 0 0.5rem 0.5rem 0;
+}
+
+.duration-option input[type="radio"] {
+  display: none;
+}
+
+.duration-option label {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(74, 144, 226, 0.3);
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.duration-option input[type="radio"]:checked + label {
+  background: rgba(74, 144, 226, 0.2);
+  border-color: #4A90E2;
+  color: white;
+  box-shadow: 0 0 0 1px #4A90E2;
+}
+
+.duration-option label:hover {
+  background: rgba(74, 144, 226, 0.1);
+  transform: translateY(-2px);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn-next {
+  background: #4A90E2;
+}
+
+.btn-next:hover {
+  background: #3a7bc8;
+}
+
+.btn-back {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-back:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-submit {
+  background: #4A90E2;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: #3a7bc8;
+}
+
+.btn-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.empty {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 2rem;
 }
 
 @keyframes rotate {
