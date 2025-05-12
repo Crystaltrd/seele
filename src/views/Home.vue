@@ -34,12 +34,13 @@
               <circle r="20" cy="50" cx="50"></circle>
             </svg>
           </div>
+          <button type="button" class="see-all-btn" @click="seeAll">
+            <i class="fas fa-arrow-right"></i> View All
+          </button>
         </div>
       </div>
     </section>
-    <button type="button" class="see-all-btn" @click="seeAll">
-      <i class="fas fa-arrow-right"></i>View All
-    </button>
+
   </div>
 </template>
 
@@ -278,30 +279,35 @@ circle {
 }
 
 .see-all-btn {
-  margin-left: 78rem;
-  margin-bottom: 5rem;
-  background: rgba(74, 144, 226, 0.2);
+  display: block;
+  margin: 2rem 0 3rem auto;
+  background: rgba(74, 144, 226, 0.7);
   color: #FFFFFF;
   border: none;
   cursor: pointer;
-  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 5px;
   font-size: 0.9rem;
-  padding: 8px 16px;
+  padding: 10px 20px;
   border-radius: 20px;
   transition: all 0.3s ease;
-  z-index: 9999; /* just temporary to make the btn work */
   position: relative;
+  width: max-content;
 }
 
 .see-all-btn:hover {
-  background: rgba(74, 144, 226, 0.1);
-  transform: translateX(-3px);
+  background: rgba(74, 144, 226, 0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
-.see-all-btn i {
-  font-size: 0.8rem;
+@media (max-width: 768px) {
+  .see-all-btn {
+    margin: 1.5rem 0 1.5rem 0;
+    padding: 8px 16px;
+    font-size: 0.8rem;
+  }
 }
 
 .admin-btn-container {

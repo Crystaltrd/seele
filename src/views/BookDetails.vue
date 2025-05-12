@@ -10,18 +10,18 @@
       <div class="container">
         <div class="content-wrapper">
 
-           <div class="detail-content">
+          <div class="detail-content">
             <div class="book-cover">
               <img v-bind:alt="book.booktitle+'\'s Cover'" v-if="book.bookcover" v-bind:src="covers_url+book.bookcover"/>
               <img v-bind:alt="book.booktitle+'\'s Cover PLACEHOLDER'" v-else src="../assets/bookcover.jpg"/>
             </div>
 
-             <div class="book-header">
-               <h1 class="book-title">{{ book.booktitle }}</h1>
-               <div class="book-description">
-                 <p>{{ book.description }}</p>
-               </div>
-             </div>
+            <div class="book-header">
+              <h1 class="book-title">{{ book.booktitle }}</h1>
+              <div class="book-description">
+                <p>{{ book.description }}</p>
+              </div>
+            </div>
           </div>
 
           <div class="separator"></div>
@@ -45,10 +45,10 @@
                 <span class="info-label">Authors:</span>
                 <span class="info-value" v-for="author in book.authors" v-if="book.authors && !loading">{{ author || 'Unknown' }}</span>
               </div>
-                <div class="info-item">
-                  <span class="info-label">Publisher:</span>
-                  <span class="info-value">{{ book.publisher || 'Unknown' }}</span>
-                </div>
+              <div class="info-item">
+                <span class="info-label">Publisher:</span>
+                <span class="info-value">{{ book.publisher || 'Unknown' }}</span>
+              </div>
 
 
               <div class="info-item">
