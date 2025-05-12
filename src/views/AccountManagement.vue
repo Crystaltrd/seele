@@ -85,17 +85,17 @@
               <div
                   class="account-item"
                   v-for="account in accounts"
-                  :key="account['ACCOUNT.UUID']"
-                  :class="{ selected: selectedAccount?.['ACCOUNT.UUID'] === account['ACCOUNT.UUID'] }"
+                  :key="account['UUID']"
+                  :class="{ selected: selectedAccount?.['UUID'] === account['UUID'] }"
                   @click="selectAccount(account)"
               >
                 <div class="account-info">
-                  <div class="selected-indicator" v-if="selectedAccount?.['ACCOUNT.UUID'] === account['ACCOUNT.UUID']">
+                  <div class="selected-indicator" v-if="selectedAccount?.['UUID'] === account['UUID']">
                     <i class="fa-solid fa-check"></i>
                   </div>
                   <h4 id="display-name">{{ account.disp_name }}</h4>
                   <div class="meta">
-                    <span>{{ account['ACCOUNT.UUID'] }}</span>
+                    <span>{{ account['UUID'] }}</span>
                     <span>{{ account.role }} ({{ account.campus }})</span>
                   </div>
                   <div class="status-info">
@@ -317,7 +317,7 @@ function applyFilter() {
 }
 
 function selectAccount(account) {
-  selectedAccount.value = selectedAccount.value?.['ACCOUNT.UUID'] === account['ACCOUNT.UUID']
+  selectedAccount.value = selectedAccount.value?.['UUID'] === account['UUID']
       ? null
       : account;
 }
@@ -362,7 +362,7 @@ async function deleteAccount() {
 
   if (result.isConfirmed) {
     try {
-      const response = await fetch(`${apiurl}account/${selectedAccount.value['ACCOUNT.UUID']}`, {
+      const response = await fetch(`${apiurl}account/${selectedAccount.value['UUID']}`, {
         method: "DELETE",
         credentials: 'include'
       });
