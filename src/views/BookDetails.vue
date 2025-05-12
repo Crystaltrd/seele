@@ -33,9 +33,14 @@
                 <span>borrow</span>
               </button>
 
-              <button class="btn" type="button" >
+              <button
+                  class="btn"
+                  type="button"
+                  @click="openReturnModal"
+                  :disabled="isProcessingReturn"
+              >
                 <i class="fa-solid fa-arrow-rotate-left" style="color: #ffffff;"></i>
-                <span>take back</span>
+                <span>{{ isProcessingReturn ? 'Processing...' : 'take back' }}</span>
               </button>
 
             </div>
@@ -193,6 +198,79 @@
         </div>
       </div>
     </div>
+
+    <div v-if="showReturnModal" class="modal-overlay">
+      <div class="modal-wrapper">
+        <div class="modal-header">
+          <h3>Select User to Return</h3>
+          <button class="modal-close" @click="showReturnModal = false">
+            <i class="fa-solid fa-times"></i>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <div v-if="isLoadingUsers" class="loading">
+            <svg viewBox="25 25 50 50" class="spinner">
+              <circle r="20" cy="50" cx="50"></circle>
+            </svg>
+          </div>
+
+          <div v-else-if="borrowedUsers.length === 0" class="empty">
+            No users have borrowed this book
+          </div>
+
+          <div v-else class="users-list">
+            <div
+                class="user-item"
+                v-for="user in borrowedUsers"
+                :key="user['UUID']"
+                :class="{ selected: selectedReturnUser?.['UUID'] === user['UUID'] }"
+                @click="selectReturnUser(user)"
+            >
+              <div class="user-info">
+                <div class="selected-indicator" v-if="selectedReturnUser?.['UUID'] === user['UUID']">
+                  <i class="fa-solid fa-check"></i>
+                </div>
+                <div class="uuid-display">
+                  <span class="uuid-label">UUID:</span>
+                  <span class="uuid-value">{{ user['UUID'] }}</span>
+                </div>
+                <div class="display-name">
+                  <span class="name-label">Name:</span>
+                  <span class="name-value">{{ user.displayname }}</span>
+                </div>
+                <div class="meta">
+                  <div class="meta-item">
+                    <span class="meta-label">Borrow Date:</span>
+                    <span class="meta-value">{{ user.rentdate }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button
+              type="button"
+              class="btn btn-submit"
+              @click="processReturn"
+              :disabled="!selectedReturnUser || isProcessingReturn"
+          >
+            <span v-if="!isProcessingReturn">Confirm Return</span>
+            <span v-else>Processing...</span>
+          </button>
+
+          <button
+              type="button"
+              class="btn btn-cancel"
+              @click="showReturnModal = false"
+          >
+            <span>Cancel</span>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -223,7 +301,11 @@ export default defineComponent({
       durationOptions: [7, 14, 21, 30],
       users: [],
       isLoadingUsers: false,
-      isProcessing: false
+      isProcessing: false,
+      isProcessingReturn: false,
+      showReturnModal: false,
+      borrowedUsers: [],
+      selectedReturnUser: null
     }
   },
   computed: {
@@ -365,6 +447,94 @@ export default defineComponent({
         console.error("Error:", error);
       } finally {
         this.loading = false;
+      }
+    },
+    async openReturnModal() {
+      this.isLoadingUsers = true;
+      this.showReturnModal = true;
+      try {
+        const response = await fetch(`${apiurl}query/inventory?serialnum=${encodeURIComponent(this.serialnum)}`, {
+          method: "GET",
+          credentials: 'include'
+        });
+
+        const data = await response.json();
+        if (data.res) {
+          this.borrowedUsers = data.res;
+          if (this.borrowedUsers.length === 1) {
+            this.selectedReturnUser = this.borrowedUsers[0];
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching borrowed users:", error);
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to fetch borrowed users",
+          icon: "error",
+          iconColor: "#FF5252",
+          background: "#2c2c3a",
+          color: "#fff"
+        });
+      } finally {
+        this.isLoadingUsers = false;
+      }
+    },
+
+    selectReturnUser(user) {
+      this.selectedReturnUser = this.selectedReturnUser?.UUID === user.UUID ? null : user;
+    },
+
+    async processReturn() {
+      if (!this.selectedReturnUser) {
+        await Swal.fire({
+          title: "No user selected",
+          text: "Please select a user first",
+          icon: "warning",
+          iconColor: "#FFA726",
+          background: "#2c2c3a",
+          color: "#fff"
+        });
+        return;
+      }
+
+      this.isProcessingReturn = true;
+
+      try {
+        const response = await fetch(
+            `${apiurl}borrow?uuid=${encodeURIComponent(this.selectedReturnUser.UUID)}&serialnum=${encodeURIComponent(this.serialnum)}&duration=0`,
+            {
+              method: "GET",
+              credentials: 'include'
+            }
+        );
+
+        const data = await response.json();
+
+        if (response.ok) {
+          await Swal.fire({
+            title: "Success!",
+            text: "Book returned successfully",
+            icon: "success",
+            iconColor: "#4CAF50",
+            background: "#2c2c3a",
+            color: "#fff"
+          });
+          this.fetchBookDetails();
+          this.showReturnModal = false;
+        } else {
+          throw new Error(data.error || "Failed to return book");
+        }
+      } catch (error) {
+        await Swal.fire({
+          title: "Error!",
+          text: error.message,
+          icon: "error",
+          iconColor: "#FF5252",
+          background: "#2c2c3a",
+          color: "#fff"
+        });
+      } finally {
+        this.isProcessingReturn = false;
       }
     }
   },
