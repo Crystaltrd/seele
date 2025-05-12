@@ -454,18 +454,17 @@ async function handleAccountSubmit() {
   }
 
   try {
-    const params = new URLSearchParams();
-    params.append('name', newAccount.value.displayName);
-    params.append('pw', newAccount.value.password);
-    params.append('campus', newAccount.value.campus);
-    params.append('role', newAccount.value.role);
-    params.append('frozen', newAccount.value.status === 'frozen' ? '1' : '0');
+    const formData = new FormData();
+    formData.append('uuid', newAccount.value.username);
+    formData.append('name', newAccount.value.displayName);
+    formData.append('pw', newAccount.value.password);
+    formData.append('campus', newAccount.value.campus);
+    formData.append('role', newAccount.value.role);
+    formData.append('frozen', newAccount.value.status === 'frozen' ? '1' : '0');
 
-    const response = await fetch(`${apiurl}add/account?uuid=${encodeURIComponent(newAccount.value.username)}
-    &name=${encodeURIComponent(newAccount.value.displayName)}&pw=${encodeURIComponent(newAccount.value.password)}
-    &campus=${encodeURIComponent(newAccount.value.campus)}&role=${encodeURIComponent(newAccount.value.role)}
-    &frozen=${newAccount.value.status === 'frozen' ? '1' : '0'}`, {
+    const response = await fetch(`${apiurl}add/account`, {
       method: "POST",
+      body: formData,
       credentials: 'include'
     });
 
