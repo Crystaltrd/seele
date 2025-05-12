@@ -465,7 +465,7 @@ async function handleAccountSubmit() {
     &name=${encodeURIComponent(newAccount.value.displayName)}&pw=${encodeURIComponent(newAccount.value.password)}
     &campus=${encodeURIComponent(newAccount.value.campus)}&role=${encodeURIComponent(newAccount.value.role)}
     &frozen=${newAccount.value.status === 'frozen' ? '1' : '0'}`, {
-      method: "GET",
+      method: "POST",
       credentials: 'include'
     });
 
