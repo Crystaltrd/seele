@@ -501,7 +501,7 @@ export default defineComponent({
 
       try {
         const response = await fetch(
-            `${apiurl}borrow?uuid=${encodeURIComponent(this.selectedReturnUser.UUID)}&serialnum=${encodeURIComponent(this.serialnum)}&duration=0`,
+            `${apiurl}return?uuid=${encodeURIComponent(this.selectedReturnUser.UUID)}&serialnum=${encodeURIComponent(this.serialnum)}`,
             {
               method: "GET",
               credentials: 'include'
