@@ -441,22 +441,25 @@ async function handleAccountSubmit() {
   }
 
   try {
-    const formData = new FormData();
-    formData.append('UUID', newAccount.value.username);
-    formData.append('name', newAccount.value.displayName);
-    formData.append('passwd', newAccount.value.password);
-    formData.append('role', newAccount.value.role);
-    formData.append('campus', newAccount.value.campus);
-    formData.append('frozen', newAccount.value.status === 'frozen' ? '1' : '0');
+    const params = new URLSearchParams();
+    params.append('name', newAccount.value.displayName);
+    params.append('pw', newAccount.value.password);
+    params.append('campus', newAccount.value.campus);
+    params.append('role', newAccount.value.role);
+    params.append('frozen', newAccount.value.status === 'frozen' ? '1' : '0');
 
-    const response = await fetch(apiurl + 'signup', {
-      method: "POST",
-      headers: {
-        'Accept': 'application/json',
-      },
-      body: formData,
+    const response = await fetch(`${apiurl}add/account?uuid=${encodeURIComponent(newAccount.value.username)}
+    &name=${encodeURIComponent(newAccount.value.displayName)}&pw=${encodeURIComponent(newAccount.value.password)}
+    &campus=${encodeURIComponent(newAccount.value.campus)}&role=${encodeURIComponent(newAccount.value.role)}
+    &frozen=${newAccount.value.status === 'frozen' ? '1' : '0'}`, {
+      method: "GET",
       credentials: 'include'
     });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Server error: ${response.status} ${response.statusText}\n${text}`);
+    }
 
     const data = await response.json();
     if (data.account_created) {
@@ -482,17 +485,29 @@ async function handleAccountSubmit() {
       showAddModal.value = false;
       await fetchAccounts();
     } else {
-      throw new Error(data.error || "Failed to create account");
+      let errorMsg = "Failed to create account";
+      if (data.error) {
+        errorMsg += `: ${data.error}`;
+      }
+      await Swal.fire({
+        title: "Error!",
+        text: errorMsg,
+        icon: "error",
+        iconColor: "#FF5252",
+        background: "#2c2c3a",
+        color: "#fff"
+      });
     }
   } catch (error) {
     await Swal.fire({
-      title: "Error!",
-      text: error.message || "An error occurred while creating the account",
+      title: "Network Error!",
+      text: error.message || "Could not connect to server",
       icon: "error",
       iconColor: "#FF5252",
       background: "#2c2c3a",
       color: "#fff"
     });
+    console.error("Error:", error);
   }
 }
 
