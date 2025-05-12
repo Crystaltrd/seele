@@ -627,22 +627,91 @@ const newPublication = ref({
   stock: [],
 })
 
-function handleSubmit() {
-  if (campuses.value.length === 0) {
-    newPublication.value.stock = [{ campus: 'Default', stock: 0 }]
+async function handleSubmit() {
+  try {
+
+    const bookParams = new URLSearchParams();
+
+    bookParams.append('serialnum', newPublication.value.serialnum);
+    bookParams.append('type', newPublication.value.type);
+    bookParams.append('category', newPublication.value.category);
+    bookParams.append('publisher', newPublication.value.publisher);
+    bookParams.append('name', newPublication.value.booktitle);
+    bookParams.append('year', newPublication.value.bookreleaseyear);
+
+    if (newPublication.value.description) {
+      bookParams.append('description', newPublication.value.description);
+    }
+
+    const authors = newPublication.value.authorsInput
+        .split(',')
+        .map(author => author.trim())
+        .filter(author => author !== '');
+
+    authors.forEach(author => {
+      bookParams.append('author', author);
+    });
+
+    newPublication.value.langs.forEach(lang => {
+      bookParams.append('lang', lang);
+    });
+
+    const bookUrl = `${apiurl}add/book?${bookParams.toString()}`;
+    const bookResponse = await fetch(bookUrl, {
+      method: 'POST',
+      credentials: 'include'
+    });
+
+    if (!bookResponse.ok) {
+      throw new Error('Error while adding the book');
+    }
+
+    for (const campusStock of newPublication.value.stock) {
+      if (campusStock.stock > 0) {
+        try {
+          const stockParams = new URLSearchParams();
+          stockParams.append('serialnum', newPublication.value.serialnum);
+          stockParams.append('campus', campusStock.campus);
+          stockParams.append('instock', campusStock.stock);
+
+          const stockUrl = `${apiurl}add/stock?${stockParams.toString()}`;
+          const stockResponse = await fetch(stockUrl, {
+            method: 'POST',
+            credentials: 'include'
+          });
+
+          if (!stockResponse.ok) {
+            console.error(`Failed to add stock for campus ${campusStock.campus}`);
+          }
+        } catch (error) {
+          console.error(`Error adding stock for campus ${campusStock.campus}:`, error);
+        }
+      }
+    }
+
+    await Swal.fire({
+      title: "Success!",
+      text: "Book and stock added successfully",
+      icon: "success",
+      iconColor: "#4A90E2",
+      background: "#2c2c3a",
+      color: "#fff"
+    });
+
+    showAddModal.value = false;
+    await fetchBooks();
+
+  } catch (error) {
+    console.error("Error:", error);
+    await Swal.fire({
+      title: "Error!",
+      text: error.message || "Error while adding publication",
+      icon: "error",
+      iconColor: "#FF5252",
+      background: "#2c2c3a",
+      color: "#fff"
+    });
   }
-
-  newPublication.value.authors = newPublication.value.authorsInput
-      .split(',')
-      .map(author => author.trim())
-      .filter(author => author !== '')
-
-
-  newPublication.value["BOOK.serialnum"] = newPublication.value.serialnum
-
-  console.log('New publication:', newPublication.value)
-  showAddModal.value = false
-
 }
 
 function handleImageUpload(event) {
@@ -653,6 +722,8 @@ function handleImageUpload(event) {
       newPublication.value.bookcover = e.target.result;
     };
     reader.readAsDataURL(file);
+
+    newPublication.value.coverFile = file;
   }
 }
 
@@ -693,6 +764,11 @@ onMounted(async () => {
     getLanguages(),
     getDocTypes()
   ]);
+  newPublication.value.stock = campuses.value.map(campus => ({
+    campus,
+    stock: 0
+  }));
+
   updateFilterOptions(filterType.value);
   checkAdminAccess();
 });
