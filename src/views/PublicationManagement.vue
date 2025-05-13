@@ -460,33 +460,45 @@ async function deleteBook() {
 
   if (result.isConfirmed) {
     try {
-      // API call here
-      const response = await fetch(`${apiurl}book/${selectedBook.value.serialnum}`, {
-        method: "DELETE",
+      const formData = new FormData();
+      formData.append('serialnum', selectedBook.value.serialnum);
+
+      const response = await fetch(`${apiurl}delete/book`, {
+        method: "POST",
+        body: formData,
         credentials: 'include'
       });
 
       if (response.ok) {
-        await Swal.fire({
-          title: "Deleted!",
-          text: "The publication has been deleted.",
-          icon: "success",
-          iconColor: "#4A90E2",
-          background: "#2c2c3a",
-          color: "#fff"
-        });
-        await fetchBooks();
-        selectedBook.value = null;
+        const data = await response.json();
+        if (data.status === "Ressource deleted successfully!") {
+          await Swal.fire({
+            title: "Deleted!",
+            text: "The publication has been deleted.",
+            icon: "success",
+            iconColor: "#4A90E2",
+            background: "#2c2c3a",
+            color: "#fff"
+          });
+          await fetchBooks();
+          selectedBook.value = null;
+        } else {
+          throw new Error(data.error || "Failed to delete publication");
+        }
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to delete publication");
       }
     } catch (error) {
       await Swal.fire({
         title: "Error!",
-        text: "An error occurred while deleting the publication.",
+        text: error.message || "An error occurred while deleting the publication.",
         icon: "error",
         iconColor: "#FF5252",
         background: "#2c2c3a",
         color: "#fff"
       });
+      console.error("Delete error:", error);
     }
   }
 }
