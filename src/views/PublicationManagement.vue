@@ -670,11 +670,11 @@ async function handleSubmit() {
       if (campusStock.stock > 0) {
         try {
           const stockParams = new URLSearchParams();
-          stockParams.append('serialnum', newPublication.value.serialnum);
-          stockParams.append('campus', campusStock.campus);
-          stockParams.append('instock', campusStock.stock);
+          stockParams.append('key1', newPublication.value.serialnum);
+          stockParams.append('key2', campusStock.campus);
+          stockParams.append('mod_stock', campusStock.stock);
 
-          const stockUrl = `${apiurl}add/stock?${stockParams.toString()}`;
+          const stockUrl = `${apiurl}edit/stock?${stockParams.toString()}`;
           const stockResponse = await fetch(stockUrl, {
             method: 'POST',
             credentials: 'include'

@@ -278,6 +278,7 @@
 import { defineComponent } from 'vue'
 import Background from "../components/background.vue"
 import router from "../router";
+import Swal from 'sweetalert2';
 
 export default defineComponent({
   components: { Background },
@@ -305,13 +306,19 @@ export default defineComponent({
       isProcessingReturn: false,
       showReturnModal: false,
       borrowedUsers: [],
-      selectedReturnUser: null
+      selectedReturnUser: null,
+      userPermissions: {}
     }
+  },
+
+  async beforeMount() {
+    await this.fetchUserData();
   },
   computed: {
     showRentControls() {
-      const allowedRoles = ["ADMIN", "STAFF", "SHELF MANAGER", "LIBRARIAN"];
-      return this.userRole && allowedRoles.includes(this.userRole.toUpperCase());
+      return this.userPermissions.manage_stock ||
+          this.userPermissions.admin ||
+          this.userPermissions.staff;
     },
     eligibleUsers() {
       return this.users.filter(user =>
@@ -321,6 +328,24 @@ export default defineComponent({
     }
   },
   methods: {
+    async fetchUserData() {
+      try {
+        const response = await fetch(`${apiurl}me`, {
+          credentials: 'include'
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch user data');
+
+        const userData = await response.json();
+
+        this.userRole = userData.user?.role;
+        this.userCampus = userData.user?.campus;
+        this.userPermissions = userData.user?.perms || {};
+
+      } catch (error) {
+        console.error("Failed to fetch user data", error);
+      }
+    },
     goBack() {
       router.push('/');
     },
@@ -370,8 +395,7 @@ export default defineComponent({
       this.isProcessing = true;
 
       try {
-        const response = await fetch(`${apiurl}borrow?uuid=${encodeURIComponent(this.selectedUser.UUID)}
-        &serialnum=${encodeURIComponent(this.serialnum)}&duration=${this.selectedDuration}`, {
+        const response = await fetch(`${apiurl}borrow?uuid=${encodeURIComponent(this.selectedUser.UUID)}&serialnum=${encodeURIComponent(this.serialnum)}&duration=${this.selectedDuration}`, {
           method: "GET",
           credentials: 'include'
         });
@@ -406,17 +430,6 @@ export default defineComponent({
       }
     },
 
-    async beforeMount() {
-      try {
-        const response = await fetch(`${apiurl}me`, {
-          credentials: 'include'
-        });
-        const userData = await response.json();
-        this.userRole = userData.role;
-      } catch (error) {
-        console.error("Failed to fetch user data", error);
-      }
-    },
 
     async fetchBookDetails() {
       try {
