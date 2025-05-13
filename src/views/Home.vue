@@ -89,7 +89,7 @@ export default defineComponent({
         const queryParams = new URLSearchParams({
           limit: this.limit,
         });
-        const response = await fetch(apiurl+`query/book?${queryParams.toString()}`, {
+        const response = await fetch(apiurl+`query/book?${queryParams.toString()}&order_hits=0`, {
           method: "GET",
           headers: {
             Accept: 'application/json',
