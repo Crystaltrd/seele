@@ -323,7 +323,6 @@ export default defineComponent({
     },
     eligibleUsers() {
       return this.users.filter(user =>
-          ['STUDENT', 'PROFESSOR'].includes(user.role.toUpperCase()) &&
           !user.frozen
       );
     }
