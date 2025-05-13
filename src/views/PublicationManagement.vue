@@ -99,6 +99,7 @@
                   </div>
                   <h4>{{ book.booktitle }}</h4>
                   <div class="meta">
+                    <span> Serial N°:{{ book.serialnum }}</span>
                     <span>{{ book.authors.join(', ') }}</span>
                     <span>{{ book.publisher }} ({{ book.bookreleaseyear }})</span>
                   </div>

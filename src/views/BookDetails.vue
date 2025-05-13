@@ -19,7 +19,8 @@
             <div class="book-header">
               <h1 class="book-title">{{ book.booktitle }}</h1>
               <div class="book-description">
-                <p>{{ book.description }}</p>
+                <p>Serial N°: {{ book.serialnum }}</p>
+                <p>Description: {{ book.description }}</p>
               </div>
             </div>
           </div>
@@ -69,7 +70,7 @@
               </div>
 
               <div class="info-item">
-                <span class="info-label">Language:</span>
+                <span class="info-label">Languages:</span>
                 <span class="info-value" v-for="lang in book.langs" v-if="book.langs && !loading">{{ lang || 'Unknown' }}</span>
               </div>
 
