@@ -20,7 +20,7 @@
               <h1 class="book-title">{{ book.booktitle }}</h1>
               <div class="book-description">
                 <p>Serial N°: {{ book.serialnum }}</p>
-                <p>Description: {{ book.description }}</p>
+                <p>Description: {{ book.description || "No Description found" }}</p>
               </div>
             </div>
           </div>
@@ -433,7 +433,7 @@ export default defineComponent({
 
     async fetchBookDetails() {
       try {
-        const response = await fetch(apiurl + `query/book/${this.serialnum}`, {
+        const response = await fetch(apiurl + `query/book/?serialnum=${this.serialnum}`, {
           method: "GET",
           headers: { 'Accept': 'application/json' },
           credentials: 'include'
@@ -456,6 +456,11 @@ export default defineComponent({
           }
         }
 
+        await fetch(apiurl + `hit?serialnum=${this.serialnum}`, {
+          method: "GET",
+          headers: { 'Accept': 'application/json' },
+          credentials: 'include'
+        });
       } catch (error) {
         console.error("Error:", error);
       } finally {
