@@ -59,18 +59,18 @@
                     </option>
                   </select>
                 </div>
-
-                <button
-                    class="btn"
-                    type="button"
-                    @click="resetFilters"
-                    v-if="filterType"
-                >
-                  <i class="fa-solid fa-rotate-left"></i>
-                  <span>Reset</span>
-                </button>
               </div>
+              <button
+                  class="btn"
+                  type="button"
+                  @click="resetFilters"
+                  v-if="filterType"
+              >
+                <i class="fa-solid fa-rotate-left"></i>
+                <span>Reset</span>
+              </button>
             </div>
+
             <div v-if="isLoading" class="loading">
               <svg viewBox="25 25 50 50" class="spinner">
                 <circle r="20" cy="50" cx="50"></circle>
@@ -375,32 +375,45 @@ async function deleteAccount() {
 
   if (result.isConfirmed) {
     try {
-      const response = await fetch(`${apiurl}account/${selectedAccount.value['UUID']}`, {
-        method: "DELETE",
-        credentials: 'include'
-      });
+          const formData = new FormData();
+          formData.append('uuid', selectedAccount.value['UUID']);
+
+          const response = await fetch(`${apiurl}delete/account`, {
+            method: "POST",
+            body: formData,
+            credentials: 'include'
+          });
 
       if (response.ok) {
-        await Swal.fire({
-          title: "Deleted!",
-          text: "The account has been deleted.",
-          icon: "success",
-          iconColor: "#4A90E2",
-          background: "#2c2c3a",
-          color: "#fff"
-        });
-        await fetchAccounts();
-        selectedAccount.value = null;
+        const data = await response.json();
+        if (data.status === "Ressource deleted successfully!") {
+          await Swal.fire({
+            title: "Deleted!",
+            text: "The account has been deleted.",
+            icon: "success",
+            iconColor: "#4A90E2",
+            background: "#2c2c3a",
+            color: "#fff"
+          });
+          await fetchAccounts();
+          selectedAccount.value = null;
+        } else {
+          throw new Error(data.error || "Failed to delete account");
+        }
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to delete account");
       }
     } catch (error) {
       await Swal.fire({
         title: "Error!",
-        text: "An error occurred while deleting the account.",
+        text: error.message || "An error occurred while deleting the account.",
         icon: "error",
         iconColor: "#FF5252",
         background: "#2c2c3a",
         color: "#fff"
       });
+      console.error("Delete error:", error);
     }
   }
 }
@@ -631,13 +644,12 @@ onMounted(async () => {
   gap: 2rem;
   width: 100%;
   margin-bottom: 2rem;
-  flex-wrap: wrap;
 }
 
 .filter-wrapper {
   display: flex;
   gap: 1rem;
-  align-items: center;
+  align-items: flex-end;
 }
 
 .admin-btn-container {
@@ -678,9 +690,9 @@ onMounted(async () => {
   }
 
   .btn-wrapper, .filter-wrapper {
-    width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    height: 44px;
   }
 
   .filter-wrapper .input-field {
@@ -1494,6 +1506,23 @@ onMounted(async () => {
   100% {
     stroke-dasharray: 89, 200;
     stroke-dashoffset: -124;
+  }
+}
+
+@media (max-width: 768px) {
+  .filter-actions-wrapper {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .btn-wrapper, .filter-wrapper {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .filter-wrapper .input-field {
+    min-width: 150px;
   }
 }
 </style>
