@@ -76,8 +76,8 @@
               </button>
             </div>
 
-            <div class="pagination-controls" v-if="historyEntries.length > 0">
-              <button @click="prevPage" :disabled="currentPage === 1">
+            <div class="pagination-controls" v-if="historyEntries.length >= 0">
+              <button @click="prevPage" :disabled="currentPage === 0">
                 <i class="fa-solid fa-chevron-left"></i>
               </button>
               <span>Page {{ currentPage }} ({{ historyEntries.length }} of {{ totalItems }} entries)</span>
@@ -144,7 +144,7 @@ const historyEntries = ref([]);
 const isLoadingHistory = ref(true);
 const selectedFilter = ref("");
 const actionTypes = ref(["LOGIN", "LOGOUT", "EDIT", "RENT", "RETURN", "EXTEND", "FREEZE", "UNFREEZE"]);
-const currentPage = ref(1);
+const currentPage = ref(0);
 const itemsPerPage = 25;
 const totalItems = ref(0);
 
@@ -187,7 +187,7 @@ async function fetchHistory() {
     isLoadingHistory.value = true;
 
     if (selectedFilter.value) {
-      currentPage.value = 1;
+      currentPage.value = 0;
     }
 
     let url = `${apiurl}query/history?page=${currentPage.value}&limit=${itemsPerPage}`;
@@ -276,7 +276,7 @@ function nextPage() {
 }
 
 function prevPage() {
-  if (currentPage.value > 1) {
+  if (currentPage.value > 0) {
     currentPage.value--;
     fetchHistory();
   }
