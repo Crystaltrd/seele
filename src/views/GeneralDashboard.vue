@@ -64,12 +64,61 @@
       <div class="container">
         <div class="content-wrapper">
           <h3 class="section-heading">General History</h3>
-          <div class="history-grid">
-            <div class="filter-wrapper">
-              <div class="input-field">
-                <select id="filter" class="select">
-                  <option value="">Filter</option>
-                </select>
+
+          <div class="history-controls">
+            <div class="filter-container">
+              <select v-model="selectedFilter" class="styled-select" @change="fetchHistory">
+                <option value="">All Actions</option>
+                <option v-for="action in actionTypes" :value="action">{{ action }}</option>
+              </select>
+              <button @click="fetchHistory" class="refresh-btn">
+                <i class="fa-solid fa-rotate"></i> Refresh
+              </button>
+            </div>
+
+            <div class="pagination-controls" v-if="historyEntries.length > 0">
+              <button @click="prevPage" :disabled="currentPage === 1">
+                <i class="fa-solid fa-chevron-left"></i>
+              </button>
+              <span>Page {{ currentPage }} ({{ historyEntries.length }} of {{ totalItems }} entries)</span>
+              <button @click="nextPage" :disabled="currentPage * itemsPerPage >= totalItems">
+                <i class="fa-solid fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <div v-if="isLoadingHistory" class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading history...</p>
+          </div>
+
+          <div v-else-if="historyEntries.length === 0" class="empty-state">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <p>No history entries found</p>
+          </div>
+
+          <div class="history-list" v-else>
+            <div class="history-item" v-for="(entry, index) in historyEntries" :key="index">
+              <div class="entry-icon" :class="getActionClass(entry.action)">
+                <i :class="getActionIcon(entry.action)"></i>
+              </div>
+              <div class="entry-content">
+                <div class="entry-header">
+              <span class="action-badge" :class="getActionClass(entry.action)">
+                {{ entry.action }}
+              </span>
+                  <span class="entry-date">{{ formatDateTime(entry.actiondate) }}</span>
+                </div>
+                <div class="entry-details">
+                  <div class="detail-row">
+                    <span class="detail-label">IP Address:</span>
+                    <span class="detail-value">{{ entry.IP }}</span>
+                  </div>
+                  <div v-if="entry.details" class="detail-row">
+                    <span class="detail-label">Details:</span>
+                    <span class="detail-value">{{ entry.details }}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -85,11 +134,19 @@ import Background from "../components/background.vue";
 import AdminsHeader from "../components/AdminsHeader.vue";
 import {useRouter} from "vue-router";
 import {onMounted, ref, computed} from "vue";
+import { watch } from 'vue';
 
 const router = useRouter();
 const showAdminButton = ref(false);
 const accounts = ref([]);
 const isLoading = ref(true);
+const historyEntries = ref([]);
+const isLoadingHistory = ref(true);
+const selectedFilter = ref("");
+const actionTypes = ref(["LOGIN", "LOGOUT", "EDIT", "RENT", "RETURN", "EXTEND", "FREEZE", "UNFREEZE"]);
+const currentPage = ref(1);
+const itemsPerPage = 25;
+const totalItems = ref(0);
 
 const goToAdmin = () => {
   router.push('/');
@@ -125,8 +182,115 @@ async function fetchAccounts() {
   }
 }
 
+async function fetchHistory() {
+  try {
+    isLoadingHistory.value = true;
+
+    if (selectedFilter.value) {
+      currentPage.value = 1;
+    }
+
+    let url = `${apiurl}query/history?page=${currentPage.value}&limit=${itemsPerPage}`;
+
+    if (selectedFilter.value) {
+      url += `&action=${encodeURIComponent(selectedFilter.value)}`;
+    }
+
+    console.log("URL complète:", url);
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: { 'Accept': 'application/json' },
+      credentials: 'include'
+    });
+
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+    const data = await response.json();
+    console.log("Données reçues:", data);
+
+    if (data?.res) {
+      historyEntries.value = data.res.map(entry => ({
+        action: entry.action || 'UNKNOWN',
+        actiondate: entry.actiondate || new Date().toISOString(),
+        IP: entry.IP || 'N/A',
+        details: entry.details || null
+      }));
+      totalItems.value = data.nbrres || data.res.length;
+    } else {
+      historyEntries.value = [];
+      totalItems.value = 0;
+    }
+  } catch (error) {
+    console.error("Error fetching history:", error);
+    historyEntries.value = [];
+    totalItems.value = 0;
+  } finally {
+    isLoadingHistory.value = false;
+  }
+}
+
+function getActionClass(action) {
+  return {
+    'login': action === 'LOGIN',
+    'logout': action === 'LOGOUT',
+    'edit': action === 'EDIT',
+    'rent': action === 'RENT',
+    'return': action === 'RETURN',
+    'extend': action === 'EXTEND',
+    'freeze': action === 'FREEZE',
+    'unfreeze': action === 'UNFREEZE'
+  };
+}
+
+function getActionIcon(action) {
+  const icons = {
+    'LOGIN': 'fa-sign-in-alt',
+    'LOGOUT': 'fa-sign-out-alt',
+    'EDIT': 'fa-edit',
+    'RENT': 'fa-book',
+    'RETURN': 'fa-book-return',
+    'EXTEND': 'fa-calendar-plus',
+    'FREEZE': 'fa-snowflake',
+    'UNFREEZE': 'fa-fire'
+  };
+  return 'fa-solid ' + (icons[action] || 'fa-circle-info');
+}
+
+function formatDateTime(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleString('fr-FR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
+function nextPage() {
+  if (currentPage.value * itemsPerPage < totalItems.value) {
+    currentPage.value++;
+    fetchHistory();
+  }
+}
+
+function prevPage() {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+    fetchHistory();
+  }
+}
+
+watch(selectedFilter, (newVal) => {
+  if (newVal) {
+    fetchHistory();
+  }
+});
+
 onMounted(async () => {
   await fetchAccounts();
+  await fetchHistory();
   checkAdminAccess();
 });
 </script>
@@ -178,13 +342,19 @@ onMounted(async () => {
   background: linear-gradient(90deg, #4a90e2, transparent);
 }
 
-#history, #alert {
+#alert {
   padding: 8rem 0;
   display: flex;
   align-items: center;
 }
 
-.history-grid, .alert-grid {
+#history{
+  padding: 0 0 8rem 0;
+  display: flex;
+  align-items: center;
+}
+
+.alert-grid {
   display: flex;
   gap: 2rem;
   padding: 2rem 0;
@@ -193,50 +363,11 @@ onMounted(async () => {
   flex-wrap: wrap;
 }
 
-.history-grid, .alert-grid::-webkit-scrollbar {
+.alert-grid::-webkit-scrollbar {
   display: none;
 }
 
-.select {
-  width: 100%;
-  min-width: 150px;
-}
 
-.input-field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.select {
-  padding: 0.8rem 1rem;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  font-size: 0.95rem;
-  transition: all 0.3s ease;
-}
-
-.select:focus {
-  outline: none;
-  border-color: #4A90E2;
-  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
-}
-
-.select {
-  appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-  background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 1rem;
-  width: 100%;
-  min-width: 150px;
-}
-
-.filter-wrapper {
-  margin-left: auto;
-}
 
 .admin-btn-container {
   position: fixed;
@@ -399,24 +530,269 @@ onMounted(async () => {
   width: 100%;
 }
 
-@keyframes rotate {
-  100% {
-    transform: rotate(360deg);
-  }
+
+
+.history-item {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 1rem;
+  transition: all 0.3s ease;
 }
 
-@keyframes dash {
-  0% {
-    stroke-dasharray: 1, 200;
-    stroke-dashoffset: 0;
-  }
-  50% {
-    stroke-dasharray: 89, 200;
-    stroke-dashoffset: -35;
-  }
-  100% {
-    stroke-dasharray: 89, 200;
-    stroke-dashoffset: -124;
-  }
+.history-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+
+
+.entry-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+
+
+#history {
+  padding: 0 0 10rem 0;
+  display: flex;
+  align-items: center;
+  min-height: 60vh;
+}
+
+.history-controls {
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.filter-container {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.styled-select {
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(30, 30, 40, 0.8);
+  color: white !important;
+  font-size: 0.9rem;
+  min-width: 180px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+}
+
+.styled-select option {
+  background: rgba(30, 30, 40, 0.95);
+  color: white;
+}
+
+.styled-select:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.styled-select:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.refresh-btn {
+  padding: 0.6rem 1rem;
+  background: rgba(74, 144, 226, 0.2);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.refresh-btn:hover {
+  background: rgba(74, 144, 226, 0.3);
+}
+
+.refresh-btn i {
+  font-size: 0.9rem;
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.loading-spinner .spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(74, 144, 226, 0.2);
+  border-top-color: #4a90e2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.empty-state i {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  opacity: 0.6;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.history-item {
+  background: rgba(30, 30, 40, 0.5);
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+.history-item:hover {
+  background: rgba(40, 40, 50, 0.7);
+  transform: translateY(-2px);
+}
+
+.entry-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.entry-icon.login { background: rgba(76, 175, 80, 0.15); color: #4CAF50; }
+.entry-icon.logout { background: rgba(244, 67, 54, 0.15); color: #F44336; }
+.entry-icon.edit { background: rgba(255, 152, 0, 0.15); color: #FF9800; }
+.entry-icon.rent { background: rgba(33, 150, 243, 0.15); color: #2196F3; }
+.entry-icon.return { background: rgba(156, 39, 176, 0.15); color: #9C27B0; }
+.entry-icon.extend { background: rgba(0, 150, 136, 0.15); color: #009688; }
+.entry-icon.freeze { background: rgba(233, 30, 99, 0.15); color: #E91E63; }
+.entry-icon.unfreeze { background: rgba(103, 58, 183, 0.15); color: #673AB7; }
+
+.entry-content {
+  flex-grow: 1;
+}
+
+.entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.action-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.action-badge.login { background: rgba(76, 175, 80, 0.2); color: #4CAF50; }
+.action-badge.logout { background: rgba(244, 67, 54, 0.2); color: #F44336; }
+.action-badge.edit { background: rgba(255, 152, 0, 0.2); color: #FF9800; }
+.action-badge.rent { background: rgba(33, 150, 243, 0.2); color: #2196F3; }
+.action-badge.return { background: rgba(156, 39, 176, 0.2); color: #9C27B0; }
+.action-badge.extend { background: rgba(0, 150, 136, 0.2); color: #009688; }
+.action-badge.freeze { background: rgba(233, 30, 99, 0.2); color: #E91E63; }
+.action-badge.unfreeze { background: rgba(103, 58, 183, 0.2); color: #673AB7; }
+
+.entry-date {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.entry-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.detail-row {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.detail-label {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.detail-value {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: auto;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.pagination-controls button {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 </style>
