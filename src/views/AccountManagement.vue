@@ -199,6 +199,75 @@
               </div>
             </div>
           </div>
+          //
+          <div v-if="showEditModal" class="modal-overlay">
+            <div class="modal-wrapper">
+              <div class="modal-header">
+                <h3>Edit account</h3>
+                <button class="modal-close" @click="showEditModal = false">
+                  <i class="fa-solid fa-times"></i>
+                </button>
+              </div>
+
+              <div class="modal-body">
+                <form @submit.prevent="handleEditSubmit">
+                  <div class="form-grid">
+                    <div class="form-column">
+                      <div class="input-field">
+                        <label for="edit-username">UUID</label>
+                        <input id="edit-username" v-model="editedAccount.uuid" type="text" class="input" required>
+                      </div>
+
+                      <div class="input-field">
+                        <label for="edit-displayName">Display Name</label>
+                        <input id="edit-displayName" v-model="editedAccount.displayName" type="text" class="input" required>
+                      </div>
+                    </div>
+
+                    <div class="form-column">
+                      <div class="input-field">
+                        <label for="edit-role">Role</label>
+                        <select id="edit-role" v-model="editedAccount.role" class="select" required>
+                          <option value="">Select a role</option>
+                          <option v-for="role in roles" :key="role" :value="role">
+                            {{ role }}
+                          </option>
+                        </select>
+                      </div>
+
+                      <div class="input-field">
+                        <label for="edit-campus">Campus</label>
+                        <select id="edit-campus" v-model="editedAccount.campus" class="select" required>
+                          <option value="">Select a campus</option>
+                          <option v-for="campus in campuses" :key="campus" :value="campus">
+                            {{ campus }}
+                          </option>
+                        </select>
+                      </div>
+
+                      <div class="input-field">
+                        <label for="edit-status">Status</label>
+                        <select id="edit-status" v-model="editedAccount.status" class="select" required>
+                          <option value="active">Active</option>
+                          <option value="frozen">Frozen</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="modal-actions">
+                    <button type="button" class="btn btn-cancel" @click="showEditModal = false">
+                      <span>Cancel</span>
+                    </button>
+                    <button type="submit" class="btn btn-submit">
+                      <span>Save Changes</span>
+                      <i class="fa-solid fa-save" style="color: #ffffff;"></i>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -225,6 +294,7 @@ const filterOptions = ref([])
 const originalAccounts = ref([])
 const router = useRouter();
 const showAdminButton = ref(false);
+const showEditModal = ref(false);
 const newAccount = ref({
   username: '',
   displayName: '',
@@ -234,7 +304,14 @@ const newAccount = ref({
   campus: '',
   status: 'active'
 });
-
+const editedAccount = ref({
+  originalUUID: '',
+  uuid: '',
+  displayName: '',
+  campus: '',
+  role: '',
+  status: 'active'
+});
 
 const roles = ref([])
 const statuses = ref(['Active', 'Frozen'])
@@ -336,15 +413,28 @@ function selectAccount(account) {
 }
 
 function showEditAlert() {
-  Swal.fire({
-    title: "Option not available yet",
-    text: "This feature is not yet available but will be soon!",
-    icon: "info",
-    iconColor: "#4A90E2",
-    background: "#2c2c3a",
-    color: "#fff",
-    confirmButtonColor: "#4A90E2"
-  });
+  if (!selectedAccount.value) {
+    Swal.fire({
+      title: "No account selected",
+      text: "Please select an account first",
+      icon: "warning",
+      iconColor: "#FFA726",
+      background: "#2c2c3a",
+      color: "#fff"
+    });
+    return;
+  }
+
+  editedAccount.value = {
+    originalUUID: selectedAccount.value['UUID'],
+    uuid: selectedAccount.value['UUID'],
+    displayName: selectedAccount.value.displayname,
+    campus: selectedAccount.value.campus,
+    role: selectedAccount.value.role,
+    status: selectedAccount.value.frozen ? 'frozen' : 'active'
+  };
+
+  showEditModal.value = true;
 }
 
 async function deleteAccount() {
@@ -533,6 +623,63 @@ async function handleAccountSubmit() {
       color: "#fff"
     });
     console.error("Error:", error);
+  }
+}
+
+async function handleEditSubmit() {
+  try {
+    const formData = new FormData();
+    formData.append('key1', editedAccount.value.originalUUID);
+    formData.append('mod_uuid', editedAccount.value.uuid);
+    formData.append('mod_name', editedAccount.value.displayName);
+    formData.append('mod_campus', editedAccount.value.campus);
+    formData.append('mod_role', editedAccount.value.role);
+    formData.append('mod_frozen', editedAccount.value.status === 'frozen' ? '1' : '0');
+
+    const response = await fetch(`${apiurl}edit/account`, {
+      method: "POST",
+      body: formData,
+      credentials: 'include'
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Failed to update account");
+    }
+
+    const data = await response.json();
+    if (data.changes > 0) {
+      await Swal.fire({
+        title: "Success!",
+        text: "Account updated successfully",
+        icon: "success",
+        iconColor: "#4A90E2",
+        background: "#2c2c3a",
+        color: "#fff"
+      });
+
+      showEditModal.value = false;
+      await fetchAccounts();
+    } else {
+      await Swal.fire({
+        title: "No changes",
+        text: "No changes were made to the account",
+        icon: "info",
+        iconColor: "#4A90E2",
+        background: "#2c2c3a",
+        color: "#fff"
+      });
+    }
+  } catch (error) {
+    await Swal.fire({
+      title: "Error!",
+      text: error.message || "An error occurred while updating the account",
+      icon: "error",
+      iconColor: "#FF5252",
+      background: "#2c2c3a",
+      color: "#fff"
+    });
+    console.error("Edit error:", error);
   }
 }
 

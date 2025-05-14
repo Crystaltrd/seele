@@ -304,6 +304,136 @@
               </div>
             </div>
           </div>
+          <div v-if="showEditModal" class="modal-overlay">
+            <div class="modal-wrapper">
+              <div class="modal-header">
+                <h3>Edit Publication</h3>
+                <p class="subtitle">Modify the fields you want to update</p>
+                <button class="modal-close" @click="showEditModal = false">
+                  <i class="fa-solid fa-times"></i>
+                </button>
+              </div>
+
+              <div class="modal-body">
+                <form @submit.prevent="handleEditSubmit">
+                  <div class="form-grid">
+                    <div class="form-column">
+                      <div class="input-field">
+                        <label for="edit-serialnum">Serial Number</label>
+                        <input id="edit-serialnum" v-model="editedBook.serialnum" type="text" class="input" required>
+                      </div>
+
+                      <div class="input-field">
+                        <label for="edit-booktitle">Title</label>
+                        <input id="edit-booktitle" v-model="editedBook.booktitle" type="text" class="input" required>
+                      </div>
+
+                      <div class="input-field">
+                        <label for="edit-authors">Author(s) " separate them with a comma "</label>
+                        <input id="edit-authors" v-model="editedBook.authorsInput" type="text" class="input" required>
+                      </div>
+
+                      <div class="input-field">
+                        <label for="edit-publisher">Publisher</label>
+                        <input id="edit-publisher" v-model="editedBook.publisher" type="text" class="input" required>
+                      </div>
+
+                      <div class="input-field">
+                        <label for="edit-bookreleaseyear">Release Year</label>
+                        <input id="edit-bookreleaseyear" v-model="editedBook.bookreleaseyear" type="number" class="input" min="1500" required>
+                      </div>
+                    </div>
+
+                    <div class="form-column">
+                      <div class="input-field">
+                        <label for="edit-type">Type</label>
+                        <select id="edit-type" v-model="editedBook.type" class="select" required>
+                          <option value="">Select a type</option>
+                          <option v-for="docType in docTypes" :key="docType" :value="docType">
+                            {{ docType }}
+                          </option>
+                        </select>
+                      </div>
+
+                      <div class="input-field">
+                        <label for="edit-category">Category</label>
+                        <select id="edit-category" v-model="editedBook.category" class="select" required>
+                          <option value="">Select a category</option>
+                          <option v-for="cat in categories" :key="cat.categoryClass" :value="cat.categoryClass">
+                            {{ cat.categoryName }}
+                          </option>
+                        </select>
+                      </div>
+
+                      <div class="input-field">
+                        <label for="edit-langs">Languages</label>
+                        <select id="edit-langs" v-model="editedBook.langs" class="select" multiple>
+                          <option v-for="lang in languages" :key="lang" :value="lang">
+                            {{ lang.toUpperCase() }}
+                          </option>
+                        </select>
+                      </div>
+
+                      <div class="input-field">
+                        <label for="edit-bookcover">Cover Image</label>
+                        <div class="image-upload-container">
+                          <input
+                              id="edit-bookcover"
+                              type="file"
+                              accept="image/*"
+                              @change="handleEditImageUpload"
+                              class="image-upload-input"
+                          >
+                          <label for="edit-bookcover" class="image-upload-label">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <span v-if="!editedBook.bookcover">Choose an image</span>
+                            <span v-else>Change image</span>
+                          </label>
+                          <div v-if="editedBook.bookcover" class="image-preview">
+                            <img :src="editedBook.bookcover" alt="Cover preview">
+                            <button type="button" @click="removeEditImage" class="remove-image-btn">
+                              <i class="fa-solid fa-trash"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="input-field">
+                        <label for="edit-description">Description</label>
+                        <textarea id="edit-description" v-model="editedBook.description" class="input textarea"></textarea>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="stock-section">
+                    <h4>Stock by Campus</h4>
+                    <div class="stock-grid">
+                      <div class="stock-item" v-for="(campusStock, index) in editedBook.stock" :key="index">
+                        <label :for="'edit-stock-'+campusStock.campus">{{ campusStock.campus }}</label>
+                        <input
+                            :id="'edit-stock-'+campusStock.campus"
+                            v-model="editedBook.stock[index].stock"
+                            type="number"
+                            min="0"
+                            class="input"
+                        >
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="modal-actions">
+                    <button type="button" class="btn btn-cancel" @click="showEditModal = false">
+                      <span>Cancel</span>
+                    </button>
+                    <button type="submit" class="btn btn-submit">
+                      <span>Save Changes</span>
+                      <i class="fa-solid fa-save" style="color: #ffffff;"></i>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -336,7 +466,22 @@ const filterOptions = ref([])
 const originalBooks = ref([])
 const router = useRouter();
 const showAdminButton = ref(false);
+const showEditModal = ref(false);
 
+const editedBook = ref({
+  originalSerialNum: '',
+  serialnum: '',
+  type: '',
+  category: '',
+  publisher: '',
+  booktitle: '',
+  bookreleaseyear: '',
+  bookcover: '',
+  description: '',
+  authorsInput: '',
+  langs: [],
+  stock: []
+});
 
 const goToAdmin = () => {
   router.push('/');
@@ -422,15 +567,34 @@ function selectBook(book) {
 }
 
 function showEditAlert() {
-  Swal.fire({
-    title: "Option not available yet",
-    text: "This feature is not yet available but will be soon!",
-    icon: "info",
-    iconColor: "#4A90E2",
-    background: "#2c2c3a",
-    color: "#fff",
-    confirmButtonColor: "#4A90E2"
-  });
+  if (!selectedBook.value) {
+    Swal.fire({
+      title: "No publication selected",
+      text: "Please select a publication first",
+      icon: "warning",
+      iconColor: "#FFA726",
+      background: "#2c2c3a",
+      color: "#fff"
+    });
+    return;
+  }
+
+  editedBook.value = {
+    originalSerialNum: selectedBook.value.serialnum,
+    serialnum: selectedBook.value.serialnum,
+    type: selectedBook.value.type,
+    category: selectedBook.value.category,
+    publisher: selectedBook.value.publisher,
+    booktitle: selectedBook.value.booktitle,
+    bookreleaseyear: selectedBook.value.bookreleaseyear,
+    bookcover: selectedBook.value.bookcover || '',
+    description: selectedBook.value.description || '',
+    authorsInput: selectedBook.value.authors.join(', '),
+    langs: [...selectedBook.value.langs],
+    stock: [...selectedBook.value.stock]
+  };
+
+  showEditModal.value = true;
 }
 
 async function deleteBook() {
@@ -744,6 +908,137 @@ function removeImage() {
   newPublication.value.bookcover = '';
   const input = document.querySelector('.image-upload-input');
   if (input) input.value = '';
+}
+
+function handleEditImageUpload(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      editedBook.value.bookcover = e.target.result;
+    };
+    reader.readAsDataURL(file);
+    editedBook.value.coverFile = file;
+  }
+}
+
+function removeEditImage() {
+  editedBook.value.bookcover = '';
+  const input = document.querySelector('#edit-bookcover');
+  if (input) input.value = '';
+}
+
+async function handleEditSubmit() {
+  try {
+    const formData = new FormData();
+    formData.append('key1', editedBook.value.originalSerialNum);
+
+    if (editedBook.value.serialnum !== selectedBook.value.serialnum) {
+      formData.append('mod_serialnum', editedBook.value.serialnum);
+    }
+    if (editedBook.value.type !== selectedBook.value.type) {
+      formData.append('mod_type', editedBook.value.type);
+    }
+    if (editedBook.value.category !== selectedBook.value.category) {
+      formData.append('mod_category', editedBook.value.category);
+    }
+    if (editedBook.value.publisher !== selectedBook.value.publisher) {
+      formData.append('mod_publisher', editedBook.value.publisher);
+    }
+    if (editedBook.value.booktitle !== selectedBook.value.booktitle) {
+      formData.append('mod_name', editedBook.value.booktitle);
+    }
+    if (editedBook.value.bookreleaseyear !== selectedBook.value.bookreleaseyear) {
+      formData.append('mod_year', editedBook.value.bookreleaseyear);
+    }
+    if (editedBook.value.description !== selectedBook.value.description) {
+      formData.append('mod_description', editedBook.value.description || '');
+    }
+
+
+    if (editedBook.value.coverFile) {
+      formData.append('mod_cover', editedBook.value.coverFile);
+    }
+
+
+    const authors = editedBook.value.authorsInput
+        .split(',')
+        .map(author => author.trim())
+        .filter(author => author !== '');
+
+    if (JSON.stringify(authors) !== JSON.stringify(selectedBook.value.authors)) {
+      formData.delete('mod_author');
+      authors.forEach(author => {
+        formData.append('mod_author', author);
+      });
+    }
+
+    if (JSON.stringify(editedBook.value.langs) !== JSON.stringify(selectedBook.value.langs)) {
+      formData.delete('mod_lang');
+      editedBook.value.langs.forEach(lang => {
+        formData.append('mod_lang', lang);
+      });
+    }
+
+    const response = await fetch(`${apiurl}edit/book`, {
+      method: "POST",
+      body: formData,
+      credentials: 'include'
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update book');
+    }
+
+    const data = await response.json();
+    if (data.changes > 0) {
+      for (const campusStock of editedBook.value.stock) {
+        const originalStock = selectedBook.value.stock.find(s => s.campus === campusStock.campus);
+        if (originalStock && originalStock.stock !== campusStock.stock) {
+          const stockParams = new URLSearchParams();
+          stockParams.append('key1', editedBook.value.serialnum);
+          stockParams.append('key2', campusStock.campus);
+          stockParams.append('mod_stock', campusStock.stock);
+
+          await fetch(`${apiurl}edit/stock?${stockParams.toString()}`, {
+            method: 'POST',
+            credentials: 'include'
+          });
+        }
+      }
+
+      await Swal.fire({
+        title: "Success!",
+        text: "Publication updated successfully",
+        icon: "success",
+        iconColor: "#4A90E2",
+        background: "#2c2c3a",
+        color: "#fff"
+      });
+
+      showEditModal.value = false;
+      await fetchBooks();
+    } else {
+      await Swal.fire({
+        title: "No changes",
+        text: "No changes were made to the publication",
+        icon: "info",
+        iconColor: "#4A90E2",
+        background: "#2c2c3a",
+        color: "#fff"
+      });
+    }
+  } catch (error) {
+    await Swal.fire({
+      title: "Error!",
+      text: error.message || "An error occurred while updating the publication",
+      icon: "error",
+      iconColor: "#FF5252",
+      background: "#2c2c3a",
+      color: "#fff"
+    });
+    console.error("Edit error:", error);
+  }
 }
 
 async function fetchBooks() {
